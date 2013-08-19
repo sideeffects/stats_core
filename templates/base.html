@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+{% block head %}
+<script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+ <!--  
+ <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
+ -->
+ <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/datepicker.js"></script>
+ <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/DateRangesWidget.js"></script>
+ <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/datepicker/base.css" />
+ <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/DateRangesWidget/base.css" />   
+
+<head>
+    <meta charset="utf-8">
+    <title>Houdini Stats</title>
+
+    <style type="text/css">
+        h1, h2  {font: 2.5em/1em 'Georgia', serif}
+        h2  {font-size: 1.5em}
+        .normal {height: 240px; width: 300px}
+        .wide   {height: 240px; width: 940px}
+        .graph  {background: #f9f9f9; margin-bottom: 20px}
+        #container {
+                width: 300px;
+                float:right;
+        }
+        #id_nav_wrapper2 {
+            box-shadow: 0 1px 2px 0px #222;
+            background:lightgrey;
+            height:30px;
+            font-size:1.3em;
+            text-align: center;
+            vertical-align: center;
+        }
+        #section{
+            padding-top:5px;
+            margin-left:0px;
+            width:250px;
+            height:100%;
+            float:left;
+        }
+        #section:hover{
+            cursor:pointer;
+            font-size:1em;
+                font-weight:bold;
+                color:#ffffff;
+        }
+        .selected{
+            color:grey;
+            cursor:auto;
+            font-weight: normal;
+        }
+        .graph-title{
+            font: 1.5em 'Georgia', serif;
+            margin-left:20px;
+        }
+    </style>
+</head>
+
+{% endblock %}
+<body>
+    <div class="container_12">
+        <div class="grid_12">
+            <center><h1>Houdini Stats</h1></center>
+             <div id="id_nav_wrapper2">
+                <div id="section">
+                    <a {% if active_index %}class="categories selected" {% else %} class="categories" {% endif %}  
+                       href="{% url index %}">Uptime</a>
+                </div>
+                <div id="section">
+                    <a {% if active_crashes %}class="categories selected" {% else %} class="categories" {% endif %}   
+                       href= "{% url hou_crashes %}">Crashes</a>
+                </div>
+                <div id="section">
+                    <a {% if active_nodes_usage %}class="categories selected" {% else %} class="categories" {% endif %}    
+                       href="{% url hou_nodes_usage %}">Nodes Usage</a>
+                </div>
+                
+                <div id="section">
+                    <a {% if active_ver_builds %}class="categories selected" {% else %} class="categories" {% endif %}    
+                       href="{% url hou_versions_and_builds %}">Versions and Builds</a>
+                </div>
+            </div>
+            <br>
+            <div id="container">
+                <div class="item">
+                    <div class="pickerContainer widget"></div>
+                </div>
+             </div>
+           <br>  
+           {% block internalbody %}
+           {% endblock internalbody %}
+
+       </div>
+    </div>
+</body>    
+
+</html>

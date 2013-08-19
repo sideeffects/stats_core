@@ -1,0 +1,11 @@
+{% load static %}
+<html>
+    <head>
+        <meta name="provenance" content="$Id: 401.html 1610 2011-11-25 16:36:00Z gvwilson $" />
+        <link rel="stylesheet" href="{% get_static_prefix %}saas.css" type="text/css" />
+    </head>
+    <body>
+        <h1>Authentication failed</h1>
+        <p id="errormessage">{{ message }}</p> <!-- FIXME (DH): style this error message properly -->
+    </body>
+</html>
