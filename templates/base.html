@@ -62,10 +62,31 @@
     <div class="container_12">
         <div class="grid_12">
             <center><h1>Houdini Stats</h1></center>
+            <div>
+             <div>
+                  {% if is_logged_in %}
+                  Welcome {{ user}}, enjoy our Analytics !!
+                  {% endif %}
+                  <br> 
+                  <a class="" {% if is_logged_in %} href="{% url logout %}"> 
+                                Logout
+                                {% else %} href="{% url login %}">
+                                Login
+                                {% endif %} 
+                  </a>            
+             </div>
+            </div>
+             <br>
              <div id="id_nav_wrapper2">
+                
                 <div id="section">
                     <a {% if active_index %}class="categories selected" {% else %} class="categories" {% endif %}  
-                       href="{% url index %}">Uptime</a>
+                       href="{% url index %}">Overview</a>
+                </div>
+                
+                <div id="section">
+                    <a {% if active_uptime %}class="categories selected" {% else %} class="categories" {% endif %}  
+                       href="{% url hou_uptime %}">Uptime</a>
                 </div>
                 <div id="section">
                     <a {% if active_crashes %}class="categories selected" {% else %} class="categories" {% endif %}   
@@ -94,5 +115,26 @@
        </div>
     </div>
 </body>    
-
+<script type="text/javascript">
+     //<![CDATA[
+        $(document).ready(function() {
+            $('.pickerContainer.widget').DateRangesWidget();
+            if ("{{range}}" != "None"){
+                var start = "{{range.0}}";
+                var end = "{{range.1}}";
+                var range = start + " - " + end;
+            } else {range="Aggregation period";}
+            if (range) $(".main").html(range);
+        
+            $("#button-ok").click(function(){
+                var aggregation = $(".aggregation:eq(1)").find(":selected").text();
+                var date = $(".main").text();
+                var range = date.split("-");
+                var start = $.trim(range[0]);
+                var end = $.trim(range[1]);
+                window.location = "{{ url }}"+ "?start="+start+"&end="+end+"&ag="+aggregation;
+                })
+            });
+    //]]>
+</script>
 </html>

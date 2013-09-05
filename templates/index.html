@@ -3,25 +3,16 @@
 {% load googlecharts %}
 {% block internalbody %}
       
-    <div class="graph-title">Average Session Length (in seconds)</div>
+    <div class="graph-title">Users over time</div>
     <br>
-    <div id="series_hou_average_session_length" class="wide graph"></div>
-    <br>
-    <div class="graph-title">Average Usage by Machine (in seconds)</div>
-    <br>
-    <div id="series_hou_average_usage_by_machine" class="wide graph"></div>
+    <div id="series_hou_users_over_time" class="wide graph"></div>
     <br>
             
     {% googlecharts %}
-        
-        {% data series.hou_average_session_length "count1" %}
-           {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-           {% col "number" "# of seconds" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
-        {% data series.hou_average_usage_by_machine "count2" %}
-           {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-           {% col "number" "# of seconds" %}{{ val }}{% endcol %}
+    
+        {% data series.users_over_time "count1" %}
+         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+         {% col "number" "# of users" %}{{ val }}{% endcol %}
         {% enddata %}
         
         options = {
@@ -49,38 +40,9 @@
             options: options_wide
         {% endoptions %}
         
-        {% options "opt_count_wide_column" %}
-            kind: "ColumnChart",
-            options: options_wide
-        {% endoptions %}
-        
-        {% graph "series_hou_average_session_length" "count1" "opt_count_wide_column" %}
-        {% graph "series_hou_average_usage_by_machine" "count2" "opt_count_wide_column" %}
-        
+        {% graph "series_hou_users_over_time" "count1" "opt_count_wide" %}
+               
     {% endgooglecharts %}
 
  {% endblock internalbody %}   
-
-<script type="text/javascript">
-     //<![CDATA[
-        $(document).ready(function() {
-            $('.pickerContainer.widget').DateRangesWidget();
-            if ("{{range}}" != "None"){
-                var start = "{{range.0}}";
-                var end = "{{range.1}}";
-                var range = start + " - " + end;
-            } else {range="N/A";}
-            if (range) $(".main").html(range);
-        
-            $("#button-ok").click(function(){
-                var aggregation = $(".aggregation:eq(1)").find(":selected").text();
-                var date = $(".main").text();
-                var range = date.split("-");
-                var start = $.trim(range[0]);
-                var end = $.trim(range[1]);
-                window.location = "/analytics?start="+start+"&end="+end+"&ag="+aggregation;
-                })
-            });
-    //]]>
-</script>
 

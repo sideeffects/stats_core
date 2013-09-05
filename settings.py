@@ -4,7 +4,7 @@ import os
 import sys
 import datetime
 
-DEBUG =  True # Dont make it false while testing, so that we dont get emails
+DEBUG =  True # Dont make it false while testing, so that we don't get emails
               # with errors
 TEMPLATE_DEBUG = DEBUG
 
@@ -34,7 +34,7 @@ DATABASES = {
 }
 
 # Date that we started collecting data [Y, M, D]
-STARTING_DATE = datetime.datetime(2013, 7, 1) 
+STARTING_DATE = datetime.datetime(2013, 8, 15) 
                                   
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -173,3 +173,13 @@ LOGGING = {
         },
     }
 }
+
+# Page to use for logins.
+
+# If testing with http://norfolk.local
+#LOGIN_URL = '/stats/login'
+#LOGIN_REDIRECT_URL = '/stats'
+
+# If testing with http://127.0.0.1:8000
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{{ request.session.name }}
+{% load googlecharts %}
+{% block internalbody %}
+<div class="regular_signin_container">             
+   <h2>Sign in to be able to see Houdini Analytics</h2>
+   <div class="yui3-u login-container">
+     <form method="post" action="{{secure_login_url}}" >
+       {% csrf_token %}
+        <h3>Username: <input id="id_login_username" type="text" name="username" /> </h3>
+        <h3>Password: <input id="id_login_password" type="password" name="password" /> </h3>
+        {% if invalid_login %}
+         <ul class="errorlist" id="id_login_error" style="display: block; color:red;">
+                <li>Invalid user name or password. Try again.</li>
+         </ul>
+        {% endif %} 
+       <input type="submit" value="Login" id="id_login_button" class="yui3-u button-medium" />
+       {% if next %}
+       <input type="hidden" id="id_next" name="next" value="{{ next }}" />
+       {% else %}
+       <input type="hidden" id="id_next" name="next" value="/" />
+       {% endif %}
+       {% if stay_on_login_after_failure %} 
+       <input type="hidden" name="stay_on_login_after_failure" value="1" /> 
+       {% endif %}
+     </form>
+   </div>
+   <hr />
+</div>
+{% endblock internalbody %}
