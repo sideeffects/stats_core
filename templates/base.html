@@ -101,6 +101,11 @@
                     <a {% if active_ver_builds %}class="categories selected" {% else %} class="categories" {% endif %}    
                        href="{% url hou_versions_and_builds %}">Versions and Builds</a>
                 </div>
+                
+                <div id="section">
+                    <a {% if active_licenses %}class="categories selected" {% else %} class="categories" {% endif %}    
+                       href="{% url hou_licenses %}">Licenses</a>
+                </div>
             </div>
             <br>
             <div id="container">

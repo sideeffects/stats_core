@@ -11,6 +11,6 @@ urlpatterns = patterns('',
     # Enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     
-     # Add the houdini stats URLs.
-    (r'', include('houdini_stats.urls')),
+    # Add the houdini stats URLs.
+    (r'', include('houdini_stats.urls')),    
 )

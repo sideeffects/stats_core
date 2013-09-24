@@ -3,16 +3,16 @@
 {% load googlecharts %}
 {% block internalbody %}
       
-    <div class="graph-title">Users over time</div>
+    <div class="graph-title">Apprentice licenses over time</div>
     <br>
-    <div id="series_hou_users_over_time" class="wide graph"></div>
+    <div id="series_hou_apprentice_lic_over_time" class="wide graph"></div>
     <br>
-    
+            
     {% googlecharts %}
     
-        {% data series.users_over_time "count1" %}
+        {% data series.apprentice_lic_over_time "count2" %}
          {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "# of users" %}{{ val }}{% endcol %}
+         {% col "number" "# of licenses" %}{{ val }}{% endcol %}
         {% enddata %}
         
         options = {
@@ -40,7 +40,7 @@
             options: options_wide
         {% endoptions %}
         
-        {% graph "series_hou_users_over_time" "count1" "opt_count_wide" %}
+        {% graph "series_hou_apprentice_lic_over_time" "count2" "opt_count_wide" %}
                
     {% endgooglecharts %}
 
