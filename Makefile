@@ -28,7 +28,7 @@ push:
 	scp $(SOURCE_FILE_NAME) Makefile root@$(SERVER):$(TEMP_DIR)/
 
 	@# Run the target on the server.
-	ssh root@$(SERVER) "cd $(TEMP_DIR) && make -n apply_updates_on_server"
+	ssh root@$(SERVER) "cd $(TEMP_DIR) && make apply_updates_on_server"
 
 apply_updates_on_server:
 	@# Back up the old source code and database.
