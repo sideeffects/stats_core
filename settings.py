@@ -7,8 +7,7 @@ import socket
 
 IS_PRODUCTION_SERVER = socket.gethostname() == "florida"
 
-DEBUG =  True # Dont make it false while testing, so that we don't get emails
-              # with errors
+DEBUG = not IS_PRODUCTION_SERVER
 TEMPLATE_DEBUG = DEBUG
 USE_PRODUCTION_SERVER = True
 
@@ -26,24 +25,28 @@ _this_dir = os.path.normpath(os.path.dirname(__file__))
 _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 
 DATABASES = {
-              'default': {
-                          'ENGINE':  'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-                          'NAME': 'stats',
-                          'USER': 'www',          # Not used with sqlite3.
-                          'PASSWORD': 'TODO: enter-password', # Not used with sqlite3.
-                          'HOST': '',             # Set to empty string for localhost. Not used with sqlite3.
-                          'PORT': '',             # Set to empty string for default. Not used with sqlite3.
-                         },
-              'licensedb': {    
-                           'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-                           'NAME': 'licensedb',  # Or path to database file if using sqlite3.
-                           'USER': 'www',
-                           'PASSWORD': 'TODO: enter-password',
-                           'HOST': 'internal.sidefx.com' , #'sandbox.sidefx.com', #,  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-                           'PORT': '',  # Set to empty string for default.
-                           'STORAGE_ENGINE': 'INNODB',
-                            },
+    'default': {
+        'ENGINE':  'django.db.backends.mysql',
+        'NAME': 'stats',
+        'USER': 'www',
+        'PASSWORD': 'TODO: enter-password',
+    },
+    'licensedb': {    
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'licensedb',
+        'USER': 'www',
+        'PASSWORD': 'TODO: enter-password',
+        'HOST': ("internal" if IS_PRODUCTION_SERVER else "sandbox") +
+            '.sidefx.com',
+    },
+    'mambo': {    
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mambo',
+        'USER': 'www',
+        'PASSWORD': 'TODO: enter-password',
+    },
 }
+
 # Database routers
 DATABASE_ROUTERS = ['routers.DBRouter']
 
