@@ -3,6 +3,9 @@
 import os
 import sys
 import datetime
+import socket
+
+IS_PRODUCTION_SERVER = socket.gethostname() == "florida"
 
 DEBUG =  True # Dont make it false while testing, so that we don't get emails
               # with errors
@@ -23,13 +26,12 @@ _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 
 DATABASES = {
     'default': {
-        'ENGINE':  'django.db.backends.mysql',# Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        #'NAME': '/home/yele/dev_external/django/stats/stats.db',# Or path to database file if using sqlite3.
+        'ENGINE':  'django.db.backends.mysql',
         'NAME': 'stats',
-        'USER': 'www',                      # Not used with sqlite3.
-        'PASSWORD': 'TODO: enter-password',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'USER': 'www',
+        'PASSWORD': 'TODO: enter-password',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
