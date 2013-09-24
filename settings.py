@@ -175,11 +175,10 @@ LOGGING = {
 }
 
 # Page to use for logins.
+if len(sys.argv) >= 2 and sys.argv[1] == 'runserver':
+    LOGIN_URL = '/login'
+    LOGIN_REDIRECT_URL = '/'
+else:
+    LOGIN_URL = '/stats/login'
+    LOGIN_REDIRECT_URL = '/stats'
 
-# If testing with http://norfolk.local
-#LOGIN_URL = '/stats/login'
-#LOGIN_REDIRECT_URL = '/stats'
-
-# If testing with http://127.0.0.1:8000
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
