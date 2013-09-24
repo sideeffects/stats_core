@@ -36,7 +36,7 @@ apply_updates_on_server:
 	    mkdir -p $(BACKUP_DIR); \
 	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \
 	    (cd $(INSTALL_DIR) && $(MAKE) dump); \
-	    cp $(INSTALL_DIR)/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
+	    mv $(INSTALL_DIR)/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
 	else \
 	    mkdir -p $(INSTALL_DIR); \
 	fi)
