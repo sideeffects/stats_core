@@ -1,20 +1,70 @@
-{% extends "base.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 {{ request.session.name }}
-{% load googlecharts %}
-{% block internalbody %}
-<div class="regular_signin_container">             
-   <h2>Sign in to be able to see Houdini Analytics</h2>
-   <div class="yui3-u login-container">
-     <form method="post" action="{{secure_login_url}}" >
-       {% csrf_token %}
-        <h3>Username: <input id="id_login_username" type="text" name="username" /> </h3>
-        <h3>Password: <input id="id_login_password" type="password" name="password" /> </h3>
+<html lang="en">
+<head>
+     <meta charset="utf-8">
+     <title>Houdini Stats Sign in</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="description" content="">
+     <meta name="author" content="">
+	
+	 <style type="text/css">
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+      }
+
+      .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+      .form-signin .form-signin-heading,
+      .form-signin .checkbox {
+        margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+      </style>
+    
+	 <!-- Bootstrap -->
+	 <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	 <link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+	 <script src="http://code.jquery.com/jquery.js"></script>
+	 <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+     <form class="form-signin" method="post" action="{{secure_login_url}}">
+        {% csrf_token %} 
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" class="input-block-level" placeholder="Username" name="username">
+        <input type="password" class="input-block-level" placeholder="Password" name="password">
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
         {% if invalid_login %}
          <ul class="errorlist" id="id_login_error" style="display: block; color:red;">
                 <li>Invalid user name or password. Try again.</li>
          </ul>
         {% endif %} 
-       <input type="submit" value="Login" id="id_login_button" class="yui3-u button-medium" />
+        <button id="id_login_button" class="btn btn-large btn-primary" type="submit">Sign in</button>
+        
        {% if next %}
        <input type="hidden" id="id_next" name="next" value="{{ next }}" />
        {% else %}
@@ -23,8 +73,8 @@
        {% if stay_on_login_after_failure %} 
        <input type="hidden" name="stay_on_login_after_failure" value="1" /> 
        {% endif %}
-     </form>
-   </div>
-   <hr />
-</div>
-{% endblock internalbody %}
+        
+      </form>
+</div> 
+
+</body>

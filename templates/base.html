@@ -1,19 +1,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html lang="en">
 {% block head %}
 <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
- <!--  
- <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/base.css" />
- -->
+ 
  <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/datepicker.js"></script>
  <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/DateRangesWidget.js"></script>
  <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/datepicker/base.css" />
  <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/DateRangesWidget/base.css" />   
+ 
+ <!-- Bootstrap -->
+ <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+ <link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+ <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
 
 <head>
     <meta charset="utf-8">
     <title>Houdini Stats</title>
-
+    
     <style type="text/css">
         h1, h2  {font: 2.5em/1em 'Georgia', serif}
         h2  {font-size: 1.5em}
@@ -59,66 +62,133 @@
 
 {% endblock %}
 <body>
-    <div class="container_12">
-        <div class="grid_12">
-            <center><h1>Houdini Stats</h1></center>
-            <div>
-             <div>
-                  {% if is_logged_in %}
-                  Welcome {{ user}}, enjoy our Analytics !!
-                  {% endif %}
-                  <br> 
-                  <a class="" {% if is_logged_in %} href="{% url logout %}"> 
-                                Logout
-                                {% else %} href="{% url login %}">
-                                Login
-                                {% endif %} 
-                  </a>            
-             </div>
-            </div>
-             <br>
-             <div id="id_nav_wrapper2">
-                
-                <div id="section">
-                    <a {% if active_index %}class="categories selected" {% else %} class="categories" {% endif %}  
-                       href="{% url index %}">Overview</a>
-                </div>
-                
-                <div id="section">
-                    <a {% if active_uptime %}class="categories selected" {% else %} class="categories" {% endif %}  
-                       href="{% url hou_uptime %}">Uptime</a>
-                </div>
-                <div id="section">
-                    <a {% if active_crashes %}class="categories selected" {% else %} class="categories" {% endif %}   
-                       href= "{% url hou_crashes %}">Crashes</a>
-                </div>
-                <div id="section">
-                    <a {% if active_nodes_usage %}class="categories selected" {% else %} class="categories" {% endif %}    
-                       href="{% url hou_nodes_usage %}">Nodes Usage</a>
-                </div>
-                
-                <div id="section">
-                    <a {% if active_ver_builds %}class="categories selected" {% else %} class="categories" {% endif %}    
-                       href="{% url hou_versions_and_builds %}">Versions and Builds</a>
-                </div>
-                
-                <div id="section">
-                    <a {% if active_licenses %}class="categories selected" {% else %} class="categories" {% endif %}    
-                       href="{% url hou_licenses %}">Licenses</a>
-                </div>
-            </div>
-            <br>
-            <div id="container">
-                <div class="item">
-                    <div class="pickerContainer widget"></div>
-                </div>
-             </div>
-           <br>  
-           {% block internalbody %}
-           {% endblock internalbody %}
-
-       </div>
+<!--     
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Houdini Statistics</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              Logged in as <a href="#" class="navbar-link">Username</a>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <br>
+            <ul class="nav nav-list">
+            
+              <li class="nav-header">Reports</li>
+              <li {% if active_index %}class="active" {% endif %}>
+                   <a href="{% url "index" %}">General</a>
+               </li>
+               <li {% if active_uptime %} class="active"{% endif %}>
+                   <a href="{% url "hou_uptime" %}">Uptime</a>
+               </li>
+               <li {% if active_crashes %} class="active"{% endif %}>
+                   <a href= "{% url "hou_crashes" %}">Crashes</a>
+               </li>
+               <li {% if active_nodes_usage %} class="active"{% endif %}>
+                   <a href="{% url "hou_nodes_usage" %}">Nodes Usage</a>
+               </li>
+               <li {% if active_ver_builds %} class="active"{% endif %}>
+                   <a href="{% url "hou_versions_and_builds" %}">Versions and Builds</a>
+               </li>
+                <li {% if active_licenses %} class="active"{% endif %}>
+                   <a href="{% url "hou_licenses" %}">Licenses</a>
+               </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <br>
+          <br>
+           
+           <div class="hero-unit">
+            
+            <h1>Welcome to houdini stats !</h1>
+            <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+            <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>-->
+<div class="container">
+ <div class="masthead">
+   <div align="center">
+       <h3 class="muted">Houdini Statistics </h3>
+   </div>   
+   <div align="right">
+     {% if is_logged_in %} Welcome {{ user}}. {% endif %}
+     <br> 
+     <a class="" {% if is_logged_in %} href="{% url "logout" %}"> 
+        Logout
+        {% else %} href="{% url "login" %}">
+        Login
+        {% endif %} 
+      </a>            
+   </div>
+        
+   <div class="navbar">
+     <div class="navbar-inner">
+         <div class="container">
+            <ul class="nav">
+               <li {% if active_index %}class="active" {% endif %}>
+                   <a href="{% url "index" %}">Overview</a>
+               </li>
+               <li {% if active_uptime %} class="active"{% endif %}>
+                   <a href="{% url "hou_uptime" %}">Uptime</a>
+               </li>
+               <li {% if active_crashes %} class="active"{% endif %}>
+                   <a href= "{% url "hou_crashes" %}">Crashes</a>
+               </li>
+               <li {% if active_nodes_usage %} class="active"{% endif %}>
+                   <a href="{% url "hou_nodes_usage" %}">Nodes Usage</a>
+               </li>
+               <li {% if active_ver_builds %} class="active"{% endif %}>
+                   <a href="{% url "hou_versions_and_builds" %}">Versions and Builds</a>
+               </li>
+                <li {% if active_licenses %} class="active"{% endif %}>
+                   <a href="{% url "hou_licenses" %}">Licenses</a>
+               </li>
+             </ul>
+           </div>
+          </div>
+    </div>
+    <br>
+    <div id="container">
+        <div class="item">
+            <div class="pickerContainer widget"></div>
+        </div>
+    </div>
+   <br> 
+   </div>
+   <br>
+    {% block internalbody %} 
+    {% endblock internalbody %} 
+ 
+</div>
+<!-- 
+ <footer>
+        <p>&copy; Side Effects Software 2013</p>
+ </footer>
+-->
 </body>    
 <script type="text/javascript">
      //<![CDATA[
@@ -128,10 +198,11 @@
                 var start = "{{range.0}}";
                 var end = "{{range.1}}";
                 var range = start + " - " + end;
-            } else {range="Aggregation period";}
+            } else {range="N/A";}
             if (range) $(".main").html(range);
         
             $("#button-ok").click(function(){
+                
                 var aggregation = $(".aggregation:eq(1)").find(":selected").text();
                 var date = $(".main").text();
                 var range = date.split("-");
@@ -139,7 +210,7 @@
                 var end = $.trim(range[1]);
                 window.location = "{{ url }}"+ "?start="+start+"&end="+end+"&ag="+aggregation;
                 })
-            });
+                });
     //]]>
 </script>
 </html>
