@@ -1,8 +1,12 @@
-TIMESTAMP=$(shell date +"%Y-%m-%d")
-SERVER=www.sidefx.com
+LOGGING_SERVER=www.sidefx.com
+LOGGING_SERVER_USER=root
+QUERY_SERVER=internal.sidefx.com
+QUERY_SERVER_USER=prisms
+
 INSTALL_DIR=/var/www/stats
-TEMP_DIR=/root/stats_backup
-BACKUP_DIR=/root/stats_backup/$(TIMESTAMP)
+TEMP_DIR=~/stats_backup
+TIMESTAMP=$(shell date +"%Y-%m-%d")
+BACKUP_DIR=$(TEMP_DIR)/$(TIMESTAMP)
 SOURCE_FILE_NAME=source.tar
 DB_DUMP_FILE_NAME=db_backup.tar.gz
 
@@ -25,14 +29,29 @@ package_source:
 push:
 	$(MAKE) package_source
 
+	@# In case this is the first time updating the servers, make sure the
+	@# temporary directories exist.
+	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "mkdir -p $(TEMP_DIR)"
+	ssh $(LOGGING_SERVER_USER)@$(LOGGING_SERVER) "mkdir -p $(TEMP_DIR)"
+
 	@# Copy the source and the makefile to the server.
-	scp $(SOURCE_FILE_NAME) Makefile root@$(SERVER):$(TEMP_DIR)/
+	scp $(SOURCE_FILE_NAME) Makefile $(QUERY_SERVER_USER)@$(QUERY_SERVER):$(TEMP_DIR)/
+	scp $(SOURCE_FILE_NAME) Makefile $(LOGGING_SERVER_USER)@$(LOGGING_SERVER):$(TEMP_DIR)/
 
 	@# Run the target on the server.
-	ssh root@$(SERVER) "cd $(TEMP_DIR) && make apply_updates_on_server"
+	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server"
+	ssh $(LOGGING_SERVER_USER)@$(LOGGING_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server"
+
+local_push:
+	$(MAKE) package_source
+	mkdir -p $(TEMP_DIR)
+	cp $(SOURCE_FILE_NAME) Makefile $(TEMP_DIR)/
+	(cd $(TEMP_DIR) && sudo make apply_updates_on_server)
 
 apply_updates_on_server:
-	@# Back up the old source code and database.
+	@# Back up the old source code and database.  If this is the query
+	@# server the database will just contain django and south tables, but
+	@# that's ok.
 	(if [ -e $(INSTALL_DIR) ]; then \
 	    mkdir -p $(BACKUP_DIR); \
 	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \

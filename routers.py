@@ -1,3 +1,4 @@
+import settings
 
 class DBRouter(object):
     """A router to control database operations"""
@@ -17,4 +18,4 @@ class DBRouter(object):
         if hasattr(model._meta, "db_name"):
             return model._meta.db_name
         return None
-     
+

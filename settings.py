@@ -5,20 +5,29 @@ import sys
 import datetime
 import socket
 
-IS_PRODUCTION_SERVER = socket.gethostname() == "florida"
+PRODUCTION_LOGGING_SERVER_NAME = "florida"
+PRODUCTION_QUERY_SERVER_NAME = "yuma"
+
+IS_PRODUCTION_LOGGING_SERVER = (
+    socket.gethostname() == PRODUCTION_LOGGING_SERVER_NAME)
+IS_PRODUCTION_QUERY_SERVER = (
+    socket.gethostname() == PRODUCTION_QUERY_SERVER_NAME)
+IS_PRODUCTION_SERVER = (
+    IS_PRODUCTION_LOGGING_SERVER or IS_PRODUCTION_QUERY_SERVER)
+
+# If it's not a production server, then the server is both the logging and
+# query server.
+IS_LOGGING_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_LOGGING_SERVER
+IS_QUERY_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_QUERY_SERVER
 
 DEBUG = not IS_PRODUCTION_SERVER
 TEMPLATE_DEBUG = DEBUG
-USE_PRODUCTION_SERVER = True
 
+ADMIN_USER = 'admin'
 ADMINS = (
     ('stats dev1', 'yele@sidefx.com'),
     ('stats dev2', 'luke@sidefx.com'),
 )
-
-# Temporary super user
-ADMIN_USER = 'admin'
-
 MANAGERS = ADMINS
 
 _this_dir = os.path.normpath(os.path.dirname(__file__))
@@ -26,26 +35,40 @@ _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 
 DATABASES = {
     'default': {
-        'ENGINE':  'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats',
         'USER': 'www',
         'PASSWORD': 'TODO: enter-password',
     },
-    'licensedb': {    
+    'stats': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'licensedb',
+        'NAME': 'stats',
         'USER': 'www',
         'PASSWORD': 'TODO: enter-password',
-        'HOST': ("internal" if IS_PRODUCTION_SERVER else "sandbox") +
-            '.sidefx.com',
-    },
-    'mambo': {    
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mambo',
-        'USER': 'www',
-        'PASSWORD': 'TODO: enter-password',
+        'HOST': (PRODUCTION_LOGGING_SERVER_NAME
+            if IS_PRODUCTION_QUERY_SERVER else '')
     },
 }
+
+if IS_QUERY_SERVER:
+    DATABASES.update({
+        'licensedb': {    
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'licensedb',
+            'USER': 'www',
+            'PASSWORD': 'TODO: enter-password',
+            'HOST': (''
+                if IS_PRODUCTION_QUERY_SERVER else 'sandbox.sidefx.com'),
+        },
+        'mambo': {    
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'mambo',
+            'USER': 'www',
+            'PASSWORD': 'TODO: enter-password',
+            'HOST': (PRODUCTION_LOGGING_SERVER_NAME
+                if IS_PRODUCTION_QUERY_SERVER else ''),
+        },
+    })
 
 # Database routers
 DATABASE_ROUTERS = ['routers.DBRouter']
@@ -166,8 +189,12 @@ INSTALLED_APPS = (
     'googlecharts',
     'south',
     'houdini_stats',
-    'houdini_licenses'    
 )
+
+if not IS_LOGGING_SERVER:
+    INSTALLED_APPS += (
+        'houdini_licenses',
+    )
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
