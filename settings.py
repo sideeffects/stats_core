@@ -20,7 +20,7 @@ IS_PRODUCTION_SERVER = (
 IS_LOGGING_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_LOGGING_SERVER
 IS_QUERY_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_QUERY_SERVER
 
-DEBUG = not IS_PRODUCTION_SERVER
+DEBUG = True #not IS_PRODUCTION_SERVER
 TEMPLATE_DEBUG = DEBUG
 SHOW_DEBUG_TOOLBAR = False
 
@@ -37,7 +37,7 @@ _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stats',
+        'NAME': 'stats_django_skeleton',
         'USER': 'www',
         'PASSWORD': 'TODO: enter-password',
     },
@@ -200,8 +200,12 @@ INSTALLED_APPS = (
     'googlecharts',
     'south',
     'houdini_stats',
-    'debug_toolbar',
 )
+
+if SHOW_DEBUG_TOOLBAR:
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
 
 if not IS_LOGGING_SERVER:
     INSTALLED_APPS += (

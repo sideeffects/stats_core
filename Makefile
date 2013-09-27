@@ -34,12 +34,12 @@ push:
 	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "mkdir -p $(TEMP_DIR)"
 	ssh $(LOGGING_SERVER_USER)@$(LOGGING_SERVER) "mkdir -p $(TEMP_DIR)"
 
-	@# Copy the source and the makefile to the server.
+	@# Copy the source and the Makefile to the servers.
 	scp $(SOURCE_FILE_NAME) Makefile $(QUERY_SERVER_USER)@$(QUERY_SERVER):$(TEMP_DIR)/
 	scp $(SOURCE_FILE_NAME) Makefile $(LOGGING_SERVER_USER)@$(LOGGING_SERVER):$(TEMP_DIR)/
 
 	@# Run the target on the server.
-	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server"
+	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server NO_MIGRATIONS=1 TEMP_DIR=$(TEMP_DIR)"
 	ssh $(LOGGING_SERVER_USER)@$(LOGGING_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server"
 
 local_push:
@@ -52,6 +52,7 @@ apply_updates_on_server:
 	@# Back up the old source code and database.  If this is the query
 	@# server the database will just contain django and south tables, but
 	@# that's ok.
+	@# TODO: If it's the first time, we also need to do a syncdb.
 	(if [ -e $(INSTALL_DIR) ]; then \
 	    mkdir -p $(BACKUP_DIR); \
 	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \
@@ -65,8 +66,10 @@ apply_updates_on_server:
 	if [ "$(INSTALL_DIR)" != "" ]; then rm -rf $(INSTALL_DIR)/*; fi
 	(cd $(INSTALL_DIR) && tar xf $(TEMP_DIR)/$(SOURCE_FILE_NAME))
 
-	@# Apply any migrations.
-	(cd $(INSTALL_DIR) && ./manage.py migrate)
+	@# Apply any migrations, unless we've been told not too.
+	(if [ "$(NO_MIGRATIONS)" = "" ]; then \
+	    (cd $(INSTALL_DIR) && ./manage.py migrate) \
+	fi)
 
 	@# Change file ownerships away from root.
 	(cd $(INSTALL_DIR) && chown -R www-data:www-data *)

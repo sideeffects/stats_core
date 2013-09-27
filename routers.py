@@ -19,3 +19,15 @@ class DBRouter(object):
             return model._meta.db_name
         return None
 
+    def allow_syncdb(self, db, model):
+        actual_db = db
+        if hasattr(model._meta, "db_name"):
+            actual_db = model._meta.db_name
+
+        if actual_db == "default":
+            return True
+        if actual_db != "stats":
+            return False
+        assert actual_db == "stats"
+        return settings.IS_LOGGING_SERVER
+
