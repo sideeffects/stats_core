@@ -22,6 +22,7 @@ IS_QUERY_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_QUERY_SERVER
 
 DEBUG = not IS_PRODUCTION_SERVER
 TEMPLATE_DEBUG = DEBUG
+SHOW_DEBUG_TOOLBAR = False
 
 ADMIN_USER = 'admin'
 ADMINS = (
@@ -159,7 +160,17 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'stats.urls'
+if SHOW_DEBUG_TOOLBAR:
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',)
+    
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
+
+INTERNAL_IPS = ('127.0.0.1',)    
+
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
      os.path.join(_this_dir, 'templates'),
@@ -189,6 +200,7 @@ INSTALLED_APPS = (
     'googlecharts',
     'south',
     'houdini_stats',
+    'debug_toolbar',
 )
 
 if not IS_LOGGING_SERVER:
