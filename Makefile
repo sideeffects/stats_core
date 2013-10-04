@@ -19,7 +19,9 @@ RELEASE_DIRS=\
 	static \
 	templates \
 	houdini_stats \
-	houdini_licenses
+	houdini_licenses \
+	houdini_surveys \
+	houdini_forum
 
 package_source:
 	@# Create the package of source files to copy to the server.
