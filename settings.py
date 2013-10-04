@@ -22,7 +22,7 @@ IS_QUERY_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_QUERY_SERVER
 
 DEBUG = True #not IS_PRODUCTION_SERVER
 TEMPLATE_DEBUG = DEBUG
-SHOW_DEBUG_TOOLBAR = False
+SHOW_DEBUG_TOOLBAR = not IS_PRODUCTION_SERVER
 
 ADMIN_USER = 'admin'
 ADMINS = (
@@ -69,13 +69,21 @@ if IS_QUERY_SERVER:
             'HOST': (PRODUCTION_LOGGING_SERVER_NAME
                 if IS_PRODUCTION_QUERY_SERVER else ''),
         },
+        'surveys': {    
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'surveys',
+            'USER': 'www',
+            'PASSWORD': 'TODO: enter-password',
+            'HOST': (PRODUCTION_LOGGING_SERVER_NAME
+                if IS_PRODUCTION_QUERY_SERVER else ''),
+        },
     })
 
 # Database routers
 DATABASE_ROUTERS = ['routers.DBRouter']
 
 # Date that we started collecting data [Y, M, D]
-STARTING_DATE = datetime.datetime(2013, 8, 15) 
+STARTING_DATE = datetime.datetime(2013, 9, 01) 
                                   
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -169,7 +177,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 INTERNAL_IPS = ('127.0.0.1',)    
-
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
@@ -207,9 +214,12 @@ if SHOW_DEBUG_TOOLBAR:
         'debug_toolbar',
     )
 
-if not IS_LOGGING_SERVER:
+if IS_QUERY_SERVER:
     INSTALLED_APPS += (
         'houdini_licenses',
+        'houdini_forum',
+        'houdini_surveys',
+        
     )
 
 # A sample logging configuration. The only tangible logging
@@ -220,9 +230,15 @@ if not IS_LOGGING_SERVER:
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+#    'filters': {
+#     'require_debug_false': {
+#         '()': 'django.utils.log.RequireDebugFalse'
+#     }
+#     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
+#            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         }
     },
