@@ -216,7 +216,13 @@
                             SideFX labs survey
                           </a>
                       </li>
-                      <li><a href="#">Aprentice survey</a></li>
+                      <li  {% if survey_name == "apprentice_followup" %} 
+                          class="active" 
+                          {% endif %}>
+                          <a href="{% url "hou_surveys" "apprentice_followup" %}">
+                             Aprentice survey
+                          </a>
+                      </li>
                       <li><a href="#">License survey</a></li>
                    </ul>
                </li>
@@ -263,7 +269,9 @@
         <p>&copy; Side Effects Software 2013</p>
  </footer>
 -->
-</body>    
+</body> 
+
+{% if show_date_picker %}   
 <script type="text/javascript">
      //<![CDATA[
         $(document).ready(function() {
@@ -287,4 +295,5 @@
                 });
     //]]>
 </script>
+{% endif %}
 </html>
