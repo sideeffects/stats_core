@@ -23,7 +23,7 @@
            <span> &nbsp;&nbsp;&nbsp;&nbsp; Total number of answers: {{ value.count }} </span>   
            </div>
            <br>
-           <div id="series_user_answers_apprentice_{{forloop.counter}}" class="wide graph"></div>
+           <div id="series_user_answers_apprentice_{{forloop.counter}}"></div>
            <br>
            
         {% endfor %}
@@ -65,6 +65,14 @@
        kind: "LineChart",
        options: options_with_legend
     {% endoptions %}
+    
+    {% options "out_options" %}
+                kind: "PieChart",
+                options: {
+                        width: 600,
+                        height: 480
+                }
+    {% endoptions %}
         
       {% if survey_name == "sidefx_labs" %}
             {% data series.user_answers_maya_unity_count "count1" %}
@@ -87,31 +95,31 @@
 	             {% col "string" "Answer" %}"{{ val }}"{% endcol %}
 	             {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}
 	          {% enddata %}
-	          {% graph "series_user_answers_apprentice_1" "count1" "opt_count_wide" %}
+	          {% graph "series_user_answers_apprentice_1" "count1" "out_options" %}
 	          
 	          {% data series.answer_2 "count2" %}
                  {% col "string" "Answer" %}"{{ val }}"{% endcol %}
                  {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}
               {% enddata %}
-              {% graph "series_user_answers_apprentice_2" "count2" "opt_count_wide" %}
+              {% graph "series_user_answers_apprentice_2" "count2" "out_options" %}
               
               {% data series.answer_3 "count3" %}
                  {% col "string" "Answer" %}"{{ val }}"{% endcol %}
                  {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}
               {% enddata %}
-              {% graph "series_user_answers_apprentice_3" "count3" "opt_count_wide" %}
+              {% graph "series_user_answers_apprentice_3" "count3" "out_options" %}
               
               {% data series.answer_4 "count4" %}
                  {% col "string" "Answer" %}"{{ val }}"{% endcol %}
                  {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}
               {% enddata %}
-              {% graph "series_user_answers_apprentice_4" "count4" "opt_count_wide" %}
+              {% graph "series_user_answers_apprentice_4" "count4" "out_options" %}
               
               {% data series.answer_5 "count5" %}
                  {% col "string" "Answer" %}"{{ val }}"{% endcol %}
                  {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}
               {% enddata %}
-              {% graph "series_user_answers_apprentice_5" "count5" "opt_count_wide" %}
+              {% graph "series_user_answers_apprentice_5" "count5" "out_options" %}
            
         {% endif%}     
       {% endif %}
