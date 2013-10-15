@@ -1,7 +1,5 @@
-{% extends "base.html" %}
-{{ request.session.name }}
 {% load googlecharts %}
-{% block internalbody %}
+
  <br>
     <!-- Pie Charts -->
     <div class="graph-title">Houdini Versions and Builds</div>
@@ -76,6 +74,3 @@
         {% graph "commer1" "houdini_builds_commercial" "out_options" %}
       
     {% endgooglecharts %}
-        
- 
-{% endblock internalbody %}

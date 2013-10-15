@@ -1,16 +1,17 @@
-{% load googlecharts %}
-     <div class="graph-title">Most Popular Nodes </div>
-     <br>
-     <div id="series_hou_most_popular_nodes" class="wide graph"></div>
-     <br>
-     {% googlecharts %}
-        
-        {% data series.hou_most_popular_nodes "count3" %}
-           {% col "string" "Node" %}"{{ val }}"{% endcol %}
-           {% col "number" "# of times used" %}{{ val }}{% endcol %}
+{% load googlecharts %}  
+    
+    <div class="graph-title">Number of People Using Houdini</div>
+    <br>
+    <div id="series_hou_users_over_time" class="wide graph"></div>
+    <br>
+    
+    {% googlecharts %}
+    
+        {% data series.users_over_time "count1" %}
+         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+         {% col "number" "# of users" %}{{ val }}{% endcol %}
         {% enddata %}
-     
-     
+        
         options = {
             backgroundColor: "#f9f9f9",
             colors: ["#09f"],
@@ -36,11 +37,7 @@
             options: options_wide
         {% endoptions %}
         
-        {% options "opt_count_wide_column" %}
-            kind: "ColumnChart",
-            options: options_wide
-        {% endoptions %}
- 
-        {% graph "series_hou_most_popular_nodes" "count3" "opt_count_wide_column" %}
-     
-     {% endgooglecharts %}
+        {% graph "series_hou_users_over_time" "count1" "opt_count_wide" %}
+               
+    {% endgooglecharts %}
+

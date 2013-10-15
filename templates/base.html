@@ -7,11 +7,13 @@
  <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/DateRangesWidget.js"></script>
  <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/datepicker/base.css" />
  <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/DateRangesWidget/base.css" />   
- 
  <!-- Bootstrap -->
  <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
  <link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
  <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
+ 
+  <!-- Custom styles for home page template -->
+  <link href="{{STATIC_URL}}bootstrap/css/justified-nav.css" rel="stylesheet">
 
 <head>
     <meta charset="utf-8">
@@ -62,77 +64,14 @@
 
 {% endblock %}
 <body>
-<!--     
-<div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Houdini Statistics</a>
-          <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>
-            </p>
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <br>
-            <ul class="nav nav-list">
-            
-              <li class="nav-header">Reports</li>
-              <li {% if active_index %}class="active" {% endif %}>
-                   <a href="{% url "index" %}">General</a>
-               </li>
-               <li {% if active_uptime %} class="active"{% endif %}>
-                   <a href="{% url "hou_uptime" %}">Uptime</a>
-               </li>
-               <li {% if active_crashes %} class="active"{% endif %}>
-                   <a href= "{% url "hou_crashes" %}">Crashes</a>
-               </li>
-               <li {% if active_nodes_usage %} class="active"{% endif %}>
-                   <a href="{% url "hou_nodes_usage" %}">Nodes Usage</a>
-               </li>
-               <li {% if active_ver_builds %} class="active"{% endif %}>
-                   <a href="{% url "hou_versions_and_builds" %}">Versions and Builds</a>
-               </li>
-                <li {% if active_licenses %} class="active"{% endif %}>
-                   <a href="{% url "hou_licenses" %}">Licenses</a>
-               </li>
-            </ul>
-          </div>
-        </div>
-        <div class="span9">
-          <br>
-          <br>
-           
-           <div class="hero-unit">
-            
-            <h1>Welcome to houdini stats !</h1>
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-            <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-          </div>
-        </div>
-      </div>
-      <hr>
-    </div>-->
 <div class="container">
- <div class="masthead">
-   <div align="center">
-       <h3 class="muted">Side Effects Analytics </h3>
+ <div class="brand">
+    <div align="left">
+       <a href="/">
+       <img alt="stats" src="{{STATIC_URL}}/images/analytics_banner.png">
+       </a>
+       <!-- 
+       <h3 class="muted">Side Effects Software Analytics</h3> -->
    </div>   
    <div align="right">
      {% if is_logged_in %} Welcome {{ user}}. {% endif %}
@@ -149,109 +88,49 @@
      <div class="navbar-inner">
          <div class="container">
             <ul class="nav">
-              <li {% if active_index %} 
-                      class="dropdown active" 
-                   {% else %}
-                      class="dropdown"
-                   {% endif %}>
+              <li {% if not active_menu %} class="active" {% endif %}>
+                 <a href="{% url "index" %}">Home</a>
+              </li>
+              <!--Dinamically building menu with dropdown options -->
+              {% for menu_dropdown in top_menu_options %}
+               <li {%if active_menu == menu_dropdown.menu_name %} 
+                   class="dropdown active"
+                   {% else %} class="dropdown"
+                   {% endif%}>
                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                      Houdini Reports 
+                      {{ menu_dropdown.menu_name }} 
                       <b class="caret"></b>
                    </a>
                    <ul class="dropdown-menu">
-                      <li {% if active_overview %} 
-                          class="active" 
-                          {% endif %}>
-                          <a href="{% url "index" %}">
-                            Overview
+                      {% for key,value in menu_dropdown.menu_options.items %} 
+                         <li {% if active_menu_option_pair.0 == key %} 
+                          class="active"
+                          {% endif%}> 
+                           <a href="{% url menu_dropdown.menu_view key %}">
+                            {{ value }}
                           </a>
-                      </li>
-                       <li {% if active_uptime %} class="active"{% endif %}>
-                   <a href="{% url "hou_uptime" %}">Uptime</a>
-               </li>
-               <li {% if active_crashes %} class="active"{% endif %}>
-                   <a href= "{% url "hou_crashes" %}">Crashes</a>
-               </li>
-               <li {% if active_nodes_usage %} class="active"{% endif %}>
-                   <a href="{% url "hou_nodes_usage" %}">Nodes Usage</a>
-               </li>
-               <li {% if active_ver_builds %} class="active"{% endif %}>
-                   <a href="{% url "hou_versions_and_builds" %}">Versions and Builds</a>
-               </li>
-               </ul>
-               </li> 
-               <li {% if active_licenses %} 
-                      class="dropdown active" 
-                   {% else %}
-                      class="dropdown"
-                   {% endif %}>
-                   <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                      Licenses Reports  
-                      <b class="caret"></b>
-                   </a>
-                   <ul class="dropdown-menu">
-                      <li {% if active_licenses %} 
-                          class="active" 
-                          {% endif %}>
-                          <a href="{% url "hou_licenses" %}">
-                            Apprentice Licenses
-                          </a>
-                      </li>
-                   </ul>
-               </li>
-               <li {% if active_surveys %} 
-                      class="dropdown active" 
-                   {% else %}
-                      class="dropdown"
-                   {% endif %}>
-                   <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                      Surveys Reports  
-                      <b class="caret"></b>
-                   </a>
-                   <ul class="dropdown-menu">
-                      <li {% if survey_name == "sidefx_labs" %} 
-                          class="active" 
-                          {% endif %}>
-                          <a href="{% url "hou_surveys" "sidefx_labs" %}">
-                            SideFX labs survey
-                          </a>
-                      </li>
-                      <li  {% if survey_name == "apprentice_followup" %} 
-                          class="active" 
-                          {% endif %}>
-                          <a href="{% url "hou_surveys" "apprentice_followup" %}">
-                             Aprentice survey
-                          </a>
-                      </li>
-                      <li><a href="#">License survey</a></li>
-                   </ul>
-               </li>
-               
-                <li {% if active_forum %} 
-                      class="dropdown active" 
-                   {% else %}
-                      class="dropdown"
-                   {% endif %}>
-                   <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                      SideFX Website Reports  
-                      <b class="caret"></b>
-                   </a>
-                   <ul class="dropdown-menu">
-                      <li {% if active_forum %} 
-                          class="active" 
-                          {% endif %}>
-                          <a href="{% url "hou_forum" %}">
-                           Login & Registration
-                          </a>
-                      </li>
-                   </ul>
-               </li>
-               
-             </ul>
-           </div>
-          </div>
-    </div>
-    <br>
+                         </li>
+                          
+                      {% endfor %}
+                  </ul>
+              </li> 
+              {% endfor %}
+            </ul>
+        </div>
+   </div>
+   
+   {% if active_menu %} 
+   <ol style="margin-bottom: 5px;" class="breadcrumb">
+        <li>{{ active_menu }} / </li>
+        <li class="active"> {{ active_menu_option_pair.1 }} </li>
+   </ol>
+   {% endif %}
+   </div>
+   
+   {% block indexbody %} 
+   {% endblock indexbody %}
+   
+   {% if show_date_picker %} 
     <div id="container">
         <div class="item">
             <div class="pickerContainer widget"></div>
@@ -260,8 +139,10 @@
    <br> 
    </div>
    <br>
-    {% block internalbody %} 
-    {% endblock internalbody %} 
+   {% endif %}
+   
+   {% block internalbody %} 
+   {% endblock internalbody %} 
  
 </div>
 <!-- 

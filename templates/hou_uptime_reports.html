@@ -1,7 +1,4 @@
-{% extends "base.html" %}
-{{ request.session.name }}
 {% load googlecharts %}
-{% block internalbody %}
       
     <div class="graph-title">Average Session Length (in minutes)</div>
     <br>
@@ -58,6 +55,5 @@
         {% graph "series_hou_average_usage_by_machine" "count2" "opt_count_wide_column" %}
         
     {% endgooglecharts %}
-
- {% endblock internalbody %}   
+ 
 

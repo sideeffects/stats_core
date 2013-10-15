@@ -3,7 +3,7 @@
 {% load googlecharts %}
 {% block internalbody %}
       
-    {% if survey_name == "sidefx_labs" %}
+    {% if active_menu_option_pair.0 == "sidefx_labs" %}
      <div class="graph-title">Breakdown of Labs Users who subscribed for Maya or Unity plugin
      </div>
      <div>
@@ -15,7 +15,7 @@
      <div id="series_user_answers_maya_unity_over_time" class="wide graph"></div>
     
     {% else %}
-      {% if survey_name == "apprentice_followup" %}
+      {% if active_menu_option_pair.0 == "apprentice_followup" %}
         {% for key,value in series.questions_and_total_counts.items %}
            <div class="graph-title"> {{ value.text }} </div>
            <div>
@@ -74,7 +74,7 @@
                 }
     {% endoptions %}
         
-      {% if survey_name == "sidefx_labs" %}
+      {% if active_menu_option_pair.0 == "sidefx_labs" %}
             {% data series.user_answers_maya_unity_count "count1" %}
 	           {% col "string" "3D Tool" %}"{{ val }}"{% endcol %}
 	           {% col "number" "# of users registered" %}{{ val }}{% endcol %}
@@ -90,7 +90,7 @@
             {% graph "series_user_answers_maya_unity_over_time" "count2" "opt_count_with_legend" %}  
 	        
 	  {% else %}
-        {% if survey_name == "apprentice_followup" %}
+        {% if active_menu_option_pair.0 == "apprentice_followup" %}
 		      {% data series.answer_1 "count1" %}
 	             {% col "string" "Answer" %}"{{ val }}"{% endcol %}
 	             {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}

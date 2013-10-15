@@ -1,8 +1,4 @@
-{% extends "base.html" %}
-{{ request.session.name }}
 {% load googlecharts %}
-{% block internalbody %}
- 
     <div class="graph-title">Houdini Crashes Over Time </div>
     <br>
     <div id="series_hou_crashes_over_time" class="wide graph"></div>
@@ -54,5 +50,3 @@
         {% graph "series_hou_crashes_over_time" "count" "opt_count_wide" %}
  
      {% endgooglecharts %}
-    
- {% endblock internalbody %}

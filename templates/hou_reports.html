@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{{ request.session.name }}
+
+{% block internalbody %}
+
+    {% if active_menu_option_pair.0 == "overview" %}
+       {% include 'hou_overview_reports.html' %}
+    {% endif %}
+    
+    {% if active_menu_option_pair.0 == "uptime" %}
+       {% include 'hou_uptime_reports.html' %}
+    {% endif%}
+    
+    {% if active_menu_option_pair.0 == "crashes" %}
+       {% include 'hou_crashes_reports.html' %}
+    {% endif%}
+    
+    {% if active_menu_option_pair.0 == "node_usage" %}
+       {% include 'hou_node_usage_reports.html' %}
+    {% endif%}
+    
+    {% if active_menu_option_pair.0 == "versions_and_builds" %}
+       {% include 'hou_versions_builds_reports.html' %}
+    {% endif%}
+     
+{% endblock internalbody %}   
