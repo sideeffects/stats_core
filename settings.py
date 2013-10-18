@@ -83,7 +83,7 @@ if IS_QUERY_SERVER:
 DATABASE_ROUTERS = ['routers.DBRouter']
 
 # Date that we started collecting data [Y, M, D]
-STARTING_DATE = datetime.datetime(2013, 9, 01) 
+REPORTS_START_DATE = datetime.datetime(2013, 9, 01) 
                                   
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

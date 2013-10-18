@@ -153,28 +153,49 @@
 </body> 
 
 {% if show_date_picker %}   
+
 <script type="text/javascript">
      //<![CDATA[
         $(document).ready(function() {
-            $('.pickerContainer.widget').DateRangesWidget();
+
+            var start = null;
+            var end = null;
             if ("{{range}}" != "None"){
-                var start = "{{range.0}}";
-                var end = "{{range.1}}";
+                start = "{{range.0}}";
+                end = "{{range.1}}";
                 var range = start + " - " + end;
             } else {range="N/A";}
+
+            var custom_aggregation = null;
+            if ("{{aggregation}}" != "None"){
+                custom_aggregation = "{{aggregation}}";
+            }
+            
+            $('.pickerContainer.widget').DateRangesWidget({
+                // Initialize the date picker with
+                // the range and aggregation 
+                start: start,
+                end: end,
+                aggregation: custom_aggregation
+            });
+
             if (range) $(".main").html(range);
         
-            $("#button-ok").click(function(){
-                
+            $("#button-ok").click(function(){   
                 var aggregation = $(".aggregation:eq(1)").find(":selected").text();
+                var match = aggregation.match(/\((.*)\)/);
+                if (match)
+                    aggregation = match[1];
+
                 var date = $(".main").text();
                 var range = date.split("-");
                 var start = $.trim(range[0]);
                 var end = $.trim(range[1]);
                 window.location = "{{ url }}"+ "?start="+start+"&end="+end+"&ag="+aggregation;
                 })
-                });
+            });
     //]]>
-</script>
+    </script>
+
 {% endif %}
 </html>
