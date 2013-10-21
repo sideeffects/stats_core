@@ -2,25 +2,29 @@
 {{ request.session.name }}
 
 {% block internalbody %}
-
-    {% if active_menu_option_pair.0 == "overview" %}
+    
+    <!--TODO: Render these templates in a more generic way so that we can
+    change the menu and dinamically and not worry about the texts like 
+    "overview, crashes, etc etc"  -->
+    
+    {% if active_menu_option_info.key == "overview" %}
        {% include 'hou_overview_reports.html' %}
     {% endif %}
     
-    {% if active_menu_option_pair.0 == "uptime" %}
+    {% if active_menu_option_info.key == "uptime" %}
        {% include 'hou_uptime_reports.html' %}
     {% endif%}
     
-    {% if active_menu_option_pair.0 == "crashes" %}
+    {% if active_menu_option_info.key == "crashes" %}
        {% include 'hou_crashes_reports.html' %}
     {% endif%}
     
-    {% if active_menu_option_pair.0 == "node_usage" %}
+    {% if active_menu_option_info.key == "node_usage" %}
        {% include 'hou_node_usage_reports.html' %}
     {% endif%}
     
-    {% if active_menu_option_pair.0 == "versions_and_builds" %}
+    {% if active_menu_option_info.key == "versions_and_builds" %}
        {% include 'hou_versions_builds_reports.html' %}
     {% endif%}
-     
+    
 {% endblock internalbody %}   

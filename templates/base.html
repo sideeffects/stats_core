@@ -103,7 +103,7 @@
                    </a>
                    <ul class="dropdown-menu">
                       {% for key,value in menu_dropdown.menu_options.items %} 
-                         <li {% if active_menu_option_pair.0 == key %} 
+                         <li {% if active_menu_option_info.key == key %} 
                           class="active"
                           {% endif%}> 
                            <a href="{% url menu_dropdown.menu_view key %}">
@@ -122,10 +122,14 @@
    {% if active_menu %} 
    <ol style="margin-bottom: 5px;" class="breadcrumb">
         <li>{{ active_menu }} / </li>
-        <li class="active"> {{ active_menu_option_pair.1 }} </li>
+        <li class="active"> {{ active_menu_option_info.name }} </li>
    </ol>
    {% endif %}
    </div>
+   
+   {% if active_menu %} 
+      {% include 'menu_options_pager.html' %}
+   {% endif %}
    
    {% block indexbody %} 
    {% endblock indexbody %}
@@ -143,7 +147,11 @@
    
    {% block internalbody %} 
    {% endblock internalbody %} 
- 
+   
+   {% if active_menu %} 
+      {% include 'menu_options_pager.html' %}
+   {% endif %}
+
 </div>
 <!-- 
  <footer>
