@@ -5,7 +5,9 @@
           <div class="row">
             <div class="span">
               <h2>Houdini Analytics</h2>
-              <img alt="stats" src="{{STATIC_URL}}/images/stats_houdini.png">
+              <a href="{% url "hou_reports" "overview" %}">
+                 <img alt="stats" src="{{STATIC_URL}}/images/stats_houdini.png">
+              </a>
               <p>Graphs and reports from data being collected from inside Houdini. 
                  Some of the analytics in this set include session information, houdini crashes, must popular nodes and more.<p>
                  <a class="btn btn-default" href="{% url "hou_reports" "overview" %}">View details &raquo;</a></p>
@@ -14,7 +16,9 @@
             
              <div class="span">
               <h2>Licensing Analytics</h2>
-              <img alt="stats" src="{{STATIC_URL}}/images/stats_licensing.png">
+              <a href="{% url "hou_reports" "overview" %}">
+                 <img alt="stats" src="{{STATIC_URL}}/images/stats_licensing.png">
+              </a>
               <p>Graphs and reports from data stored in the License Database. 
                  Some of the analytics in this set include apprentice activations over time.<p>
                  <a class="btn btn-default" href="{% url "hou_licenses" "apprentice_activations" %}">View details &raquo;</a></p>
@@ -23,7 +27,9 @@
             
             <div class="span">
               <h2>Surveys Analytics</h2>
-              <img alt="stats" src="{{STATIC_URL}}/images/stats_survey.png">
+              <a href="{% url "hou_reports" "overview" %}">
+                 <img alt="stats" src="{{STATIC_URL}}/images/stats_survey.png">
+              </a>
               <p>Graphs and reports from data stored in the Surveys Database. 
                  Some of the analytics in this set include results of the houdini labs and apprentice survery statistics.<p>
                  <a class="btn btn-default" href="{% url "hou_surveys" "sidefx_labs" %}">View details &raquo;</a></p>
@@ -32,7 +38,9 @@
             
             <div class="span">
               <h2>Side Effects Website Analytics</h2>
-              <img alt="stats" src="{{STATIC_URL}}/images/stats_sidefx.png">
+              <a href="{% url "hou_reports" "overview" %}">
+                 <img alt="stats" src="{{STATIC_URL}}/images/stats_sidefx.png">
+              </a>
               <p>Graphs and reports from data stored in the Forum Database. 
                  Some of the analytics in this set include statistics for login and registration.<p>
                  <a class="btn btn-default" href="{% url "hou_forum" "login_registration" %}">View details &raquo;</a></p>
