@@ -3,6 +3,8 @@
 {% load googlecharts %}
 {% block internalbody %}
       
+    {% if active_menu_option_info.key == "login_registration" %}   
+      
     <div class="graph-title">New website registrations per day</div>
     <div>
     <br>
@@ -25,21 +27,17 @@
     </div>
     <div id="series_openid_breakdown" class="wide graph"></div>
     <br>
+    {% else %}
+    
+    <div class="graph-title">Houdini Downloads</div>
+    <div>
+    <br>
+    <div id="series_software_download" class="wide graph"></div>
+    
+    {% endif %}
             
     {% googlecharts %}
     
-        {% data series.users_forum_openid "count1" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-            {% col "number" "Total Users Registered" %}{{ val }}{% endcol %}
-            {% col "number" "Total Users Registered with Forum" %}{{ val }}{% endcol %}
-            {% col "number" "Total Users Registered with Openid" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
-        {% data series.open_id_breakdown "count2" %}
-           {% col "string" "Provider" %}"{{ val }}"{% endcol %}
-           {% col "number" "# of users registered" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
         options = {
             backgroundColor: "#f9f9f9",
             colors: ["#09f","#66CC33", "daa520"],
@@ -79,8 +77,33 @@
 	       options: options_with_legend
 	    {% endoptions %}
         
+        {% if active_menu_option_info.key == "login_registration" %}   
+        
+        {% data series.users_forum_openid "count1" %}
+            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+            {% col "number" "Total Users Registered" %}{{ val }}{% endcol %}
+            {% col "number" "Total Users Registered with Forum" %}{{ val }}{% endcol %}
+            {% col "number" "Total Users Registered with Openid" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% data series.open_id_breakdown "count2" %}
+           {% col "string" "Provider" %}"{{ val }}"{% endcol %}
+           {% col "number" "# of users registered" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
         {% graph "series_users_registered_forum_openid" "count1" "opt_count_with_legend" %}
         {% graph "series_openid_breakdown" "count2" "opt_count_wide_column" %}
+        
+        {% else %}
+         {% data series.software_downloads "count1" %}
+            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+            {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
+            {% col "number" "Houdini Commercial Downloads" %}{{ val }}{% endcol %}
+            {% col "number" "Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
+        {% enddata %}
+        {% graph "series_software_download" "count1" "opt_count_with_legend" %}
+        
+        {% endif %}
         
     {% endgooglecharts %}
 
