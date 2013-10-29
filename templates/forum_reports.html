@@ -29,21 +29,15 @@
     <br>
     {% else %}
     
-    <div class="graph-title">Houdini Downloads</div>
+    <div class="graph-title">Number of Houdini Downloads</div>
     <div>
     <br>
     <div id="series_software_download" class="wide graph"></div>
     
-    <div class="graph-title">Percetages for Houdini Apprentice Downloads</div>
+    <div class="graph-title">Commercial vs Apprentice Downloads</div>
     <div>
     <br>
-    <div id="series_downloaded_apprentice_percentage" class="wide graph"></div>
-    
-    <div class="graph-title">Percetages for Houdini Commercial Downloads</div>
-    <div>
-    <br>
-    <div id="series_downloaded_commercial_percentage" class="wide graph"></div>
-    
+    <div id="series_download_percentages" class="wide graph"></div>
     
     {% endif %}
             
@@ -90,7 +84,8 @@
 	    
 	    options_for_percentage = _clone(options_wide);
         options_for_percentage.vAxis= {minValue: 0, maxValue: 100, format:"#,###'%'"}
-        options_for_percentage.colors =  ["#66CC33"] 
+        options_for_percentage.colors =  ["#66CC33", "daa520"] 
+        options_for_percentage.legend =  {position: 'in', alignment: 'center',textStyle: {color: 'black', fontSize: 12}}
         
         {% options "opt_count_column_comm" %}
            kind: "ColumnChart",
@@ -124,27 +119,21 @@
         {% graph "series_openid_breakdown" "count2" "opt_count_wide_column" %}
         
         {% else %}
-         {% data series.software_downloads "count1" %}
+        {% data series.software_downloads "count1" %}
             {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
             {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
             {% col "number" "Houdini Commercial Downloads" %}{{ val }}{% endcol %}
             {% col "number" "Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
         {% enddata %}
         
-         {% data series.commercial_percentage "count2" %}
+        {% data series.percentages "count2" %}
             {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-            {% col "number" "Percentage %" %} {{ val }}{% endcol %}
-        {% enddata %}
-        
-        {% data series.apprentice_percentage "count3" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-            {% col "number" "Percentage %" %} {{ val }}{% endcol %}
+            {% col "number" "% of Houdini Commercial Downloads" %}{{ val }}{% endcol %}
+            {% col "number" "% of Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
         {% enddata %}
         
         {% graph "series_software_download" "count1" "opt_count_with_legend" %}
-        {% graph "series_downloaded_apprentice_percentage"  "count3" "opt_count_column_app" %}
-        {% graph "series_downloaded_commercial_percentage"  "count2" "opt_count_column_comm" %}
-        
+        {% graph "series_download_percentages"  "count2" "opt_count_column_comm" %}
         
         {% endif %}
         
