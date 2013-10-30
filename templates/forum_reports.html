@@ -27,18 +27,6 @@
     </div>
     <div id="series_openid_breakdown" class="wide graph"></div>
     <br>
-    {% else %}
-    
-    <div class="graph-title">Number of Houdini Downloads</div>
-    <div>
-    <br>
-    <div id="series_software_download" class="wide graph"></div>
-    
-    <div class="graph-title">Commercial vs Apprentice Downloads</div>
-    <div>
-    <br>
-    <div id="series_download_percentages" class="wide graph"></div>
-    
     {% endif %}
             
     {% googlecharts %}
@@ -92,15 +80,6 @@
            options: options_for_percentage
         {% endoptions %}
         
-        options_for_percentage_app = _clone(options_wide);
-        options_for_percentage_app.vAxis= {minValue: 0, maxValue: 100, format:"#,###'%'"}
-        options_for_percentage_app.colors =  ["daa520"] 
-        
-        {% options "opt_count_column_app" %}
-           kind: "ColumnChart",
-           options: options_for_percentage_app
-        {% endoptions %}
-        
         {% if active_menu_option_info.key == "login_registration" %}   
         
         {% data series.users_forum_openid "count1" %}
@@ -117,23 +96,6 @@
         
         {% graph "series_users_registered_forum_openid" "count1" "opt_count_with_legend" %}
         {% graph "series_openid_breakdown" "count2" "opt_count_wide_column" %}
-        
-        {% else %}
-        {% data series.software_downloads "count1" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-            {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
-            {% col "number" "Houdini Commercial Downloads" %}{{ val }}{% endcol %}
-            {% col "number" "Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
-        {% data series.percentages "count2" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-            {% col "number" "% of Houdini Commercial Downloads" %}{{ val }}{% endcol %}
-            {% col "number" "% of Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
-        {% graph "series_software_download" "count1" "opt_count_with_legend" %}
-        {% graph "series_download_percentages"  "count2" "opt_count_column_comm" %}
         
         {% endif %}
         

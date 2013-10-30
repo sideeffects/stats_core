@@ -2,22 +2,41 @@
 {{ request.session.name }}
 {% load googlecharts %}
 {% block internalbody %}
+    
+    {% if active_menu_option_info.key == "downloads" %}   
+    
+    <div class="graph-title">Number of Houdini Downloads</div>
+    <div>
+    <br>
+    <div id="series_software_download" class="wide graph"></div>
+    
+    <div class="graph-title">Commercial vs Apprentice Downloads</div>
+    <div>
+    <br>
+    <div id="series_download_percentages" class="wide graph"></div>
+    
+    {% else %}  
+    
+    {% if active_menu_option_info.key == "apprentice_activations" %}   
       
-    <div class="graph-title">Apprentice Activations over Time</div>
+    <div class="graph-title">Apprentice Activations vs Apprentice Downloads</div>
     <br>
     <div id="series_hou_apprentice_lic_over_time" class="wide graph"></div>
     <br>
+    
+    <div class="graph-title">Percentage of Apprentice Activations from Apprentice Downloads</div>
+    <br>
+    <div id="series_hou_apprentice_percentages" class="wide graph"></div>
+    <br>
+    
+    {% endif %}
+    {% endif %}
             
     {% googlecharts %}
     
-        {% data series.apprentice_lic_over_time "count2" %}
-         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "# of licenses" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
         options = {
             backgroundColor: "#f9f9f9",
-            colors: ["#09f"],
+            colors: ["#09f", "daa520", "#66CC33"],
             gridlineColor: "#ddd",
             legend: "none",
             vAxis: {minValue: 0},
@@ -29,18 +48,73 @@
         options_wide = _clone(options);
         options_wide.chartArea.width = 880;
         options_wide.width = 940;
-
+        
+        options_with_legend = _clone(options_wide);
+        options_with_legend.legend =  {position: 'in', alignment: 'center',textStyle: {color: 'black', fontSize: 12}}
+        
         {% options "opt_count" %}
             kind: "LineChart",
             options: options
         {% endoptions %}
-
+    
         {% options "opt_count_wide" %}
             kind: "LineChart",
             options: options_wide
         {% endoptions %}
+
+        {% options "opt_count_with_legend" %}
+           kind: "LineChart",
+           options: options_with_legend
+        {% endoptions %}
         
-        {% graph "series_hou_apprentice_lic_over_time" "count2" "opt_count_wide" %}
+        options_for_percentage = _clone(options_wide);
+        options_for_percentage.vAxis= {minValue: 0, maxValue: 100, format:"#,###'%'"}
+        options_for_percentage.colors =  ["#09f", "#66CC33", "daa520"] 
+        options_for_percentage.legend =  {position: 'in', alignment: 'center',textStyle: {color: 'black', fontSize: 12}}
+        
+        {% options "opt_count_column" %}
+           kind: "ColumnChart",
+           options: options_for_percentage
+        {% endoptions %}
+        
+        {% if active_menu_option_info.key == "downloads" %}   
+        
+        {% data series.software_downloads "count1" %}
+            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+            {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
+            {% col "number" "Houdini Commercial Downloads" %}{{ val }}{% endcol %}
+            {% col "number" "Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% data series.percentages "count2" %}
+            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+            {% col "number" "% of Houdini Commercial Downloads" %}{{ val }}{% endcol %}
+            {% col "number" "% of Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% graph "series_software_download" "count1" "opt_count_with_legend" %}
+        {% graph "series_download_percentages"  "count2" "opt_count_column" %}
+        
+        {% else %}  
+        {% if active_menu_option_info.key == "apprentice_activations" %}   
+        
+        {% data series.apprentice_lic_over_time "count1" %}
+         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+         {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
+         {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
+         
+        {% enddata %}
+        
+        {% data series.apprentice_act_percentages "count2" %}
+         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+         {% col "number" "% of Apprentice Activations" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% graph "series_hou_apprentice_lic_over_time" "count1" "opt_count_with_legend" %}
+        {% graph "series_hou_apprentice_percentages" "count2" "opt_count_column" %}
+        
+        {% endif %}
+        {% endif %}
                
     {% endgooglecharts %}
 
