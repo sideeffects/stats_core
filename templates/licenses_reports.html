@@ -36,7 +36,7 @@
     
         options = {
             backgroundColor: "#f9f9f9",
-            colors: ["#09f", "daa520", "#66CC33"],
+            colors: ["#09f", "#66CC33", "daa520"],
             gridlineColor: "#ddd",
             legend: "none",
             vAxis: {minValue: 0},
@@ -69,7 +69,7 @@
         
         options_for_percentage = _clone(options_wide);
         options_for_percentage.vAxis= {minValue: 0, maxValue: 100, format:"#,###'%'"}
-        options_for_percentage.colors =  ["#09f", "#66CC33", "daa520"] 
+        options_for_percentage.colors =  ["#66CC33", "daa520"] 
         options_for_percentage.legend =  {position: 'in', alignment: 'center',textStyle: {color: 'black', fontSize: 12}}
         
         {% options "opt_count_column" %}
@@ -100,9 +100,9 @@
         
         {% data series.apprentice_lic_over_time "count1" %}
          {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
          {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
-         
+         {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
+        
         {% enddata %}
         
         {% data series.apprentice_act_percentages "count2" %}

@@ -16,18 +16,45 @@
     
     {% else %}
       {% if active_menu_option_info.key == "apprentice_followup" %}
-        {% for key,value in series.questions_and_total_counts.items %}
-           <div class="graph-title"> {{ value.text }} </div>
-           <div>
-           <br>
-           <span> &nbsp;&nbsp;&nbsp;&nbsp; Total number of answers: {{ value.count }} </span>   
-           </div>
-           <br>
-           <div id="series_user_answers_apprentice_{{forloop.counter}}"></div>
-           <br>
-           
-        {% endfor %}
-        
+       
+       <div class="graph-title"> Number of Users who Replied Survey vs Apprentice Activations
+       </div>
+       <div id="series_survey_counts_vs_app_activations" class="wide graph"></div>
+      
+        <!-- Showing pie charts with apprentice survey answers, in pairs of two.
+        Two pie charts beside each other -->
+        {% for questions_tuple in series.questions_tuples %}
+        <table>
+         <tr>
+          {% for key,value in series.questions_and_total_counts.items %}
+          {% if key == questions_tuple.0 %}
+          <td>
+	           <div class="graph-title"> {{ value.text }} </div>
+	           <div>
+	           <br>
+	           <span> &nbsp;&nbsp;&nbsp;&nbsp; Total number of answers: {{ value.count }} </span>  
+	           </div>
+	           <br>
+	           <div id="series_user_answers_apprentice_{{forloop.counter}}"></div>
+	           <br>
+	      </td>
+          {% endif %}
+          {% if key == questions_tuple.1 %}
+          <td>
+	           <div class="graph-title"> {{ value.text }} </div>
+	           <div>
+	           <br>
+	           <span> &nbsp;&nbsp;&nbsp;&nbsp; Total number of answers: {{ value.count }} </span>   
+	           </div>
+	           <br>
+	           <div id="series_user_answers_apprentice_{{forloop.counter}}"></div>
+	           <br>
+          </td>
+          {% endif %}
+          {% endfor %}
+         </tr>
+        </table>
+         {% endfor %}     
       {% endif%} 
     {% endif %}  
       
@@ -69,8 +96,8 @@
     {% options "out_options" %}
                 kind: "PieChart",
                 options: {
-                        width: 600,
-                        height: 480
+                        width: 500,
+                        height: 380
                 }
     {% endoptions %}
         
@@ -91,6 +118,15 @@
 	        
 	  {% else %}
         {% if active_menu_option_info.key == "apprentice_followup" %}
+            
+            {% data series.survey_counts_vs_app_activations "count0" %}
+               {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+               {% col "number" "Survey Counts" %}{{ val }}{% endcol %}
+               {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
+            {% enddata %}
+            {% graph "series_survey_counts_vs_app_activations" "count0" "opt_count_with_legend" %}   
+        
+            
 		      {% data series.answer_1 "count1" %}
 	             {% col "string" "Answer" %}"{{ val }}"{% endcol %}
 	             {% col "number" "# of users that selected this choice" %}{{ val }}{% endcol %}
