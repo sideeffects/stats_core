@@ -97,20 +97,30 @@
                    class="dropdown active"
                    {% else %} class="dropdown"
                    {% endif%}>
-                   <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                   
+                   <a data-toggle="dropdown"
+                      class="dropdown-toggle" href="#">
                       {{ menu_dropdown.menu_name }} 
                       <b class="caret"></b>
                    </a>
                    <ul class="dropdown-menu">
-                      {% for key,value in menu_dropdown.menu_options.items %} 
-                         <li {% if active_menu_option_info.key == key %} 
-                          class="active"
-                          {% endif%}> 
-                           <a href="{% url menu_dropdown.menu_view key %}">
-                            {{ value }}
-                          </a>
+                      {% for key,value in menu_dropdown.menu_options.items %}
+                         <!-- Temporarily disabling Houdini Reports -->
+                         {% if menu_dropdown.menu_name == "Houdini" %}
+                         <li class="disabled">
+                             <a href="">
+                                {{ value }}
+                             </a>
                          </li>
-                          
+                         {% else %}
+                         <li {% if active_menu_option_info.key == key %} 
+                                class="active"
+                             {% endif%}> 
+                             <a href="{% url menu_dropdown.menu_view key %}">
+                                {{ value }}
+                             </a>
+                         </li>
+                         {% endif %}
                       {% endfor %}
                   </ul>
               </li> 
