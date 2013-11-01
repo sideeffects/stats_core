@@ -22,8 +22,9 @@
         
     {% googlecharts %}
  
-    <!-- Pie charts -->
+        {% include 'googlecharts_options.html' %}
         
+        <!-- Pie charts -->
         {% data pies.houdini_versions "houdini_versions" %}
                 {% col "string" "Name" %}"{{ val }}"{% endcol %}
                 {% col "number" "Value" %}{{ val }}{% endcol %}
@@ -55,15 +56,6 @@
                 {% col "number" "Value" %}{{ val }}{% endcol %}
         {% enddata %}
 
-            {# you can also use global javascript variables here, #}
-            {# and call functions #}
-            {% options "out_options" %}
-                kind: "PieChart",
-                options: {
-                        width: 600,
-                        height: 480
-                }
-        {% endoptions %}
         {% graph "general" "houdini_versions" "out_options" %}
         {% graph "general1" "houdini_builds" "out_options" %}
         
