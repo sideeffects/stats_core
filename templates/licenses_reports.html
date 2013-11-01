@@ -9,7 +9,7 @@
     <div>
     <br>
     <div id="series_software_download" class="wide graph"></div>
-    
+    <br>
     <div class="graph-title">Commercial vs Apprentice Downloads</div>
     <div>
     <br>
@@ -27,6 +27,17 @@
     <div class="graph-title">Percentage of Apprentice Activations from Apprentice Downloads</div>
     <br>
     <div id="series_hou_apprentice_percentages" class="wide graph"></div>
+    <br>
+    {% else %}
+    
+    <div class="graph-title">Apprentice HD Licenses</div>
+    <br>
+    <div id="series_hou_apprentice_hd_lic_over_time" class="wide graph"></div>
+    <br>
+    
+    <div class="graph-title">Cumulative Apprentice HD Licenses</div>
+    <br>
+    <div id="series_hou_apprentice_hd_sales_over_tim_cumu" class="wide graph"></div>
     <br>
     
     {% endif %}
@@ -71,6 +82,21 @@
         
         {% graph "series_hou_apprentice_lic_over_time" "count1" "opt_count_with_legend" %}
         {% graph "series_hou_apprentice_percentages" "count2" "opt_count_percentage_column" %}
+        
+        {% else %}
+        
+        {% data series.apprentice_hd_lic "count1" %}
+        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+        {% col "number" "# of Apprentice HD Licenses" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% data series.apprentice_hd_lic_cumu "count2" %}
+        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+        {% col "number" "# of Apprentice HD Licenses Cumulative" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% graph "series_hou_apprentice_hd_lic_over_time" "count1" "opt_count_wide" %}
+        {% graph "series_hou_apprentice_hd_sales_over_tim_cumu" "count2" "opt_count_wide" %}
         
         {% endif %}
         {% endif %}
