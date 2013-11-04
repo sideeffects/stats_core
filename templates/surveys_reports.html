@@ -17,9 +17,9 @@
     {% else %}
       {% if active_menu_option_info.key == "apprentice_followup" %}
        
-       <div class="graph-title"> Number of Users who Replied Survey vs Apprentice Activations
+       <div class="graph-title"> Percentage of Users who replied the Survey from Apprentice Activations
        </div>
-       <div id="series_survey_counts_vs_app_activations" class="wide graph"></div>
+       <div id="series_survey_counts_percentages" class="wide graph"></div>
       
         <br>
         <!-- Showing pie charts with apprentice survey answers, in pairs of two.
@@ -81,13 +81,12 @@
 	  {% else %}
         {% if active_menu_option_info.key == "apprentice_followup" %}
             
-            {% data series.survey_counts_vs_app_activations "count0" %}
+            {% data series.survey_counts_percentages "count0" %}
                {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-               {% col "number" "Survey Counts" %}{{ val }}{% endcol %}
-               {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
+               {% col "number" "% of user" %}{{ val }}{% endcol %}
             {% enddata %}
-            {% graph "series_survey_counts_vs_app_activations" "count0" "opt_count_with_legend" %}   
-        
+            
+            {% graph "series_survey_counts_percentages" "count0" "opt_count_percentage_column" %}   
             
 		      {% data series.answer_1 "count1" %}
 	             {% col "string" "Answer" %}"{{ val }}"{% endcol %}
