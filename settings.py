@@ -79,6 +79,12 @@ if IS_QUERY_SERVER:
         },
     })
 
+# Older versions of Django+South don't use the database router when performing
+# migrations, so we manually point to the right database.
+if (len(sys.argv) >= 2 and sys.argv[1] == 'migrate' and
+        not IS_PRODUCTION_SERVER):
+    DATABASES['default']['NAME'] = 'stats'
+
 # Database routers
 DATABASE_ROUTERS = ['routers.DBRouter']
 
