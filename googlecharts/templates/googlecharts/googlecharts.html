@@ -30,7 +30,13 @@
 			var c = googlecharts[i];
 			var data = new google.visualization.DataTable();
 			for (var j = 0; j < c.rows._cl.length; ++j) {
-				data.addColumn.apply(data, c.rows._cl[j]);
+                                var col_desc = c.rows._cl[j];
+                                parms = {type: col_desc[0]};
+                                if (col_desc[1])
+                                    parms["label"] = col_desc[1];
+                                if (col_desc.length > 2)
+                                    parms["role"] = col_desc[2];
+				data.addColumn(parms);
 			}
 			data.addRows(c.rows);
 			c.container = document.getElementById(c.container);

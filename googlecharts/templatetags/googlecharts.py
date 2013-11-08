@@ -53,7 +53,7 @@ class DataNode(template.Node):
         for row in series:
             data.append([node.render(context, row[i]) for i, node in enumerate(nodelist)])
         data_str = ''.join(['[%s],' % ','.join(r) for r in data])
-        cl = ','.join(['["%s","%s"]' % (c._typename, c._label) for c in nodelist])
+        cl = ','.join([c.as_col_description_array() for c in nodelist])
         return self.render.__doc__ % {'name': self._name, 'data': data_str, 'cl': cl}
 
 @register.tag
@@ -72,10 +72,18 @@ def data(parser, token):
 # {% col "type" "label" %}...{% endcol %}
 
 class ColNode(template.Node):
-    def __init__(self, nodelist, typename, label):
+    def __init__(self, nodelist, typename, label, role):
         self._nodelist = nodelist
         self._typename = typename
         self._label = label
+        self._role = role
+
+    def as_col_description_array(self):
+        result = '["%s","%s"' % (self._typename, self._label)
+        if self._role is not None:
+            result += ',"%s"' % self._role
+        result += ']'
+        return result
 
     def render(self, context, val):
         context['val'] = val
@@ -89,11 +97,17 @@ def col(parser, token):
         raise template.TemplateSyntaxError('%r tag requires at least one argument' % args[0])
     while len(args) < 3:
         args.append('')
-    _, typename, label = [_remove_quotes(s) for s in args]
+
+    # Note that we ignore the first arg (the tag name).
+    unquoted_args = [_remove_quotes(s) for s in args]
+    typename = unquoted_args[1]
+    label = unquoted_args[2]
+    role = (unquoted_args[3] if len(unquoted_args) >= 4 else None)
+
     nodelist = parser.parse(['endcol'])
     parser.delete_first_token()
-    
-    return ColNode(nodelist, typename=typename, label=label)
+
+    return ColNode(nodelist, typename=typename, label=label, role=role)
 
 # {% options "name" %}...{% endoptions %}
 
