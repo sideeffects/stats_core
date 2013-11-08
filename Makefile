@@ -91,3 +91,5 @@ load:
 	./manage.py migrate
 	rm db_backup.sql
 
+run:
+	./manage.py runserver
