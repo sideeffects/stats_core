@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {{ request.session.name }}
 {% load googlecharts %}
+
 {% block internalbody %}
     
     {% if active_menu_option_info.key == "downloads" %}   
@@ -48,13 +49,19 @@
         {% include 'googlecharts_options.html' %}
         
         {% if active_menu_option_info.key == "downloads" %}   
-        
+       
         {% data series.software_downloads "count1" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+            
+            {% col "string" "Date" %}
+               {% include 'events_annotate.html' %}
+            {% endcol %}
+            
             {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
+            {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
             {% col "number" "Houdini Commercial Downloads" %}{{ val }}{% endcol %}
             {% col "number" "Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
         {% enddata %}
+        {% graph "series_software_download" "count1" "opt_count_with_legend" %}
         
         {% data series.percentages "count2" %}
             {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
@@ -62,14 +69,15 @@
             {% col "number" "% of Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
         {% enddata %}
         
-        {% graph "series_software_download" "count1" "opt_count_with_legend" %}
         {% graph "series_download_percentages"  "count2" "opt_count_percentage_column" %}
         
         {% else %}  
         {% if active_menu_option_info.key == "apprentice_activations" %}   
         
         {% data series.apprentice_lic_over_time "count1" %}
-         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+         {% col "string" "Date" %}
+               {% include 'events_annotate.html' %}
+         {% endcol %}
          {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
          {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
         
@@ -86,7 +94,9 @@
         {% else %}
         
         {% data series.apprentice_hd_lic "count1" %}
-        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+        {% col "string" "Date" %}
+               {% include 'events_annotate.html' %}
+        {% endcol %}
         {% col "number" "# of Apprentice HD Licenses" %}{{ val }}{% endcol %}
         {% enddata %}
         
@@ -102,6 +112,7 @@
         {% endif %}
                
     {% endgooglecharts %}
-
+   
  {% endblock internalbody %}   
+ 
 
