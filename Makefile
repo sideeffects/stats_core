@@ -18,6 +18,7 @@ RELEASE_FILES=\
 RELEASE_DIRS=\
 	static \
 	templates \
+	googlecharts \
 	houdini_stats \
 	houdini_licenses \
 	houdini_surveys \
