@@ -5,6 +5,12 @@ import sys
 import datetime
 import socket
 
+# Make sure this folder is the first one in the search path so we pick up
+# our googlecharts instead of the system's.
+_this_dir = os.path.normpath(os.path.dirname(__file__))
+if sys.path[0] != _this_dir:
+    sys.path.insert(0, _this_dir)
+
 PRODUCTION_LOGGING_SERVER_NAME = "florida"
 PRODUCTION_QUERY_SERVER_NAME = "yuma"
 
