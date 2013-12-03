@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {{ request.session.name }}
 {% load googlecharts %}
+{% load reports_tags %}
 
 {% block internalbody %}
-    
+  
     {% if active_menu_option_info.key == "downloads" %}   
     
     <div class="graph-title">Number of Houdini Downloads</div>
@@ -51,9 +52,9 @@
         {% if active_menu_option_info.key == "downloads" %}   
        
         {% data series.software_downloads "count1" %}
-            
+           
             {% col "string" "Date" %}
-               {% include 'events_annotate.html' %}
+               {% show_annotation_title events val %} 
             {% endcol %}
             
             {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
@@ -76,9 +77,11 @@
         
         {% data series.apprentice_lic_over_time "count1" %}
          {% col "string" "Date" %}
-               {% include 'events_annotate.html' %}
+            {% show_annotation_title events val %} 
          {% endcol %}
+            
          {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
+         {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
          {% col "number" "Apprentice Activations" %}{{ val }}{% endcol %}
         
         {% enddata %}
@@ -95,7 +98,7 @@
         
         {% data series.apprentice_hd_lic "count1" %}
         {% col "string" "Date" %}
-               {% include 'events_annotate.html' %}
+               "{{ val }}"
         {% endcol %}
         {% col "number" "# of Apprentice HD Licenses" %}{{ val }}{% endcol %}
         {% enddata %}

@@ -1,11 +1,2 @@
-{% load googlecharts %}
+"{{ value }}"
 
-{% for e in events %}
-    {% if e.0|date:date_format == val|date:date_format %}
-        {% with val|date:date_format|add:" - "|add:e.1 as value %}
-            "{{ value }}"
-        {% endwith %}
-    {% else %}
-        "{{ val|date:date_format }}"
-    {% endif %}
-{% endfor %}
