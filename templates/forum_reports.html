@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {{ request.session.name }}
 {% load googlecharts %}
+{% load reports_tags %}
+
 {% block internalbody %}
       
     {% if active_menu_option_info.key == "login_registration" %}   
@@ -36,8 +38,12 @@
         {% if active_menu_option_info.key == "login_registration" %}   
         
         {% data series.users_forum_openid "count1" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+            {% col "string" "Date" %}
+               {% show_annotation_title events val %} 
+            {% endcol %}
+            
             {% col "number" "Total Users Registered" %}{{ val }}{% endcol %}
+            {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
             {% col "number" "Total Users Registered with Forum" %}{{ val }}{% endcol %}
             {% col "number" "Total Users Registered with Openid" %}{{ val }}{% endcol %}
         {% enddata %}
