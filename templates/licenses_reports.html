@@ -97,16 +97,17 @@
         {% else %}
         
         {% data series.apprentice_hd_lic "count1" %}
-        {% col "string" "Date" %}
-               "{{ val }}"
-        {% endcol %}
-        {% col "number" "# of Apprentice HD Licenses" %}{{ val }}{% endcol %}
+	        {% col "string" "Date" %}
+	            {% show_annotation_title events val %} 
+	         {% endcol %}
+	        {% col "number" "# of Apprentice HD Licenses" %}{{ val }}{% endcol %}
+	        {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
         {% enddata %}
         
         {% data series.apprentice_hd_lic_cumu "count2" %}
-        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-        {% col "number" "# of Apprentice HD Licenses Cumulative" %}{{ val }}{% endcol %}
-        {% enddata %}
+	        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+	        {% col "number" "# of Apprentice HD Licenses Cumulative" %}{{ val }}{% endcol %}
+	    {% enddata %}
         
         {% graph "series_hou_apprentice_hd_lic_over_time" "count1" "opt_count_wide" %}
         {% graph "series_hou_apprentice_hd_sales_over_tim_cumu" "count2" "opt_count_wide" %}
