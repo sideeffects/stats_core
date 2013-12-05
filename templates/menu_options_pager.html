@@ -2,7 +2,7 @@
     <ul class="pager">
     {% if active_menu_option_info.prev_option.key != "" %}
      <li class="previous">
-       <a href="{% url active_menu_option_info.menu_view active_menu_option_info.prev_option.key %}"> 
+       <a href="{% url active_menu_option_info.menu_view active_menu_option_info.prev_option.key %}{{ get_request_string|safe }}"> 
         << {{active_menu_option_info.prev_option.name }} 
        </a>
      </li>
@@ -10,9 +10,10 @@
     
     {% if active_menu_option_info.next_option.key != "" %}
      <li class="next">
-       <a href="{% url active_menu_option_info.menu_view active_menu_option_info.next_option.key %}"> 
+       <a href="{% url active_menu_option_info.menu_view active_menu_option_info.next_option.key %}{{ get_request_string|safe }}"> 
        {{ active_menu_option_info.next_option.name }} >>
        </a>
      </li>
      {% endif %}
     </ul>
+    

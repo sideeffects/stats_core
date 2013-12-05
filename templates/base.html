@@ -86,13 +86,26 @@
         {% endif %} 
       </a>            
    </div>
+   
+   <br>
+   
+   {% if show_date_picker %} 
+    <div id="container">
+        <div class="item">
+            <div class="pickerContainer widget"></div>
+        </div>
+    </div>
+   <br> 
+   </div>
+   <br>
+   {% endif %}     
         
    <div class="navbar">
      <div class="navbar-inner">
          <div class="container">
             <ul class="nav">
               <li {% if not active_menu %} class="active" {% endif %}>
-                 <a href="{% url "index" %}">Home</a>
+                 <a href="{% url "index" %}{{ get_request_string|safe }}">Home</a>
               </li>
               <!--Dinamically building menu with dropdown options -->
               {% for menu_dropdown in top_menu_options %}
@@ -119,7 +132,7 @@
                          <li {% if active_menu_option_info.key == key %} 
                                 class="active"
                              {% endif%}> 
-                             <a href="{% url menu_dropdown.menu_view key %}">
+                             <a href="{% url menu_dropdown.menu_view key %}{{ get_request_string|safe }}">
                                 {{ value }}
                              </a>
                          </li>
@@ -151,17 +164,6 @@
    
    {% block indexbody %} 
    {% endblock indexbody %}
-   
-   {% if show_date_picker %} 
-    <div id="container">
-        <div class="item">
-            <div class="pickerContainer widget"></div>
-        </div>
-    </div>
-   <br> 
-   </div>
-   <br>
-   {% endif %}
    
    {% block internalbody %} 
    {% endblock internalbody %} 
