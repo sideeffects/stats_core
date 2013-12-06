@@ -16,7 +16,6 @@ RELEASE_FILES=\
 	wsgi-script/django.wsgi
 
 RELEASE_DIRS=\
-	static \
 	templates \
 	googlecharts \
 	houdini_stats \
