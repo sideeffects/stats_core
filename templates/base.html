@@ -2,7 +2,6 @@
 <html lang="en">
 {% block head %}
 <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
- 
  <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/datepicker.js"></script>
  <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/DateRangesWidget.js"></script>
  <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/datepicker/base.css" />
@@ -70,8 +69,8 @@
 <div class="container">
  <div class="brand">
     <div align="left">
-       <a href="/">
-       <img alt="stats" src="{{STATIC_URL}}/images/analytics_banner.png">
+       <a href="{% url 'index' %}">
+       <img alt="stats" src="{{STATIC_URL}}images/analytics_banner.png">
        </a>
        <!-- 
        <h3 class="muted">Side Effects Software Analytics</h3> -->
