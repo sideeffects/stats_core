@@ -265,4 +265,9 @@ if len(sys.argv) >= 2 and sys.argv[1] == 'runserver':
 else:
     LOGIN_URL = '/stats/login'
     LOGIN_REDIRECT_URL = '/stats'
+    
+if sys.platform.startswith('linux'):
+    GEOIP_PATH = "/usr/share/GeoIP/GeoIP.dat"
+else:
+    GEOIP_PATH = "./"    
 

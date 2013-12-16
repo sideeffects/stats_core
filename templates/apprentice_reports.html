@@ -5,20 +5,6 @@
 
 {% block internalbody %}
   
-    {% if active_menu_option_info.key == "downloads" %}   
-    
-    <div class="graph-title">Number of Houdini Downloads</div>
-    <div>
-    <br>
-    <div id="series_software_download" class="wide graph"></div>
-    <br>
-    <div class="graph-title">Commercial vs Apprentice Downloads</div>
-    <div>
-    <br>
-    <div id="series_download_percentages" class="wide graph"></div>
-    
-    {% else %}  
-    
     {% if active_menu_option_info.key == "apprentice_activations" %}   
       
     <div class="graph-title">Apprentice Activations vs Apprentice Downloads</div>
@@ -30,8 +16,9 @@
     <br>
     <div id="series_hou_apprentice_percentages" class="wide graph"></div>
     <br>
+   
     {% else %}
-    
+    {% if active_menu_option_info.key == "apprentice_hd" %}   
     <div class="graph-title">Apprentice HD Licenses</div>
     <br>
     <div id="series_hou_apprentice_hd_lic_over_time" class="wide graph"></div>
@@ -41,6 +28,15 @@
     <br>
     <div id="series_hou_apprentice_hd_sales_over_tim_cumu" class="wide graph"></div>
     <br>
+    {% else %}
+    
+    <div class="graph-title">Apprentice Activations Heatmap</div>
+    <br>    
+         <iframe height="600px" width="100%" frameborder="0"
+                 scrolling="no" src="{% url "heatmap" "apprentice_heatmap" %}">
+         </iframe>
+    <br>
+        
     
     {% endif %}
     {% endif %}
@@ -49,30 +45,6 @@
     
         {% include 'googlecharts_options.html' %}
         
-        {% if active_menu_option_info.key == "downloads" %}   
-       
-        {% data series.software_downloads "count1" %}
-           
-            {% col "string" "Date" %}
-               {% show_annotation_title events val %} 
-            {% endcol %}
-            
-            {% col "number" "Total Downloads" %}{{ val }}{% endcol %}
-            {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
-            {% col "number" "Houdini Commercial Downloads" %}{{ val }}{% endcol %}
-            {% col "number" "Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
-        {% enddata %}
-        {% graph "series_software_download" "count1" "opt_count_with_legend" %}
-        
-        {% data series.percentages "count2" %}
-            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-            {% col "number" "% of Houdini Commercial Downloads" %}{{ val }}{% endcol %}
-            {% col "number" "% of Houdini Apprentice Downloads" %}{{ val }}{% endcol %}
-        {% enddata %}
-        
-        {% graph "series_download_percentages"  "count2" "opt_count_percentage_column" %}
-        
-        {% else %}  
         {% if active_menu_option_info.key == "apprentice_activations" %}   
         
         {% data series.apprentice_lic_over_time "count1" %}
@@ -95,7 +67,7 @@
         {% graph "series_hou_apprentice_percentages" "count2" "opt_count_percentage_column" %}
         
         {% else %}
-        
+        {% if active_menu_option_info.key == "apprentice_hd" %}   
         {% data series.apprentice_hd_lic "count1" %}
 	        {% col "string" "Date" %}
 	            {% show_annotation_title events val %} 

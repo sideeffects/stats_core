@@ -6,10 +6,13 @@
     <!--TODO: Render these templates in a more generic way so that we can
     change the menu and dinamically and not worry about the texts like 
     "overview, crashes, etc etc"  -->
+    {% if active_menu_option_info.key == "downloads" %}
+       {% include 'hou_downloads_reports.html' %}
+    {% endif%}
     
-    {% if active_menu_option_info.key == "overview" %}
+    {% if active_menu_option_info.key == "usage" %}
        {% include 'hou_overview_reports.html' %}
-    {% endif %}
+    {% endif%}
     
     {% if active_menu_option_info.key == "uptime" %}
        {% include 'hou_uptime_reports.html' %}
