@@ -1,5 +1,8 @@
 # Django settings for stats project.
 
+from django_auth_ldap.config import LDAPSearch, PosixGroupType
+import ldap
+import logging
 import os
 import sys
 import datetime
@@ -270,4 +273,80 @@ if sys.platform.startswith('linux'):
     GEOIP_PATH = "/usr/share/GeoIP/GeoIP.dat"
 else:
     GEOIP_PATH = "./"    
+
+
+AUTH_LDAP_SERVER_URI = "ldap://internal.sidefx.com"
+
+AUTH_LDAP_BIND_DN = "cn=licenseadmin,dc=sidefx,dc=com"
+AUTH_LDAP_BIND_PASSWORD = "test"
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=people,dc=sidefx,dc=com",\
+                                   ldap.SCOPE_SUBTREE, "(uid=%(user)s)") 
+
+AUTH_LDAP_FIND_GROUP_PERMS = True 
+AUTH_LDAP_CACHE_GROUPS = True
+AUTH_LDAP_GROUP_CACHE_TIMEOUT = 300
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+AUTH_LDAP_MIRROR_GROUPS = True
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+
+# Populate the Django user from the LDAP directory.
+AUTH_LDAP_USER_ATTR_MAP = {
+     "first_name": "givenName",
+     "last_name": "sn",
+     "email": "mail"
+}
+
+AUTH_LDAP_PROFILE_ATTR_MAP = {
+    "home_directory": "homeDirectory"}
+
+AUTH_LDAP_PROFILE_ATTR_MAP = {
+    "gid_Number": "gidNumber"
+}
+
+# enables a Django project to authenticate against any LDAP server
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {   
+    "is_staff": "cn=staff,ou=groups,dc=sidefx,dc=com",
+    "is_superuser": "cn=admin,ou=groups,dc=sidefx,dc=com",
+    "is_license": "cn=license,ou=groups,dc=sidefx,dc=com",
+    "is_support": "cn=support,ou=groups,dc=sidefx,dc=com",
+    "is_r&d": "cn=r&d,ou=groups,dc=sidefx,dc=com",
+    "is_sales": "cn=sales,ou=groups,dc=sidefx,dc=com",
+    "is_assetstore": "cn=assetstore,ou=groups,dc=sidefx,dc=com",
+    "is_audio": "cn=audio,ou=groups,dc=sidefx,dc=com",
+    "is_bizgroup": "cn=bizgroup,ou=groups,dc=sidefx,dc=com",
+    "is_cdrom": "cn=cdrom,ou=groups,dc=sidefx,dc=com",
+    "is_execs": "cn=execs,ou=groups,dc=sidefx,dc=com",
+    "is_hooke": "cn=hooke,ou=groups,dc=sidefx,dc=com",
+    "is_mware": "cn=mware,ou=groups,dc=sidefx,dc=com",
+    "is_paulgroup": "cn=paulgroup,ou=groups,dc=sidefx,dc=com",
+    "is_plugdev": "cn=plugdev,ou=groups,dc=sidefx,dc=com",
+    "is_projects": "cn=projects,ou=groups,dc=sidefx,dc=com",
+    "is_smadmin": "cn=smadmin,ou=groups,dc=sidefx,dc=com",
+    "is_video": "cn=video,ou=groups,dc=sidefx,dc=com",
+    "is_webcal_admin": "cn=webcal_admin,ou=groups,dc=sidefx,dc=com",
+}
+
+# Set up the basic group parameters.
+# Note: THis must be set or raise ImproperlyConfigured("AUTH_LDAP_GROUP_TYPE 
+# must be an LDAPGroupType instance.")
+# AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=groups,dc=sidefx,dc=com",
+#     ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
+# )
+
+# AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+
+
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=groups,dc=sidefx,dc=com",
+    ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"
+)
+AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr='cn')
+
+logger = logging.getLogger('django_auth_ldap')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
 
