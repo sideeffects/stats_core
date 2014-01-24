@@ -1,11 +1,20 @@
-{% load static %}
-<html>
-    <head>
-        <meta name="provenance" content="$Id: 404.html 151 2011-06-08 13:01:37Z gvwilson $" />
-        <link rel="stylesheet" href="{% get_static_prefix %}saas.css" type="text/css" />
-    </head>
-    <body>
-        <h1>No permission</h1>
-        <p id="errormessage">{{ message }}</p>
-    </body>
-</html>
+{% extends "base.html" %}
+{{ request.session.name }}
+
+{% block internalbody %} 
+
+  <h1>No permission</h1>
+        <p id="errormessage">
+        {% if message %}
+           {{ message }}
+        {% else %}
+           You have no permission to access these reports. 
+           </br>
+           Go back to <a href="{% url "index" %}{{ get_request_string|safe }}">
+                         Home
+                      </a> for more options.
+        {% endif%}
+        </p>
+        
+{% endblock internalbody %}
+
