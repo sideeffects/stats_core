@@ -80,16 +80,19 @@ apply_updates_on_server:
 	/etc/init.d/apache2 restart
 
 dump:
-	./manage.py backupdb > db_backup.sql
-	tar cfz $(DB_DUMP_FILE_NAME) db_backup.sql
-	rm db_backup.sql
+	./manage.py backupdb -d stats > db_backup_stats.sql
+	./manage.py backupdb -d default > db_backup_stats_django_skeleton.sql
+	tar cfz $(DB_DUMP_FILE_NAME) db_backup_stats.sql db_backup_stats_django_skeleton.sql
+	rm db_backup_stats.sql db_backup_stats_django_skeleton.sql
 
 load:
 	tar xfz $(DB_DUMP_FILE_NAME)
-	./manage.py cleardatabase
-	./manage.py backupdb -l db_backup.sql
+	./manage.py cleardatabase -d stats
+	./manage.py cleardatabase -d default
+	./manage.py backupdb -d stats -l db_backup_stats.sql
+	./manage.py backupdb -d default -l db_backup_stats_django_skeleton.sql
 	./manage.py migrate
-	rm db_backup.sql
+	rm db_backup_stats.sql db_backup_stats_django_skeleton.sql
 
 run:
 	./manage.py runserver
