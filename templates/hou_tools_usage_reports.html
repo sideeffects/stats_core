@@ -1,0 +1,52 @@
+{% load googlecharts %}
+     <div class="graph-title">Most Popular Houdini Tools </div>
+     <br>
+     <div id="series_hou_most_popular_tools" class="wide graph"></div>
+     <br>
+     
+     <div class="graph-title">Most Popular Houdini Tools from the Shelf </div>
+     <br>
+     <div id="series_hou_most_popular_tools_shelf" class="wide graph"></div>
+     <br>
+     
+     <div class="graph-title">Most Popular Houdini Tools from the Viewer </div>
+     <br>
+     <div id="series_hou_most_popular_tools_viewer" class="wide graph"></div>
+     <br>
+     
+     <div class="graph-title">Most Popular Houdini Tools from the Network </div>
+     <br>
+     <div id="series_hou_most_popular_tools_network" class="wide graph"></div>
+     <br>
+     
+     {% googlecharts %}
+        
+        {% include 'googlecharts_options.html' %}
+        
+        {% data series.hou_most_popular_tools "count1" %}
+           {% col "string" "Houdini Tool" %}"{{ val }}"{% endcol %}
+           {% col "number" "# of times used" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% data series.hou_most_popular_tools_shelf "count2" %}
+        {% col "string" "Houdini Tool" %}"{{ val }}"{% endcol %}
+        {% col "number" "# of times used" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% data series.hou_most_popular_tools_viewer "count3" %}
+        {% col "string" "Houdini Tool" %}"{{ val }}"{% endcol %}
+        {% col "number" "# of times used" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+        {% data series.hou_most_popular_tools_network "count4" %}
+        {% col "string" "Houdini Tool" %}"{{ val }}"{% endcol %}
+        {% col "number" "# of times used" %}{{ val }}{% endcol %}
+        {% enddata %}
+        
+     
+        {% graph "series_hou_most_popular_tools" "count1" "opt_count_wide_column" %}
+        {% graph "series_hou_most_popular_tools_shelf" "count2" "opt_count_wide_column" %}
+        {% graph "series_hou_most_popular_tools_viewer" "count3" "opt_count_wide_column" %}
+        {% graph "series_hou_most_popular_tools_network" "count4" "opt_count_wide_column" %}
+        
+     {% endgooglecharts %}
