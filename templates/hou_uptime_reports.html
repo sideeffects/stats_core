@@ -2,11 +2,11 @@
       
     {% include 'hou_reports_message.html' %}
     
-    <div class="graph-title">Average Session Length (in minutes)</div>
+    <div class="graph-title">Average Session Length (in hours)</div>
     <br>
     <div id="series_hou_average_session_length" class="wide graph"></div>
     <br>
-    <div class="graph-title">Average Usage by Machine (in minutes)</div>
+    <div class="graph-title">Average Usage by Machine (in hours)</div>
     <br>
     <div id="series_hou_average_usage_by_machine" class="wide graph"></div>
     <br>
@@ -17,12 +17,12 @@
         
         {% data series.hou_average_session_length "count1" %}
            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-           {% col "number" "# of minutes" %}{{ val }}{% endcol %}
+           {% col "number" "# of hours" %}{{ val }}{% endcol %}
         {% enddata %}
         
         {% data series.hou_average_usage_by_machine "count2" %}
            {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-           {% col "number" "# of minutes" %}{{ val }}{% endcol %}
+           {% col "number" "# of hours" %}{{ val }}{% endcol %}
         {% enddata %}
         
         {% graph "series_hou_average_session_length" "count1" "opt_count_wide_column" %}

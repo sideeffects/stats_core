@@ -2,20 +2,20 @@
     
     {% include 'hou_reports_message.html' %}
    
-    <div class="graph-title">Number of People Using Houdini</div>
+    <div class="graph-title">Number of new machines using Houdini over time</div>
     <br>
-    <div id="series_hou_users_over_time" class="wide graph"></div>
+    <div id="series_machines_over_time" class="wide graph"></div>
     <br>
     
     {% googlecharts %}
     
       {% include 'googlecharts_options.html' %}
       
-      {% data series.users_over_time "count1" %}
+      {% data series.machines_over_time "count1" %}
          {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "# of users" %}{{ val }}{% endcol %}
+         {% col "number" "# of machines" %}{{ val }}{% endcol %}
       {% enddata %}
-      {% graph "series_hou_users_over_time" "count1" "opt_count_wide" %}
+      {% graph "series_machines_over_time" "count1" "opt_count_wide" %}
                
     {% endgooglecharts %}
 
