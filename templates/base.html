@@ -2,10 +2,20 @@
 <html lang="en">
 {% block head %}
 <script type="text/javascript" src ="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
- <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/datepicker.js"></script>
- <script type="text/javascript" src="{{STATIC_URL}}datepicker/js/DateRangesWidget.js"></script>
- <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/datepicker/base.css" />
- <link rel="stylesheet" href="{{STATIC_URL}}datepicker/css/DateRangesWidget/base.css" />   
+
+<!-- Datapicker new -->
+ 
+ <script type="text/javascript" src="{{STATIC_URL}}DatePicker-master/js/datepicker.js"></script>
+ <script type="text/javascript" src="{{STATIC_URL}}DatePicker-master/js/DateRangesWidget.js"></script>
+ 
+ <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}DatePicker-master/css/base.css" />
+ <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}DatePicker-master/css/DateRangesWidget/clean.css" />
+ <link rel="stylesheet" href="{{STATIC_URL}}DatePicker-master/css/DateRangesWidget/base.css" />
+ 
+ <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}DatePicker-master/css/datepicker/clean.css" />
+ <link rel="stylesheet" href="{{STATIC_URL}}DatePicker-master/css/datepicker/base.css" />
+ 
+ 
  <!-- Bootstrap -->
  <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
  <link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
@@ -91,12 +101,16 @@
    {% if show_date_picker %} 
     <div id="container">
         <div class="item">
-           <div class="pickerContainer widget"></div>
+           <div class="pickerContainer widget">
+           </div>
         </div>
     </div>
    <br> 
    </div>
+   
+   
    <br>
+   
    {% endif %}     
         
    <div class="navbar">
@@ -180,10 +194,11 @@
             var start = null;
             var end = null;
             if ("{{range}}" != "None"){
-                start = "{{range.0}}";
-                end = "{{range.1}}";
-                var range = start + " - " + end;
-            } else {range="N/A";}
+            	
+            	start = "{{range.0}}";
+            	end = "{{range.1}}";
+                var range = start.replace(", midnight", "") + " - " + end.replace(", midnight", "");
+            } else {range="Select date range";}
 
             var custom_aggregation = null;
             if ("{{aggregation}}" != "None"){
@@ -195,11 +210,11 @@
                 // the range and aggregation 
                 start: start,
                 end: end,
-                aggregation: custom_aggregation
-            });
-
+                aggregation: custom_aggregation,
+             });
+            
             if (range) $(".main").html(range);
-        
+            
             $("#button-ok").click(function(){   
                 var aggregation = $(".aggregation:eq(1)").find(":selected").text();
                 var match = aggregation.match(/\((.*)\)/);
@@ -212,7 +227,8 @@
                 var end = $.trim(range[1]);
                 window.location = "{{ url }}"+ "?start="+start+"&end="+end+"&ag="+aggregation;
                 })
-            });
+            }); 
+                 
     //]]>
     </script>
 
