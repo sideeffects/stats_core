@@ -76,16 +76,12 @@ if IS_QUERY_SERVER:
             'NAME': 'mambo',
             'USER': 'www',
             'PASSWORD': 'TODO: enter-password',
-            #'HOST': (''
-            #    if IS_PRODUCTION_QUERY_SERVER else ''),
         },
         'surveys': {    
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'surveys',
             'USER': 'www',
-            'PASSWORD': 'TODO: enter-password',
-            #'HOST': (''
-            #    if IS_PRODUCTION_QUERY_SERVER else ''),
+            'PASSWORD': 'TODO: enter-password',            
         },
     })
 
