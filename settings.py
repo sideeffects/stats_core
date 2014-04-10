@@ -76,16 +76,16 @@ if IS_QUERY_SERVER:
             'NAME': 'mambo',
             'USER': 'www',
             'PASSWORD': 'TODO: enter-password',
-            'HOST': (PRODUCTION_LOGGING_SERVER_NAME
-                if IS_PRODUCTION_QUERY_SERVER else ''),
+            #'HOST': (''
+            #    if IS_PRODUCTION_QUERY_SERVER else ''),
         },
         'surveys': {    
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'surveys',
             'USER': 'www',
             'PASSWORD': 'TODO: enter-password',
-            'HOST': (PRODUCTION_LOGGING_SERVER_NAME
-                if IS_PRODUCTION_QUERY_SERVER else ''),
+            #'HOST': (''
+            #    if IS_PRODUCTION_QUERY_SERVER else ''),
         },
     })
 
@@ -95,7 +95,7 @@ DATABASE_ROUTERS = ['routers.DBRouter']
 # Date that we started collecting data [Y, M, D]
 REPORTS_START_DATE = datetime.datetime(2013, 9, 01) 
 
-HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 3, 12) 
+HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 3, 28) 
 
                                   
 # Local time zone for this installation. Choices can be found here:
