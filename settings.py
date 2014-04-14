@@ -91,7 +91,7 @@ DATABASE_ROUTERS = ['routers.DBRouter']
 # Date that we started collecting data [Y, M, D]
 REPORTS_START_DATE = datetime.datetime(2013, 9, 01) 
 
-HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 4, 10) 
+HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 4, 13) 
 
                                   
 # Local time zone for this installation. Choices can be found here:
