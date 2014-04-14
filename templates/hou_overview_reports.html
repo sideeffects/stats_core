@@ -1,21 +1,39 @@
 {% load googlecharts %}  
     
-    {% include 'hou_reports_message.html' %}
+  {% include 'hou_reports_message.html' %}
    
-    <div class="graph-title">Number of new machines using Houdini over time</div>
-    <br>
-    <div id="series_machines_over_time" class="wide graph"></div>
-    <br>
+  <div class="graph-title">Number of NEW Machines Suscribed to Stats </div>
+  <br>
+  <div id="series_new_machines_over_time" class="wide graph"></div>
+  <br>
+  <div class="graph-title">Number of Machine Configurations Actively Sending Stats </div>
+  <br>
+  <div id="series_machines_configs_per_day" class="wide graph"></div>
+  <br>
+  <div class="graph-title">Average Num of Individual Connections From the Same Machine </div>
+  <br>
+  <div id="series_avg_of_individual_successful_conn_per_day" class="wide graph"></div>
+  <br>
     
-    {% googlecharts %}
-    
-      {% include 'googlecharts_options.html' %}
-      
-      {% data series.machines_over_time "count1" %}
-         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "# of machines" %}{{ val }}{% endcol %}
-      {% enddata %}
-      {% graph "series_machines_over_time" "count1" "opt_count_wide" %}
-               
-    {% endgooglecharts %}
-
+  {% googlecharts %}
+     {% include 'googlecharts_options.html' %}
+     
+     {% data series.new_machines_over_time "count1" %}
+        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+        {% col "number" "# of new machines" %}{{ val }}{% endcol %}
+     {% enddata %}
+     {% graph "series_new_machines_over_time" "count1" "opt_count_wide" %}
+   
+     {% data series.machine_configs_sending_stats_per_day "count2" %}
+     {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+     {% col "number" "# of machine configs" %}{{ val }}{% endcol %}
+     {% enddata %}
+     {% graph "series_machines_configs_per_day" "count2" "opt_count_wide" %}
+     
+     {% data series.avg_of_individual_successful_conn_per_day "count3" %}
+     {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+     {% col "number" "Avg # of connections" %}{{ val }}{% endcol %}
+     {% enddata %}
+     {% graph "series_avg_of_individual_successful_conn_per_day" "count3" "opt_count_wide_column" %}
+     
+  {% endgooglecharts %}
