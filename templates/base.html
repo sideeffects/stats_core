@@ -14,8 +14,8 @@
  
  <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}DatePicker-master/css/datepicker/clean.css" />
  <link rel="stylesheet" href="{{STATIC_URL}}DatePicker-master/css/datepicker/base.css" />
- 
- 
+ <link rel="stylesheet" href="{{STATIC_URL}}DatePicker-master/css/agg_widget.css" />
+  
  <!-- Bootstrap -->
  <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
  <link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
@@ -100,17 +100,35 @@
    
    {% if show_date_picker %} 
     <div id="container">
-        <div class="item">
-           <div class="pickerContainer widget">
-           </div>
-        </div>
-    </div>
-   <br> 
+       <input type="hidden" id="selected_agg" name="selected_agg" value="" />
+       <div class="item">
+          <div class="pickerContainer widget">
+          </div>
+       </div>
+       <br> 
+       <ul class="_GAng">       
+       		<li {% if aggregation == 'daily' %}class="_GAkd _GApbb _GAl" 
+       		    {% else %} class="_GAkd" {% endif %} > 
+       		    Daily 
+       		</li>       		
+       		<li {% if aggregation == 'weekly' %}class="_GAkd _GApbb _GAl" 
+       		    {% else %} class="_GAkd _GApbb" {% endif %}> 
+       		    Weekly
+       		</li>
+       		<li {% if aggregation == 'monthly' %}class="_GAkd _GApbb _GAl" 
+       		    {% else %} class="_GAkd _GApbb" {% endif %}> 
+       		    Monthly 
+       		</li>
+       		<li {% if aggregation == 'yearly' %}class="_GAkd _GApbb _GAl" 
+       		    {% else %} class="_GAkd _GApbb" {% endif %}> 
+       		Yearly 
+       		</li>
+       </ul>
+       </div>
    </div>
-   
-   
-   <br>
-   
+   <br><br>
+   <br><br>
+   <br><br>
    {% endif %}     
         
    <div class="navbar">
@@ -189,14 +207,15 @@
 
 <script type="text/javascript">
      //<![CDATA[
-        $(document).ready(function() {
-
+           $(document).ready(function() {
             var start = null;
             var end = null;
+            
             if ("{{range}}" != "None"){
             	
             	start = "{{range.0}}";
             	end = "{{range.1}}";
+            	
                 var range = start.replace(", midnight", "") + " - " + end.replace(", midnight", "");
             } else {range="Select date range";}
 
@@ -215,20 +234,50 @@
             
             if (range) $(".main").html(range);
             
+            // If aggregation was selected from aggregation widget
+            $("._GAng").on('click','li',function (){
+            	
+            	aggregation = $(this).text(); 
+            	
+            	// The aggregation hidden field value will be just set when
+            	// we select the aggregation from the aggregation widget
+            	$("#selected_agg").val(aggregation.replace(/ /g,''));
+            	           	
+            	// Trigger datepicker main click to set datepickers internal
+            	// values
+            	$(".main").trigger("click");
+            	
+            	// Trigger datepicker button-ok click to save the needed values
+            	// to be able to use them.
+            	$("#button-ok").trigger("click");
+            	
+            });
+            // If aggregation was selected from inside datepicker
             $("#button-ok").click(function(){   
-                var aggregation = $(".aggregation:eq(1)").find(":selected").text();
-                var match = aggregation.match(/\((.*)\)/);
-                if (match)
-                    aggregation = match[1];
-
+            	
+            	// Get aggregation from hidden field
+            	var aggregation = $("#selected_agg").val();
+            	
+            	// If the aggregation value wasnt set in the hidden field
+            	// then it means the button onclick event was triggered from 
+            	// the dropdown inside the datepicker
+            	if(aggregation=="")
+            	{
+            		aggregation = $(".aggregation:eq(1)").find(":selected").text();
+                    var match = aggregation.match(/\((.*)\)/);
+                    if (match)
+                        aggregation = match[1];
+            		
+            	} 
                 var date = $(".main").text();
                 var range = date.split("-");
                 var start = $.trim(range[0]);
                 var end = $.trim(range[1]);
+                
                 window.location = "{{ url }}"+ "?start="+start+"&end="+end+"&ag="+aggregation;
-                })
-            }); 
-                 
+            })
+        }); 
+           
     //]]>
     </script>
 
