@@ -51,7 +51,28 @@
             kind: "ColumnChart",
             options: options_for_column_charts_wide
         {% endoptions %}
- 
+        
+        options_for_column_charts_wide_green= _clone(options_wide);
+        options_for_column_charts_wide_green.colors =  ["#4C9900"]
+        {% options "opt_count_wide_columnGreen" %}
+           kind: "ColumnChart",
+           options: options_for_column_charts_wide_green
+        {% endoptions %}
+        
+        options_for_column_charts_wide_yellow= _clone(options_wide);
+        options_for_column_charts_wide_yellow.colors =  ["#FF8000"]
+        {% options "opt_count_wide_columnYellow" %}
+           kind: "ColumnChart",
+           options: options_for_column_charts_wide_yellow
+        {% endoptions %}
+        
+        options_for_column_charts_wide_purple= _clone(options_wide);
+        options_for_column_charts_wide_purple.colors =  ["#660066"]
+        {% options "opt_count_wide_columnPurple" %}
+           kind: "ColumnChart",
+           options: options_for_column_charts_wide_purple
+        {% endoptions %}
+                 
         {% options "opt_count_with_legend" %}
            kind: "LineChart",
            options: options_with_legend
