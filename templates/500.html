@@ -1,11 +1,41 @@
 {% load static %}
-<html>
-    <head>
-        <meta name="provenance" content="$Id: 500.html 1610 2011-11-25 16:36:00Z gvwilson $" />
-        <link rel="stylesheet" href="{% get_static_prefix %}saas.css" type="text/css" />
-    </head>
-    <body>
-        <h1>Internal error</h1>
-        <p id="errormessage">{{ message }}</p> <!-- FIXME (DH): style this error properly -->
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta name="site-down" content="maintenance" />
+<title>Stats - 500 Internal Error</title>
+</head>
+
+<body>
+
+<!-- BEGINNING OF PAGEHEADER -->
+<!-- END OF PAGEHEADER -->
+ 
+<!-- BEGINNING OF MAINBODY -->
+   <div class="full-width">
+	    <div align="center">
+		  <div style="background:#ff9900; padding:40px; width:320px; color:#00000; font-size:4em; font-weight:bold; line-height:0.7em;">500
+		   <br />
+		   <br />
+		   Oops!
+		  </div>
+		 <h2>Sorry, an Internal Server Error ocurred! </h2>
+		 
+		 <p id="errormessage">{{ message }}</p>
+		 <br />
+		 
+		 <h2>You can go back to <a href="http://internal.sidefx.com/stats"> Side Effects Software Analytics</a></h2>
+	     <h2>Or report the error by emailing <a href="mailto:support@sidefx.com">yele@sidefx.com</a></h2>
+	     
+	   </div>
+	<div class="break"></div>
+	</div>
+	
+<!-- BEGINNING OF PAGEFOOTER -->
+<!-- END OF MAINBODY -->
+ 
+</body>
 </html>
+
