@@ -7,7 +7,7 @@
   
     {% if active_menu_option_info.key == "apprentice_activations" %}   
       
-    <div class="graph-title"> NEW Apprentice Activations vs Apprentice Downloads</div>
+    <div class="graph-title"> Apprentice Activations vs Apprentice Downloads</div>
     <br>
     <div id="series_hou_apprentice_lic_over_time" class="wide graph"></div>
     <br>
@@ -30,7 +30,7 @@
     <br>
     {% else %}
     
-    <div class="graph-title">Apprentice Activations Heatmap</div>
+    <div class="graph-title">Apprentice Activations (including reactivations) Heatmap</div>
     <br>    
          <iframe height="600px" width="100%" frameborder="0"
                  scrolling="no" src="{% url "heatmap" "apprentice_heatmap" %}{{get_request_string}}">
@@ -54,7 +54,8 @@
             
          {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
          {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
-         {% col "number" " NEW Apprentice Activations" %}{{ val }}{% endcol %}
+         {% col "number" "NEW Apprentice Activations" %}{{ val }}{% endcol %}
+         {% col "number" "Apprentice Activations (including reactivations)" %}{{ val }}{% endcol %}
         
         {% enddata %}
         

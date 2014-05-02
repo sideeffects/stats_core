@@ -133,6 +133,7 @@
           <div class="pickerContainer widget">
           </div>
        </div>
+       {% if show_agg_widget %}
        <br> 
        <ul class="_GAng">       
        		<li {% if aggregation == 'daily' %}class="_GAkd _GApbb _GAl" 
@@ -152,6 +153,7 @@
        		Yearly 
        		</li>
        </ul>
+       {% endif %}
        </div>
    </div>
    <br><br>
