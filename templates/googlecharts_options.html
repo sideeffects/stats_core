@@ -26,14 +26,24 @@
         options_with_legend = _clone(options_wide);
         options_with_legend.legend =  {position: 'top', alignment: 'center',textStyle: {color: 'black', fontSize: 12}}
         
-        {% options "opt_count" %}
-            kind: "LineChart",
+        {% options "opt_count_area" %}
+            kind: "AreaChart",
             options: options
         {% endoptions %}
     
-        {% options "opt_count_wide" %}
-            kind: "LineChart",
+        {% options "opt_count_area_wide" %}
+            kind: "AreaChart",
             options: options_wide
+        {% endoptions %}
+        
+        {% options "opt_count" %}
+        	kind: "LineChart",
+        	options: options
+        {% endoptions %}
+
+        {% options "opt_count_wide" %}
+        	kind: "LineChart",
+        	options: options_wide
         {% endoptions %}
         
         options_for_column_charts = _clone(options);

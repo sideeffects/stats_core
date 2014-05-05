@@ -22,13 +22,13 @@
         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
         {% col "number" "# of new machines" %}{{ val }}{% endcol %}
      {% enddata %}
-     {% graph "series_new_machines_over_time" "count1" "opt_count_wide" %}
+     {% graph "series_new_machines_over_time" "count1" "opt_count_area_wide" %}
    
      {% data series.machines_sending_stats_per_day "count2" %}
      {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
      {% col "number" "# of machines " %}{{ val }}{% endcol %}
      {% enddata %}
-     {% graph "series_machines_per_day" "count2" "opt_count_wide" %}
+     {% graph "series_machines_per_day" "count2" "opt_count_area_wide" %}
      
      {% data series.avg_of_individual_successful_conn_per_day "count3" %}
      {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
