@@ -12,12 +12,18 @@
     <div id="series_hou_apprentice_lic_over_time" class="wide graph"></div>
     <br>
     
-    <div class="graph-title">Percentage of NEW Apprentice Activations from Apprentice Downloads</div>
+    <div class="graph-title">Percentage of NEW Apprentice Activations and Reactivations</div>
     <br>
     <div id="series_hou_apprentice_percentages" class="wide graph"></div>
     <br>
+    
+    <div class="graph-title">Percentage of NEW Apprentice Activations from Apprentice Downloads</div>
+    <br>
+    <div id="series_hou_apprentice_percentages_new_from_downloads" class="wide graph"></div>
+    <br>
    
     {% else %}
+    
     {% if active_menu_option_info.key == "apprentice_hd" %}   
     <div class="graph-title">Apprentice HD Licenses</div>
     <br>
@@ -52,20 +58,28 @@
             {% show_annotation_title events val %} 
          {% endcol %}
             
-         {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
+         {% col "number" "Apprentice Total Activations (including reactivations)" %}{{ val }}{% endcol %}
          {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
          {% col "number" "NEW Apprentice Activations" %}{{ val }}{% endcol %}
-         {% col "number" "Apprentice Activations (including reactivations)" %}{{ val }}{% endcol %}
-        
+         {% col "number" "Apprentice Reactivations" %}{{ val }}{% endcol %}
+         {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
         {% enddata %}
+        {% graph "series_hou_apprentice_lic_over_time" "count1" "opt_count_with_legend" %}
+        
         
         {% data series.apprentice_act_percentages "count2" %}
          {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
          {% col "number" "% of NEW Apprentice Activations" %}{{ val }}{% endcol %}
+         {% col "number" "% of Apprentice Reactivations" %}{{ val }}{% endcol %}
         {% enddata %}
-        
-        {% graph "series_hou_apprentice_lic_over_time" "count1" "opt_count_with_legend" %}
-        {% graph "series_hou_apprentice_percentages" "count2" "opt_count_percentage_column" %}
+        {% graph "series_hou_apprentice_percentages"  "count2" "opt_count_percentage_column" %}
+                
+        {% data series.apprentice_percentages_new_from_downloads "count3" %}
+         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+         {% col "number" "% of NEW Apprentice Activations" %}{{ val }}{% endcol %}
+        {% enddata %}
+        {% graph "series_hou_apprentice_percentages_new_from_downloads" "count3" "opt_count_percentage_column" %}
+    
         
         {% else %}
         {% if active_menu_option_info.key == "apprentice_hd" %}   

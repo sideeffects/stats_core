@@ -1,6 +1,6 @@
  {% load googlecharts %}
  
- three_colors = ["daa520","#09f", "#66CC33"];
+ three_colors = ["daa520","#09f", "#66CC33", "#660066"];
  two_colors =  ["#09f", "#66CC33"];
  
  options = {
@@ -63,14 +63,14 @@
         {% endoptions %}
         
         options_for_column_charts_wide_green= _clone(options_wide);
-        options_for_column_charts_wide_green.colors =  ["#4C9900"]
+        options_for_column_charts_wide_green.colors =  ["#66CC33"]
         {% options "opt_count_wide_columnGreen" %}
            kind: "ColumnChart",
            options: options_for_column_charts_wide_green
         {% endoptions %}
         
         options_for_column_charts_wide_yellow= _clone(options_wide);
-        options_for_column_charts_wide_yellow.colors =  ["#FF8000"]
+        options_for_column_charts_wide_yellow.colors =  ["daa520"]
         {% options "opt_count_wide_columnYellow" %}
            kind: "ColumnChart",
            options: options_for_column_charts_wide_yellow
