@@ -2,9 +2,14 @@
 
     {% include 'hou_reports_message.html' %}  
   
-    <div class="graph-title">Houdini Crashes Over Time </div>
+    <div class="graph-title">Number of Crashes Over Time </div>
     <br>
     <div id="series_hou_crashes_over_time" class="wide graph"></div>
+    <br>
+    
+    <div class="graph-title">Number of Individual Machines Sending Crashes Over Time</div>
+    <br>
+    <div id="series_num_of_machines_sending_crashes" class="wide graph"></div>
     <br>
     
     <div class="graph-title">Average Num of Crashes From the Same Machine </div>
@@ -33,13 +38,20 @@
      {% enddata %}
      {% graph "series_hou_crashes_over_time" "count" "opt_count_area_wide" %}
  
-     {% data series.hou_avg_crashes_by_same_machine "count2" %}
+     {% data series.hou_num_of_machines_sending_crashes_per_day "count2" %}
+  	 	{% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
+  	 	{% col "number" "Number of machines" %}{{ val }}{% endcol %}
+     {% enddata %}
+  
+     {% graph "series_num_of_machines_sending_crashes" "count2" "opt_count_wide_column" %}
+     
+     {% data series.hou_avg_crashes_by_same_machine "count3" %}
      	{% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
      	{% col "number" "Avg # of crashes" %}{{ val }}{% endcol %}
      {% enddata %}
      
-     {% graph "series_avg_crashes_by_same_machine" "count2" "opt_count_wide_column" %}
-     
+     {% graph "series_avg_crashes_by_same_machine" "count3" "opt_count_wide_columnGreen" %}
+  
      <!-- Pie charts -->
      {% data pies.hou_crashes_by_os "hou_crashes_by_os" %}
              {% col "string" "OS" %}"{{ val }}"{% endcol %}
