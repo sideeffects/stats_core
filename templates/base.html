@@ -181,12 +181,12 @@
                       <b class="caret"></b>
                    </a>
                    <ul class="dropdown-menu">
-                      {% for key,value in menu_dropdown.menu_options.items %}
-                         <li {% if active_menu_option_info.key == key %} 
+                      {% for name, title, extra in menu_dropdown.menu_options %}
+                         <li {% if active_menu_option_info.name == name %} 
                                 class="active"
                              {% endif%}> 
-                             <a href="{% url menu_dropdown.menu_view key %}{{ get_request_string|safe }}">
-                                {{ value }}
+                             <a href="{% url "generic_report" menu_dropdown.menu_url_prefix name %}{{ get_request_string|safe }}">
+                                {{ title }}
                              </a>
                          </li>
                          
@@ -206,7 +206,7 @@
    {% if active_menu %} 
    <ol style="margin-bottom: 5px;" class="breadcrumb">
         <li>{{ active_menu }} / </li>
-        <li class="active"> {{ active_menu_option_info.name }} </li>
+        <li class="active"> {{ active_menu_option_info.title }} </li>
    </ol>
    {% endif %}
    </div>

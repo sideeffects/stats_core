@@ -1,17 +1,17 @@
  <!-- Pager to change from one report category to the next one -->
     <ul class="pager">
-    {% if active_menu_option_info.prev_option.key != "" %}
+    {% if active_menu_option_info.prev_option.url != "" %}
      <li class="previous">
-       <a href="{% url active_menu_option_info.menu_view active_menu_option_info.prev_option.key %}{{ get_request_string|safe }}"> 
-        << {{active_menu_option_info.prev_option.name }} 
+       <a href="{{ active_menu_option_info.prev_option.url }}{{ get_request_string|safe }}"> 
+        << {{active_menu_option_info.prev_option.title }} 
        </a>
      </li>
     {% endif %}
     
-    {% if active_menu_option_info.next_option.key != "" %}
+    {% if active_menu_option_info.next_option.url != "" %}
      <li class="next">
-       <a href="{% url active_menu_option_info.menu_view active_menu_option_info.next_option.key %}{{ get_request_string|safe }}"> 
-       {{ active_menu_option_info.next_option.name }} >>
+       <a href="{{ active_menu_option_info.next_option.url }}{{ get_request_string|safe }}"> 
+       {{ active_menu_option_info.next_option.title }} >>
        </a>
      </li>
      {% endif %}

@@ -3,7 +3,7 @@
 {% load googlecharts %}
 {% block internalbody %}
       
-    {% if active_menu_option_info.key == "sidefx_labs" %}
+    {% if active_menu_option_info.name == "sidefx_labs" %}
      <div class="graph-title">Breakdown of Labs Users who subscribed for Maya or Unity plugin
      </div>
      <div>
@@ -15,7 +15,7 @@
      <div id="series_user_answers_maya_unity_over_time" class="wide graph"></div>
     
     {% else %}
-      {% if active_menu_option_info.key == "apprentice_followup" %}
+      {% if active_menu_option_info.name == "apprentice_followup" %}
        
        <div class="graph-title"> Percentage of Users who replied the Survey from Apprentice Activations
        </div>
@@ -63,7 +63,7 @@
     
       {% include 'googlecharts_options.html' %}
       
-      {% if active_menu_option_info.key == "sidefx_labs" %}
+      {% if active_menu_option_info.name == "sidefx_labs" %}
             {% data series.user_answers_maya_unity_count "count1" %}
 	           {% col "string" "3D Tool" %}"{{ val }}"{% endcol %}
 	           {% col "number" "# of users registered" %}{{ val }}{% endcol %}
@@ -79,7 +79,7 @@
             {% graph "series_user_answers_maya_unity_over_time" "count2" "opt_count_with_legend" %}  
 	        
 	  {% else %}
-        {% if active_menu_option_info.key == "apprentice_followup" %}
+        {% if active_menu_option_info.name == "apprentice_followup" %}
             
             {% data series.survey_counts_percentages "count0" %}
                {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}

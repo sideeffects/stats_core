@@ -1,16 +1,12 @@
  {% load googlecharts %}
  
- three_colors = ["daa520","#09f", "#66CC33", "#660066"];
+ four_colors = ["daa520","#09f", "#66CC33", "#660066"];
  two_colors =  ["#09f", "#66CC33"];
  
  options = {
             backgroundColor: "#f9f9f9",
             colors:
-            {% if plot_three %}
-             three_colors,
-            {% else %}
-             two_colors,
-            {% endif %}
+                four_colors,
             gridlineColor: "#ddd",
             legend: "none",
             vAxis: {minValue: 0},

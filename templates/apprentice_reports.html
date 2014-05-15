@@ -5,7 +5,7 @@
 
 {% block internalbody %}
   
-    {% if active_menu_option_info.key == "apprentice_activations" %}   
+    {% if active_menu_option_info.name == "apprentice_activations" %}   
       
     <div class="graph-title"> Apprentice Activations vs Apprentice Downloads</div>
     <br>
@@ -24,7 +24,7 @@
    
     {% else %}
     
-    {% if active_menu_option_info.key == "apprentice_hd" %}   
+    {% if active_menu_option_info.name == "apprentice_hd" %}   
     <div class="graph-title">Apprentice HD Licenses</div>
     <br>
     <div id="series_hou_apprentice_hd_lic_over_time" class="wide graph"></div>
@@ -51,7 +51,7 @@
     
         {% include 'googlecharts_options.html' %}
         
-        {% if active_menu_option_info.key == "apprentice_activations" %}   
+        {% if active_menu_option_info.name == "apprentice_activations" %}   
         
         {% data series.apprentice_lic_over_time "count1" %}
          {% col "string" "Date" %}
@@ -82,7 +82,7 @@
     
         
         {% else %}
-        {% if active_menu_option_info.key == "apprentice_hd" %}   
+        {% if active_menu_option_info.name == "apprentice_hd" %}   
         {% data series.apprentice_hd_lic "count1" %}
 	        {% col "string" "Date" %}
 	            {% show_annotation_title events val %} 

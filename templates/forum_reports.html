@@ -5,7 +5,7 @@
 
 {% block internalbody %}
       
-    {% if active_menu_option_info.key == "login_registration" %}   
+    {% if active_menu_option_info.name == "login_registration" %}   
       
     <div class="graph-title">New website registrations per day</div>
     <div>
@@ -35,7 +35,7 @@
     
         {% include 'googlecharts_options.html' %}
         
-        {% if active_menu_option_info.key == "login_registration" %}   
+        {% if active_menu_option_info.name == "login_registration" %}   
         
         {% data series.users_forum_openid "count1" %}
             {% col "string" "Date" %}
