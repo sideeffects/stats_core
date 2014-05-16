@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{{ request.session.name }}
+
+{% block internalbody %}
+    {{ charts|safe }}
+{% endblock internalbody %}   
