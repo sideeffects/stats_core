@@ -32,40 +32,36 @@
     {% googlecharts %}
     
      {% include 'googlecharts_options.html' %}
-     {% data series.hou_crashes_over_time "count" %}
+     {% data series.hou_crashes_over_time "hou_crashes_over_time" %}
             {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
             {% col "number" "# of crashes" %}{{ val }}{% endcol %}
      {% enddata %}
-     {% graph "series_hou_crashes_over_time" "count" "opt_count_area_wide" %}
+     {% graph "series_hou_crashes_over_time" "hou_crashes_over_time" "opt_count_area_wide" %}
  
-     {% data series.hou_num_of_machines_sending_crashes_per_day "count2" %}
+     {% data series.hou_num_of_machines_sending_crashes_per_day "hou_num_of_machines_sending_crashes_per_day" %}
   	 	{% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
   	 	{% col "number" "Number of machines" %}{{ val }}{% endcol %}
      {% enddata %}
-  
-     {% graph "series_num_of_machines_sending_crashes" "count2" "opt_count_wide_column" %}
+     {% graph "series_num_of_machines_sending_crashes" "hou_num_of_machines_sending_crashes_per_day" "opt_count_wide_column" %}
      
-     {% data series.hou_avg_crashes_by_same_machine "count3" %}
+     {% data series.hou_avg_crashes_by_same_machine "hou_avg_crashes_by_same_machine" %}
      	{% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
      	{% col "number" "Avg # of crashes" %}{{ val }}{% endcol %}
      {% enddata %}
-     
-     {% graph "series_avg_crashes_by_same_machine" "count3" "opt_count_wide_columnGreen" %}
+     {% graph "series_avg_crashes_by_same_machine" "hou_avg_crashes_by_same_machine" "opt_count_wide_columnGreen" %}
   
      <!-- Pie charts -->
      {% data pies.hou_crashes_by_os "hou_crashes_by_os" %}
              {% col "string" "OS" %}"{{ val }}"{% endcol %}
              {% col "number" "Count" %}{{ val }}{% endcol %}
      {% enddata %}
+     {% graph "by_os" "hou_crashes_by_os" "out_options" %}
      
      {% data pies.hou_crashes_by_os_detailed "hou_crashes_by_os_detailed" %}
      		 {% col "string" "OS" %}"{{ val }}"{% endcol %}
              {% col "number" "Count" %}{{ val }}{% endcol %}
      {% enddata %}
-     
-     {% graph "by_os" "hou_crashes_by_os" "out_options" %}
      {% graph "by_os_detailed" "hou_crashes_by_os_detailed" "out_options" %}
-     
      
      {% data pies.hou_crashes_by_product "hou_crashes_by_product" %}
      	{% col "string" "Product" %}"{{ val }}"{% endcol %}

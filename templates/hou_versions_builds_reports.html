@@ -36,6 +36,8 @@
                 {% col "number" "Value" %}{{ val }}{% endcol %}
         {% enddata %}
         
+        {% graph "general" "houdini_versions" "out_options" %}
+        {% graph "general1" "houdini_builds" "out_options" %}
         
         {% data pies.houdini_versions_apprentice "houdini_versions_apprentice" %}
                 {% col "string" "Name" %}"{{ val }}"{% endcol %}
@@ -46,6 +48,9 @@
                 {% col "string" "Name" %}"{{ val }}"{% endcol %}
                 {% col "number" "Value" %}{{ val }}{% endcol %}
         {% enddata %}
+       
+        {% graph "apprent" "houdini_versions_apprentice" "out_options" %}
+        {% graph "apprent1" "houdini_builds_apprentice" "out_options" %}  
         
         {% data pies.houdini_versions_commercial "houdini_versions_commercial" %}
                 {% col "string" "Name" %}"{{ val }}"{% endcol %}
@@ -57,11 +62,6 @@
                 {% col "number" "Value" %}{{ val }}{% endcol %}
         {% enddata %}
 
-        {% graph "general" "houdini_versions" "out_options" %}
-        {% graph "general1" "houdini_builds" "out_options" %}
-        
-        {% graph "apprent" "houdini_versions_apprentice" "out_options" %}
-        {% graph "apprent1" "houdini_builds_apprentice" "out_options" %}
         
         {% graph "commer" "houdini_versions_commercial" "out_options" %}
         {% graph "commer1" "houdini_builds_commercial" "out_options" %}
