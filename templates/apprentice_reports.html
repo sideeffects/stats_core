@@ -1,109 +1,16 @@
 {% extends "base.html" %}
 {{ request.session.name }}
-{% load googlecharts %}
 {% load reports_tags %}
 
 {% block internalbody %}
   
-    {% if active_menu_option_info.name == "apprentice_activations" %}   
-      
-    <div class="graph-title"> Apprentice Activations vs Apprentice Downloads</div>
-    <br>
-    <div id="series_hou_apprentice_lic_over_time" class="wide graph"></div>
-    <br>
-    
-    <div class="graph-title">Percentage of NEW Apprentice Activations and Reactivations</div>
-    <br>
-    <div id="series_hou_apprentice_percentages" class="wide graph"></div>
-    <br>
-    
-    <div class="graph-title">Percentage of NEW Apprentice Activations from Apprentice Downloads</div>
-    <br>
-    <div id="series_hou_apprentice_percentages_new_from_downloads" class="wide graph"></div>
-    <br>
-   
-    {% else %}
-    
-    {% if active_menu_option_info.name == "apprentice_hd" %}   
-    <div class="graph-title">Apprentice HD Licenses</div>
-    <br>
-    <div id="series_hou_apprentice_hd_lic_over_time" class="wide graph"></div>
-    <br>
-    
-    <div class="graph-title">Cumulative Apprentice HD Licenses</div>
-    <br>
-    <div id="series_hou_apprentice_hd_sales_over_tim_cumu" class="wide graph"></div>
-    <br>
-    {% else %}
-    
     <div class="graph-title">Apprentice Activations (including reactivations) Heatmap</div>
     <br>    
          <iframe height="600px" width="100%" frameborder="0"
                  scrolling="no" src="{% url "heatmap" "apprentice_heatmap" %}{{get_request_string}}">
          </iframe>
     <br>
-        
-    
-    {% endif %}
-    {% endif %}
-            
-    {% googlecharts %}
-    
-        {% include 'googlecharts_options.html' %}
-        
-        {% if active_menu_option_info.name == "apprentice_activations" %}   
-        
-        {% data series.apprentice_lic_over_time "count1" %}
-         {% col "string" "Date" %}
-            {% show_annotation_title events val %} 
-         {% endcol %}
-            
-         {% col "number" "Apprentice Total Activations (including reactivations)" %}{{ val }}{% endcol %}
-         {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
-         {% col "number" "NEW Apprentice Activations" %}{{ val }}{% endcol %}
-         {% col "number" "Apprentice Reactivations" %}{{ val }}{% endcol %}
-         {% col "number" "Apprentice Downloads" %}{{ val }}{% endcol %}
-        {% enddata %}
-        {% graph "series_hou_apprentice_lic_over_time" "count1" "opt_count_with_legend" %}
-        
-        
-        {% data series.apprentice_act_percentages "count2" %}
-         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "% of NEW Apprentice Activations" %}{{ val }}{% endcol %}
-         {% col "number" "% of Apprentice Reactivations" %}{{ val }}{% endcol %}
-        {% enddata %}
-        {% graph "series_hou_apprentice_percentages"  "count2" "opt_count_percentage_column" %}
-                
-        {% data series.apprentice_percentages_new_from_downloads "count3" %}
-         {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-         {% col "number" "% of NEW Apprentice Activations" %}{{ val }}{% endcol %}
-        {% enddata %}
-        {% graph "series_hou_apprentice_percentages_new_from_downloads" "count3" "opt_count_percentage_column" %}
-    
-        
-        {% else %}
-        {% if active_menu_option_info.name == "apprentice_hd" %}   
-        {% data series.apprentice_hd_lic "count1" %}
-	        {% col "string" "Date" %}
-	            {% show_annotation_title events val %} 
-	         {% endcol %}
-	        {% col "number" "# of Apprentice HD Licenses" %}{{ val }}{% endcol %}
-	        {% col "string" "" "annotation" %}"{{ val }}"{% endcol %}
-        {% enddata %}
-        
-        {% data series.apprentice_hd_lic_cumu "count2" %}
-	        {% col "string" "Date" %}"{{ val|date:date_format }}"{% endcol %}
-	        {% col "number" "# of Apprentice HD Licenses Cumulative" %}{{ val }}{% endcol %}
-	    {% enddata %}
-        
-        {% graph "series_hou_apprentice_hd_lic_over_time" "count1" "opt_count_wide" %}
-        {% graph "series_hou_apprentice_hd_sales_over_tim_cumu" "count2" "opt_count_area_wide" %}
-        
-        {% endif %}
-        {% endif %}
-               
-    {% endgooglecharts %}
-   
+       
  {% endblock internalbody %}   
  
 
