@@ -24,34 +24,34 @@
               {% if menu_dropdown.menu_name = "Apprentice" %}
               
               <h2>Houdini Apprentice</h2>
-              <a href="{% url "hou_apprentice" "apprentice_activations" %}">
+              <a href="{% url "generic_report" "apprentice" "apprentice_activations" %}">
                  <img alt="stats" src="{{STATIC_URL}}/images/stats_licensing.png">
               </a>
               <p>Graphs and reports related to Houdini Apprentice. 
                  Some of the analytics in this set include Apprentice Activations overtime and Apprentice HD sales.<p>
-                 <a class="btn btn-default" href="{% url "hou_apprentice" "apprentice_activations" %}">View details &raquo;</a></p>
+                 <a class="btn btn-default" href="{% url "generic_report" "apprentice" "apprentice_activations" %}">View details &raquo;</a></p>
               {% endif %}
               
               {% if menu_dropdown.menu_name = "Surveys" %}
               
               <h2>Surveys Analytics</h2>
-              <a href="{% url "hou_surveys" "sidefx_labs" %}">
+              <a href="{% url "generic_report" "surveys" "sidefx_labs" %}">
                  <img alt="stats" src="{{STATIC_URL}}/images/stats_survey.png">
               </a>
               <p>Graphs and reports from data stored in the Surveys Database. 
                  Some of the analytics in this set include results of the houdini labs and apprentice survery statistics.<p>
-                 <a class="btn btn-default" href="{% url "hou_surveys" "sidefx_labs" %}">View details &raquo;</a></p>
+                 <a class="btn btn-default" href="{% url "generic_report" "surveys" "sidefx_labs" %}">View details &raquo;</a></p>
               {% endif %}
               
               {% if menu_dropdown.menu_name = "Website" %}
               
               <h2>Side Effects Website Analytics</h2>
-              <a href="{% url "hou_forum" "login_registration" %}">
+              <a href="{% url "generic_report" "sidefx.com" "login_registration" %}">
                  <img alt="stats" src="{{STATIC_URL}}/images/stats_sidefx.png">
               </a>
               <p>Graphs and reports from data stored in the Forum Database. 
                  Some of the analytics in this set include statistics for login and registration.<p>
-                 <a class="btn btn-default" href="{% url "hou_forum" "login_registration" %}">View details &raquo;</a></p>
+                 <a class="btn btn-default" href="{% url "generic_report" "sidefx.com" "login_registration" %}">View details &raquo;</a></p>
               {% endif %}
               
             <br/>
