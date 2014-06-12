@@ -15,7 +15,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     
     # Add the houdini stats URLs.
+    (r'', include('stats_main.urls')),
     (r'', include('houdini_stats.urls')),    
     
 )
-handler500 = 'houdini_stats.views.custom_500' 
+handler500 = 'main_stats.views.custom_500' 
