@@ -78,7 +78,14 @@
            kind: "ColumnChart",
            options: options_for_column_charts_wide_purple
         {% endoptions %}
-                 
+        
+        options_for_column_charts_wide_red= _clone(options_wide);
+        options_for_column_charts_wide_red.colors =  ["#CC0000"]
+        {% options "opt_count_wide_columnRed" %}
+           kind: "ColumnChart",
+           options: options_for_column_charts_wide_red
+        {% endoptions %}
+        
         {% options "opt_count_with_legend" %}
            kind: "LineChart",
            options: options_with_legend
@@ -104,8 +111,20 @@
                 }
         {% endoptions %}
         
+        {% options "out_options_smaller" %}
+        kind: "PieChart",
+        options: {
+                width: 400,
+                height: 260
+        }
+        {% endoptions %}
         
-        
+        opt_count_with_legend_with_red = _clone(options_with_legend);
+        opt_count_with_legend_with_red.colors =   ["#09f","#66CC33", "#CC0000"]
+        {% options "opt_count_with_legend_Red" %}
+        kind: "LineChart",
+        options: opt_count_with_legend_with_red
+        {% endoptions %}
         
         
       
