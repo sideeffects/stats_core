@@ -23,6 +23,7 @@ RELEASE_DIRS=\
 	houdini_licenses \
 	houdini_surveys \
 	houdini_forum \
+	orbolt \
 	bin \
 	backups \
 

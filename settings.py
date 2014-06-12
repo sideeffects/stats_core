@@ -85,6 +85,14 @@ if IS_QUERY_SERVER:
             'USER': 'www',
             'PASSWORD': 'TODO: enter-password',            
         },
+        # for Postgres
+        'store': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'store',
+            'USER': 'assetstore',
+            'PASSWORD': 'captainsrig',
+            'HOST': 'localhost',
+        }              
     })
 
 # Database routers
@@ -230,9 +238,10 @@ if IS_QUERY_SERVER:
         'houdini_licenses',
         'houdini_forum',
         'houdini_surveys',
+        'orbolt'
         
     )
-
+    
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error.
