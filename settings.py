@@ -70,8 +70,6 @@ if IS_QUERY_SERVER:
             'NAME': 'licensedb',
             'USER': 'www',
             'PASSWORD': 'TODO: enter-password',
-            'HOST': (''
-                if IS_PRODUCTION_QUERY_SERVER else 'sandbox.sidefx.com'),
         },
         'mambo': {    
             'ENGINE': 'django.db.backends.mysql',
