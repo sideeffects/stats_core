@@ -45,7 +45,6 @@ def get_sql_data_for_report(
              
         tpl = Template(tpl_header + string_query)
         
-        #print tpl.render(Context(context_vars))
         cursor.execute(tpl.render(Context(context_vars)), [])
         
         series = [(row[0], row[1]) for row in cursor.fetchall()]
@@ -94,7 +93,7 @@ def get_events_in_range(series_range, aggregation, fill_empty_string = True):
     string_query = """
         select {% aggregated_date "date" aggregation %} AS mydate, 
                group_concat(title separator ', ') AS my_title
-        from houdini_stats_event
+        from stats_main_event
         where {% where_between "date" start_date end_date %}
         group by mydate
         order by mydate"""

@@ -22,3 +22,9 @@ if settings.IS_QUERY_SERVER:
             'generic_report_view', name='generic_report'),
 
     )
+    
+if settings.IS_LOGGING_SERVER:
+    urlpatterns += patterns('stats_main.api',
+        # API for non-browser-based interaction.
+        url(r'^api$', 'api_view', name='api'),
+    )    

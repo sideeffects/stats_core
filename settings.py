@@ -223,7 +223,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'googlecharts',
     'south',
-    'stats_main'
+    'stats_main',
+    'houdini_stats',
 )
 
 if SHOW_DEBUG_TOOLBAR:
@@ -233,7 +234,6 @@ if SHOW_DEBUG_TOOLBAR:
 
 if IS_QUERY_SERVER:
     INSTALLED_APPS += (
-        'houdini_stats',               
         'houdini_licenses',
         'houdini_forum',
         'houdini_surveys',
