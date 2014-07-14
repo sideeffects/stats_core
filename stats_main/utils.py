@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from houdini_stats.models import *
+from stats_main.models import *
 from django.contrib.gis.geoip import GeoIP
 from settings import REPORTS_START_DATE, _this_dir
 from dateutil.relativedelta import relativedelta
@@ -219,7 +220,7 @@ def save_uptime(machine_config, num_seconds, idle_time, data_log_date):
     """
     Create Uptime record and save it in DB.
     """
-    uptime = Uptime(machine_config = machine_config,
+    uptime = Uptime(stats_machine_config = machine_config,
                     date = data_log_date,
                     number_of_seconds = num_seconds,
                     idle_time = idle_time)                    
@@ -278,7 +279,7 @@ def save_tool_usage(machine_config, tools_prefix, key, count, data_log_date):
                 tool_name = tool_name.replace("(orbolt)","")
                 is_asset = True
                                 
-            tools_usage = HoudiniToolUsage(machine_config = machine_config,
+            tools_usage = HoudiniToolUsage(stats_machine_config = machine_config,
                           date = data_log_date, tool_name = tool_name,
                           tool_creation_location = tool_creation_location,
                           tool_creation_mode= mode, count = count,
@@ -294,7 +295,7 @@ def save_key_usage(machine_config, key, count, data_log_date):
     Create HoudiniUsageCount object and save it in DB.
     """
      
-    key_usage = HoudiniUsageCount(machine_config = machine_config,
+    key_usage = HoudiniUsageCount(stats_machine_config = machine_config,
                                  date = data_log_date, key = key, count = count)
     key_usage.save()
         
@@ -310,7 +311,7 @@ def save_crash(machine_config, crash_log, data_log_date):
     }
     """
     crash = HoudiniCrash(
-        machine_config=machine_config,
+        stats_machine_config = machine_config,
         date=data_log_date,
         stack_trace=crash_log['traceback'],
         type="crash",
