@@ -31,10 +31,8 @@ class MachineConfigAdmin(admin.ModelAdmin):
     Control how the admin site displays machine configurations.
     """
     list_filter = ("config_hash", "machine", "creation_date",
-                   "operating_system", "graphics_card", 
-                   #"houdini_major_version", "houdini_minor_version", 
-                   #"product", "is_apprentice"
-                   ) 
+                   "operating_system", "graphics_card")
+    
     list_display = list_filter 
     list_display_links =("config_hash", "machine", "creation_date")
     list_per_page = 20
