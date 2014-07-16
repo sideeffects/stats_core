@@ -95,10 +95,15 @@ class API(object):
     @login_not_required
     def send_machine_config_and_stats( self, request, 
                                        machine_config_and_stats_json):
-        
-        # Get json content
-        json_content = json.loads(machine_config_and_stats_json['json_content'])
-        
+        json_content = ""
+        # Hack to avoid getting errors when the log file is empty
+        try:
+            # Get json content
+            json_content = json.loads(
+                                  machine_config_and_stats_json['json_content'])
+        except:
+            return json_http_response(True)
+                
         return self.send_stats_main(
             request, machine_config_and_stats_json['stat_log_version'],
             json_content['machine_config'], json_content['stats'])
