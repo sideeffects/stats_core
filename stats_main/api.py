@@ -102,6 +102,8 @@ class API(object):
             json_content = json.loads(
                                   machine_config_and_stats_json['json_content'])
         except:
+            import traceback
+            save_error_log("Errors in stats file", traceback.format_exc())
             return json_http_response(True)
                 
         return self.send_stats_main(

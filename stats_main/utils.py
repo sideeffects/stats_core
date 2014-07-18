@@ -318,13 +318,22 @@ def save_crash(machine_config, crash_log, data_log_date):
     )
     crash.save()
 
+#------------------------------------------------------------------------------- 
+
+def save_error_log(description, stack_trace):
+    """
+    Create ErrorLog object and save it in DB.
+    """
+    error_log = ErrorLog(description = description, stack_trace = stack_trace,
+                         date = datetime.datetime.now())
+    error_log.save()    
+
 #-------------------------------------------------------------------------------
 
 def save_data_log_to_file(date, config_hash, json_data):
     """
     Save the received data log to a text file
     """
-    
     with open(_this_dir + "/houdini_logs.txt", "a") as log_file:
         log_file.write("""\n Date: {0}, Config Hash: {1} \n {2}
             """.format(date, config_hash, str(json_data)))

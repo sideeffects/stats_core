@@ -179,3 +179,35 @@ class Event(models.Model):
         # How to order results when doing queries:
         ordering = ('date',)    
         db_name = 'stats'
+
+#-------------------------------------------------------------------------------
+
+class ErrorLog(models.Model):
+    """
+    Model to store possible errors like empty json files.
+    """
+    
+    description = models.TextField(
+        help_text='''Brief Description of the nature of the error.''',
+        blank=True,
+        default=''
+    )
+    
+    stack_trace = models.TextField(
+        help_text='''Stack Trace for the error.''',
+        blank=True,
+        default=''
+    )   
+    
+    date = models.DateTimeField(
+        help_text='''Date when the event took place.'''
+    )
+    
+    def __unicode__(self):
+        return "ErrorLog(%s, %s)" % \
+            (self.description, self.date)
+        
+    class Meta:
+        # How to order results when doing queries:
+        ordering = ('date',)    
+        db_name = 'stats'
