@@ -320,12 +320,14 @@ def save_crash(machine_config, crash_log, data_log_date):
 
 #------------------------------------------------------------------------------- 
 
-def save_error_log(description, stack_trace):
+def save_error_log(description, stack_trace, ip_address):
     """
     Create ErrorLog object and save it in DB.
     """
-    error_log = ErrorLog(description = description, stack_trace = stack_trace,
-                         date = datetime.datetime.now())
+    error_log = ErrorLog(description = description, 
+                         date = datetime.datetime.now(), 
+                         stack_trace = stack_trace, 
+                         ip_address = ip_address)
     error_log.save()    
 
 #-------------------------------------------------------------------------------

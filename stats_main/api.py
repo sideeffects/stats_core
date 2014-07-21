@@ -103,7 +103,8 @@ class API(object):
                                   machine_config_and_stats_json['json_content'])
         except:
             import traceback
-            save_error_log("Errors in stats file", traceback.format_exc())
+            save_error_log("Errors in stats file", traceback.format_exc(), 
+                           get_ip_address(request))
             return json_http_response(True)
                 
         return self.send_stats_main(

@@ -193,14 +193,20 @@ class ErrorLog(models.Model):
         default=''
     )
     
+    date = models.DateTimeField(
+        help_text='''Date when the event took place.'''
+    )
+    
     stack_trace = models.TextField(
         help_text='''Stack Trace for the error.''',
         blank=True,
         default=''
     )   
     
-    date = models.DateTimeField(
-        help_text='''Date when the event took place.'''
+    ip_address = models.CharField(
+        help_text='''IP address.''',
+        max_length=25,
+        blank=True,
     )
     
     def __unicode__(self):

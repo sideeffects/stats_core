@@ -59,7 +59,7 @@ class ErrorLogAdmin(admin.ModelAdmin):
     """
     Control how the admin site displays Error Logs 
     """
-    list_filter = ("description", "date")
+    list_filter = ("description", "ip_address", "date")
     list_display = list_filter 
     list_display_links =list_filter
     
