@@ -47,6 +47,8 @@ def get_sql_data_for_report(
         
         cursor.execute(tpl.render(Context(context_vars)), [])
         
+        #print tpl.render(Context(context_vars))
+        
         series = [(row[0], row[1]) for row in cursor.fetchall()]
 
         if not fill_zeros and fill_empty_string:
