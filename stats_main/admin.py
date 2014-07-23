@@ -65,3 +65,17 @@ class ErrorLogAdmin(admin.ModelAdmin):
     
     list_per_page = 20
     ordering = ["-date"]
+
+#-------------------------------------------------------------------------------
+
+@admin_site_register(Event)
+class Event(admin.ModelAdmin):
+    """
+    Control how the admin site displays Events 
+    """
+    list_filter = ("title", "date", "show")
+    list_display = list_filter 
+    list_display_links =list_filter
+    
+    list_per_page = 20
+    ordering = ["-date"]
