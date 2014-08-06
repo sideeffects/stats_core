@@ -126,9 +126,12 @@ class API(object):
             total_idle_time = json_data["idle_time"] \
                 if json_data.has_key("idle_time") else 0 
                 
+            # Get ip address
+            ip_address = get_ip_address(request)     
+                
             # Get or save machine config
             machine_config = get_or_save_machine_config(machine_config_info,
-                get_ip_address(request), data_log_date)
+                                 ip_address, data_log_date)
                 
             # The logs without log id wont be saved
             is_new_log = False
@@ -162,7 +165,7 @@ class API(object):
                     # Put everything inside json
                     save_data_log_to_file(data_log_date, 
                                           machine_config_info['config_hash'],
-                                          json_data)
+                                          json_data, ip_address)
                       
         return json_http_response(True)
 
