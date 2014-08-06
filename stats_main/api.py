@@ -137,6 +137,7 @@ class API(object):
                 is_new_log = is_new_log_or_existing(machine_config, 
                                                     json_data["log_id"], 
                                                     data_log_date)
+                
                 # Just save the stats data if  the log id was new
                 if is_new_log:
                     # Save uptime
@@ -145,12 +146,24 @@ class API(object):
                     # Save counts 
                     save_counts(machine_config, json_data["counts"], 
                                 data_log_date)
+                    
+                    # Save sums and counts
+                    save_sums_and_counts(machine_config, 
+                                         _get_sums_and_counts(json_data), 
+                                         data_log_date)
+                    
+                    # Save flags
+                    save_flags(machine_config, json_data["flags"], 
+                               data_log_date)
+                    # Save logs
+                    save_logs(machine_config, json_data["logs"], 
+                              data_log_date)
                        
                     # Put everything inside json
                     save_data_log_to_file(data_log_date, 
                                           machine_config_info['config_hash'],
                                           json_data)
-                    # TODO(YB): Implement save flags and save logs  
+                      
         return json_http_response(True)
 
     
@@ -191,3 +204,18 @@ def api_view(request):
     """
     return API().dispatch(request)
 
+#-------------------------------------------------------------------------------
+
+def _get_sums_and_counts(json_data):
+    """
+    To return properly sums and counts. There are machines who might not be 
+    sending this key yet.
+    """
+    
+    if json_data.has_key("sums_and_counts"):
+        return json_data["sums_and_counts"]
+    elif json_data.has_key("sums"):
+        return json_data["sums"]
+    else:
+        return {}    
+    

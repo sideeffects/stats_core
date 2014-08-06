@@ -322,6 +322,64 @@ def save_crash(machine_config, crash_log, data_log_date):
         type="crash",
     )
     crash.save()
+    
+#------------------------------------------------------------------------------- 
+      
+def save_sums_and_counts(machine_config, sums_and_counts, data_log_date):
+    """
+    Save sums and counts in DB.
+    
+    "sums_and_counts":{
+            "cook/SOP_xform/time": [0.524806, 4171],
+            "cook/SOP_scatter/time": [0.041588, 3],
+            "cook/SOP_merge/time": [0.041572, 3],
+            "cook/mantra/mantra1/time": [36.195406, 1],
+            "cook/SOP_copy/time": [1.512519, 3]
+     }    
+    
+    """
+    for key, sum_count in sums_and_counts.iteritems():
+        sum_and_count_object = HoudiniSumAndCount(
+                                       stats_machine_config = machine_config,
+                                       date = data_log_date, key = key,
+                                       sum = sum_count[0], count = sum_count[1])
+        sum_and_count_object.save()
+
+#------------------------------------------------------------------------------- 
+ 
+def save_flags(machine_config, flags, data_log_date):
+    """
+    Save flags in DB.
+     
+    "flags":[ "key1", "key2", "key3" ]    
+     
+    """
+    for key in flags:
+        flag_object = HoudiniFlag(stats_machine_config = machine_config,
+                                  date = data_log_date, key = key)
+                                       
+        flag_object.save()
+
+#------------------------------------------------------------------------------- 
+ 
+def save_logs(machine_config, logs, data_log_date):
+    """
+    Save logs in DB.
+     
+    "logs": {
+            "web_server": {
+                "80.511179": "user requested page /",
+                "90.234239": "user requested page /index"
+            }
+       
+    """
+    for key, values in logs.iteritems():
+        for timestamp, log_entry in values.iteritems():
+            log_object = HoudiniLog(stats_machine_config = machine_config,
+                                    date = data_log_date, key = key,
+                                    timestamp = timestamp, 
+                                    log_entry = log_entry)
+            log_object.save()
 
 #------------------------------------------------------------------------------- 
 
