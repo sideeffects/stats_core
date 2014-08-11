@@ -60,15 +60,15 @@ top_menu_options = OrderedDict([
     }),
     ("apprentice", {
         "menu_url_prefix": "apprentice",
-        "menu_name": "Apprentice",
+        "menu_name": "Activations",
         "menu_options": [
             ("apprentice_activations", "Apprentice Activations",[
                 "ApprenticeActivationsVsDownloads",
                 "ApprenticeActivationsAndReactivationsPercentages",
                 "PercentagesApprenticeNewActivationsFromApprenticeDownloads"
             ]),
-            ("apprentice_hd", "Apprentice HD",[
-                "ApprenticeHdLicensesOverTime",
+            ("apprentice_hd", "Apprentice HD and Houdini Indie",[
+                "ApprenticeHdAndHoudiniIndieLicensesOverTime",
                 "ApprenticeHdCumulativeLicensesOverTime"
             ]),
             ("apprentice_heatmap", "Apprentice Activations Heatmap",[
