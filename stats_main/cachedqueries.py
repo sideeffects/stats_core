@@ -71,7 +71,7 @@ def cacheable(max_num_caches=3):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
             return find_or_execute_query(
-                function, max_caches_per_function, *args, **kwargs)
+                function, max_num_caches, *args, **kwargs)
         return wrapper
 
     return inner_cacheable
