@@ -10,7 +10,7 @@ def _get_cursor(db_name):
         """Given a db name returns a cursor."""
         return connections[db_name].cursor()
 
-@cacheable
+@cacheable(max_num_caches=15)
 def get_sql_data_for_report(
         string_query, db_name, context_vars, 
         fill_zeros=True, fill_empty_string=False):
@@ -67,7 +67,7 @@ def get_sql_data_for_report(
         
 #-------------------------------------------------------------------------------
 
-@cacheable
+@cacheable(max_num_caches=15)
 def get_orm_data_for_report(query_set, time_field, series_range, 
                             aggregation = None, func = None):
         """
@@ -85,7 +85,7 @@ def get_orm_data_for_report(query_set, time_field, series_range,
 #TODO: Move this to houdini reports, or create an events table for
 # the stats main app.
 
-@cacheable
+@cacheable(max_num_caches=15)
 def get_events_in_range(series_range, aggregation, fill_empty_string = True):
     """
     Get all the events in the give time period. Return the results as a time
