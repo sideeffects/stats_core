@@ -23,37 +23,38 @@ top_menu_options = OrderedDict([
         "menu_options": [
             ("downloads", "Houdini Downloads", [
                 "HoudiniDownloadsOverTime",
-                "CommercialVsApprenticeDownloadsInPercentages" 
+                "CommercialVsApprenticeDownloadsInPercentages" ,
             ]),
             ("engine", "Houdini Engine", [
-                "EngineTrialLicensesOverTime"
+                "EngineTrialLicensesOverTime",
             ]),
             ("usage", "Usage", [
                 "NewMachinesOverTime",
                 "MachinesActivelySendingStats",
-                "AvgNumConnectionsFromSameMachine"
+                "AvgNumConnectionsFromSameMachine",
             ]),
             ("uptime", "Session Information", [
                 "AverageSessionLength",
-                "AverageUsageByMachine"
+                "AverageUsageByMachine",
+                "BreakdownOfApprenticeUsage",
             ]),
             ("crashes", "Crashes",[
                 "NumCrashesOverTime",
                 "NumOfMachinesSendingCrashesOverTime",
                 "AvgNumCrashesFromSameMachine",
                 "CrashesByOS",
-                "CrashesByProduct"
+                "CrashesByProduct",
             ]),
             ("tools_usage", "Shelf & Tab menu Tools", [
                 "MostPopularTools",
                 "MostPopularToolsShelf",
                 "MostPopularToolsViewer",
-                "MostPopularToolsNetwork"
+                "MostPopularToolsNetwork",
             ]),
             ("versions_and_builds", "Versions and builds",[
                 "VersionsAndBuilds",
                 "VersionsAndBuildsApprentice",
-                "VersionsAndBuildsCommercial"              
+                "VersionsAndBuildsCommercial",
             ]),
         ],
         "groups": ['staff', 'r&d'],
@@ -65,14 +66,14 @@ top_menu_options = OrderedDict([
             ("apprentice_activations", "Apprentice Activations",[
                 "ApprenticeActivationsVsDownloads",
                 "ApprenticeActivationsAndReactivationsPercentages",
-                "PercentagesApprenticeNewActivationsFromApprenticeDownloads"
+                "PercentagesApprenticeNewActivationsFromApprenticeDownloads",
             ]),
             ("apprentice_hd", "Apprentice HD and Houdini Indie",[
                 "ApprenticeHdAndHoudiniIndieLicensesOverTime",
-                "ApprenticeHdCumulativeLicensesOverTime"
+                "ApprenticeHdCumulativeLicensesOverTime",
             ]),
             ("apprentice_heatmap", "Apprentice Activations Heatmap",[
-                "ApprenticeActivationsHeatmap"
+                "ApprenticeActivationsHeatmap",
             ]),
         ],
         "groups":['staff', 'r&d'],
@@ -83,11 +84,11 @@ top_menu_options = OrderedDict([
         "menu_options": [
             ("sidefx_labs", "labs.sidefx.com survey",[
                 "BreakdownMayaUnityCounts",
-                "BreakdownMayaUnityOverTime"
+                "BreakdownMayaUnityOverTime",
             ]),
             ("apprentice_followup","Apprentice survey",[
                 "PercentageUsersWhoRepliedApprenticeSurvey",
-                "ApprenticeFollowUpSurvey"
+                "ApprenticeFollowUpSurvey",
              ]),
         ],
         "groups":['staff', 'r&d'],
@@ -98,7 +99,7 @@ top_menu_options = OrderedDict([
         "menu_options": [
             ("login_registration", "Login & Registration",[
                 "NewUserRegistrationsOverTime",
-                "BreakdownRegistrationsMethods"
+                "BreakdownRegistrationsMethods",
             ]),
         ],
         "groups":['staff', 'r&d'],
@@ -115,7 +116,7 @@ top_menu_options = OrderedDict([
                 "NewVersionsOfExistingAssets",
                 "NewUsersOverTime",
                 "OSAndBrowserCombinations",
-                "PercentageLicensesByCommercialAndApprentice"
+                "PercentageLicensesByCommercialAndApprentice",
             ]),
             ("licenses", "Licenses",[
                 "LicensesOverTime",
@@ -127,7 +128,7 @@ top_menu_options = OrderedDict([
                 "LicensesOverTimeWindows",
                 "PercentagesLicensesAssetNotDownloadedWindows",
                 "LicensesOverTimeLinux",
-                "PercentagesLicensesAssetNotDownloadedLinux"
+                "PercentagesLicensesAssetNotDownloadedLinux",
             ]),            
             ("licenses_heatmap", "Licenses Heatmap",[
                 "AssetLicensesHeatmap"
@@ -136,12 +137,12 @@ top_menu_options = OrderedDict([
                 "TopDownloadedAssets",
                 "TopViewedAssets",
                 "TopPaidAssets",
-                "TopGrossingAssets"
+                "TopGrossingAssets",
             ]),
             ("trials", "Trials",[
                 "TrialLicensesOverview",
                 "TrialLicensesForPaidAssets",
-                "TrialLicensesUpgrades"                
+                "TrialLicensesUpgrades",
             ]),             
         ],
         "groups":['staff', 'r&d'],

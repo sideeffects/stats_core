@@ -10,6 +10,17 @@ def _get_cursor(db_name):
         """Given a db name returns a cursor."""
         return connections[db_name].cursor()
 
+def expand_templated_query(string_query, context_vars):
+    context_vars = context_vars.copy()
+    
+    context_vars["start_date"] = context_vars['series_range'][0] 
+    context_vars["end_date"] = context_vars['series_range'][1]
+
+    tpl_header =  "{% load reports_tags %} "
+    tpl = Template(tpl_header + string_query)
+    return tpl.render(Context(context_vars))
+
+# TODO: Rename this to get_sql_time_series_for_report
 @cacheable(max_num_caches=15)
 def get_sql_data_for_report(
         string_query, db_name, context_vars, 
@@ -35,20 +46,11 @@ def get_sql_data_for_report(
         instead of with zeros
         """
         
-        context_vars = context_vars.copy()
-        
-        context_vars["start_date"] = context_vars['series_range'][0] 
-        context_vars["end_date"] = context_vars['series_range'][1]
-        
+        string_query = expand_templated_query(string_query, context_vars)
+
         cursor = _get_cursor(db_name)
-        tpl_header =  "{% load reports_tags %} "
-             
-        tpl = Template(tpl_header + string_query)
-        
-        cursor.execute(tpl.render(Context(context_vars)), [])
-        
-        #print tpl.render(Context(context_vars))
-        
+        cursor.execute(string_query, [])
+
         series = [(row[0], row[1]) for row in cursor.fetchall()]
 
         if not fill_zeros and fill_empty_string:
