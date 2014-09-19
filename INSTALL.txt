@@ -1,0 +1,24 @@
+apt-get install python-dev
+apt-get install python-pip
+apt-get install apache2
+apt-get install mysql-server libmysqlclient-dev
+apt-get install python-mysqldb
+apt-get install openldap libldap2-dev libsasl2-dev libssl-dev python-ldap
+pip install django==1.5
+pip install south
+pip install python-ldap
+pip install django-auth-ldap
+pip install django-dajaxice
+pip install httpagentparser
+
+mysqladmin -u root password <new-password>
+mysqladmin -u root -p create stats
+
+create user www-stats identified by 'www-stats-password';
+mysql -u root -p
+mysql> create database stats_django_skeleton;
+mysql> create database stats;
+mysql> grant all on stats_django_skeleton.* to 'www-stats'@'localhost' identified by 'www-stats-password';
+mysql> grant all on stats.* to 'www-stats'@'localhost' identified by 'www-stats-password';
+mysql> flush privileges;
+
