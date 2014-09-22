@@ -11,6 +11,8 @@ pip install django-auth-ldap
 pip install django-dajaxice
 pip install httpagentparser
 pip install petl
+pip install django-google-charts
+pip install django-qsstats-magic
 
 mysqladmin -u root password <new-password>
 mysqladmin -u root -p create stats
