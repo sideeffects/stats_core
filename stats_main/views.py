@@ -178,6 +178,8 @@ def validate_user_is_in_group(request, group_names):
             request.user, group_names):
         raise PermissionDenied()
 
+# TODO: Remove r&d from this list, perhaps add a default permission list in
+#       settings.py.
 def user_access(group_names=['staff', 'r&d']):
     """
     Decorator for views that checks if the user has access to the reports

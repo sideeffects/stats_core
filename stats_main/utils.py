@@ -11,6 +11,8 @@ import datetime
 import time
 import hashlib
 
+import settings
+
 #===============================================================================
 
 def text_http_response(content, status=200):
@@ -182,19 +184,22 @@ def get_or_save_machine_config(user_info, ip_address, data_log_date):
         )
         # Save the machine config 
         machine_config.save()
-        
-        # Create new houdini machine config with the rest of the data 
-        houdini_machine_config = HoudiniMachineConfig(
-            machine_config = machine_config,
-            houdini_major_version = user_info.get('houdini_major_version',0),
-            houdini_minor_version = user_info.get('houdini_minor_version',0),
-            houdini_build_number = user_info.get('houdini_build_version',0),
-            product = user_info.get('application_name',"").title(),
-            is_apprentice = user_info.get('license_category',"") == 'Apprentice',
-        )
-        # Save houdini machine config 
-        houdini_machine_config.save()
-        
+
+        # Let applications extend the machine config model.
+        for app_name in settings.STATS_APPLICATIONS:
+            try:
+                app_module = __import__(app_name + ".models")
+            except ImportError:
+                continue
+
+            app_models_module = getattr(app_module, "models")
+            creation_function = getattr(
+                app_models_module, "create_machine_config_extension", None)
+            if creation_function is not None:
+                machine_config_extension = creation_function(   
+                    machine_config, user_info)
+                machine_config_extension.save()
+
     return machine_config
 
 #-------------------------------------------------------------------------------
