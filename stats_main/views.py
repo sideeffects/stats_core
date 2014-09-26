@@ -24,7 +24,7 @@ import report_organization
 import settings
 import genericreportclasses
 
-for report_module_name in report_organization.REPORT_MODULES:
+for report_module_name in settings.REPORT_MODULES:
     __import__(report_module_name)
 
 #===============================================================================

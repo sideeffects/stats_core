@@ -6,16 +6,6 @@ except ImportError:
     from ordereddict import OrderedDict
 
 
-REPORT_MODULES =(
-    'houdini_stats.reports.houdini',
-    'houdini_licenses.reports.downloads',
-    'houdini_licenses.reports.apprentice',
-    'houdini_licenses.reports.engine',
-    'houdini_surveys.reports.surveys',
-    'houdini_forum.reports.sidefx_website',
-    'orbolt.reports.orbolt_reports'
-)
-
 top_menu_options = OrderedDict([
     ("houdini", {
         "menu_url_prefix": "houdini",

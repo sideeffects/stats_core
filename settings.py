@@ -3,6 +3,7 @@
 import os
 import sys
 import datetime
+import socket
 
 # Make sure this folder is the first one in the search path so we pick up
 # our googlecharts instead of the system's.
@@ -12,10 +13,31 @@ if sys.path[0] != _this_dir:
 
 _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 
-IS_PRODUCTION_SERVER = False
-DEBUG = IS_PRODUCTION_SERVER
+# Stats applications and reports modules to include. 
+# Each included app will extend this list 
+STATS_APPLICATIONS = ()
+REPORT_MODULES = ()
+
+# We need to figure out how to do this better since it shouldn't be in the main
+# settings
+PRODUCTION_LOGGING_SERVER_NAME = "florida"
+PRODUCTION_QUERY_SERVER_NAME = "yuma"
+
+IS_PRODUCTION_LOGGING_SERVER = (
+    socket.gethostname() == PRODUCTION_LOGGING_SERVER_NAME)
+IS_PRODUCTION_QUERY_SERVER = (
+    socket.gethostname() == PRODUCTION_QUERY_SERVER_NAME)
+IS_PRODUCTION_SERVER = (
+    IS_PRODUCTION_LOGGING_SERVER or IS_PRODUCTION_QUERY_SERVER)
+
+# If it's not a production server, then the server is both the logging and
+# query server.
+IS_LOGGING_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_LOGGING_SERVER
+IS_QUERY_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_QUERY_SERVER
+
+DEBUG = not IS_PRODUCTION_SERVER
 TEMPLATE_DEBUG = DEBUG
-SHOW_DEBUG_TOOLBAR = False
+SHOW_DEBUG_TOOLBAR = not IS_PRODUCTION_SERVER
 
 ALLOWED_HOSTS = ['*',] 
 
@@ -210,18 +232,28 @@ else:
 
 HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 4, 13) 
 
-INSTALLED_APPS += (
-    'houdini_stats',
-)
-
-STATS_APPLICATIONS = (
-    "houdini_stats",
-)
-
+# Let the stats_extensions.py file in this directory set STATS_EXTENSIONS.
+STATS_EXTENSIONS = ()
 try:
-    from local_settings import *
+    from stats_extensions import *
 except ImportError:
     pass
+
+# Loop through the stats extensions, add them to the sys.path, load each of
+# their local_settings, and give them a chance to append to STATS_APPLICATIONS.
+for extension_relative_dir in STATS_EXTENSIONS:
+    extension_dir = os.path.normpath(
+        os.path.join(_this_dir, extension_relative_dir))
+    sys.path.append(extension_dir)
+   
+    try:
+        execfile(os.path.join(extension_dir, "local_settings.py"))
+    except IOError:
+        pass
+
+# Now that we know all the STATS_APPLICATIONS, we can tell Django by updating
+# INSTALLED_APPS.
+INSTALLED_APPS += STATS_APPLICATIONS
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -231,3 +263,10 @@ STATIC_URL = ('/stats/static/' if IS_PRODUCTION_SERVER else '/static/')
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
+
+
+
+
+
+
