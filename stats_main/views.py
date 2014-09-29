@@ -20,7 +20,7 @@ import sys
 import time_series
 from utils import *
 
-import report_organization
+import menu_builder
 import settings
 import genericreportclasses
 
@@ -97,7 +97,7 @@ def _build_permitted_top_menu_options(user):
     """
     return [
         top_menu_info
-        for top_menu_info in report_organization.top_menu_options.values()
+        for top_menu_info in settings.TOP_MENU_OPTIONS.values()
         if _user_in_groups(user, top_menu_info.get("groups", []))]
 
 #-------------------------------------------------------------------------------
@@ -115,19 +115,19 @@ def _get_active_menu_option_info(menu, selected_option):
             'next_option': {'name': 'crashes', title: "Crashes" }
         }
     """
-    menu_info = report_organization.top_menu_options[menu]
+    menu_info = settings.TOP_MENU_OPTIONS[menu]
     menu_option_infos = menu_info['menu_options']
 
-    menu_selected_option = report_organization.find_menu_option_info(
+    menu_selected_option = menu_builder.find_menu_option_info(
         menu_option_infos, selected_option)
 
-    menu_option_names_to_titles = report_organization.menu_option_names_to_titles(
+    menu_option_names_to_titles = menu_builder.menu_option_names_to_titles(
         menu_option_infos)
 
-    if not selected_option in report_organization.build_top_menu_options_next_prevs():
+    if not selected_option in menu_builder.build_top_menu_options_next_prevs():
         raise Http404
 
-    next_prev_options = report_organization.build_top_menu_options_next_prevs()[
+    next_prev_options = menu_builder.build_top_menu_options_next_prevs()[
         selected_option]
 
     prev_option_name = next_prev_options['prev']
@@ -301,7 +301,7 @@ def generic_report_view(request, menu_name, dropdown_option):
     
     # Making sure at least the first option will always be selected
     if dropdown_option=='':
-        dropdown_option = report_organization.top_menu_options[menu_name]\
+        dropdown_option = settings.TOP_MENU_OPTIONS[menu_name]\
                                                          ["menu_options"][0][0]
     
     # TODO: Determine the proper group names for the intersection of the
@@ -310,7 +310,7 @@ def generic_report_view(request, menu_name, dropdown_option):
 
     # Find the report classes for this dropdown and create an instance of each
     # report.
-    report_class_names = report_organization.report_classes_for_menu_option(
+    report_class_names = menu_builder.report_classes_for_menu_option(
         menu_name, dropdown_option)
     
     report_classes = [

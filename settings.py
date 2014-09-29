@@ -5,6 +5,11 @@ import sys
 import datetime
 import socket
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
+
 # Make sure this folder is the first one in the search path so we pick up
 # our googlecharts instead of the system's.
 _this_dir = os.path.normpath(os.path.dirname(__file__))
@@ -17,6 +22,7 @@ _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 # Each included app will extend this list 
 STATS_APPLICATIONS = ()
 REPORT_MODULES = ()
+TOP_MENU_OPTIONS = OrderedDict()
 
 # We need to figure out how to do this better since it shouldn't be in the main
 # settings
@@ -51,12 +57,14 @@ DATABASES = {
         'NAME': 'stats_django_skeleton',
         'USER': 'www',
         'PASSWORD': 'TODO: enter-password',
+        #'PASSWORD': 'TODO: enter-password',
     },
     'stats': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats',
         'USER': 'www',
         'PASSWORD': 'TODO: enter-password',
+        #'PASSWORD': 'TODO: enter-password',
     },
 }
 
@@ -263,10 +271,3 @@ STATIC_URL = ('/stats/static/' if IS_PRODUCTION_SERVER else '/static/')
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
-
-
-
-
-
-
-

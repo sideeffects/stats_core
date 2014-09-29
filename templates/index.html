@@ -13,15 +13,15 @@
               {% if menu_dropdown.menu_name = "Houdini" %}
               
               <h2>Houdini Analytics</h2>
-              <a href="{% url "generic_report" "houdini" "downloads" %}">
+              <a href="{% url "generic_report" "houdini" "usage" %}">
                  <img alt="stats" src="{{STATIC_URL}}/images/stats_houdini.png">
               </a>
               <p>Graphs and reports from data being collected from inside Houdini. 
                  Some of the analytics in this set include session information, houdini crashes, must popular houdini tools and more.<p>
-                 <a class="btn btn-default" href="{% url "generic_report" "houdini" "downloads" %}">View details &raquo;</a></p>
+                 <a class="btn btn-default" href="{% url "generic_report" "houdini" "usage" %}">View details &raquo;</a></p>
               {% endif %}
               
-              {% if menu_dropdown.menu_name = "Apprentice" %}
+              {% if menu_dropdown.menu_name = "Activations" %}
               
               <h2>Houdini Apprentice</h2>
               <a href="{% url "generic_report" "apprentice" "apprentice_activations" %}">
