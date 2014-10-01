@@ -2,8 +2,8 @@ LOGGING_SERVER=www.sidefx.com
 LOGGING_SERVER_USER=root
 QUERY_SERVER=internal.sidefx.com
 QUERY_SERVER_USER=prisms
-
 INSTALL_DIR=/var/www/stats
+
 TEMP_DIR=~/stats_backup
 TIMESTAMP=$(shell date +"%Y-%m-%d")
 BACKUP_DIR=$(TEMP_DIR)/$(TIMESTAMP)
@@ -11,42 +11,31 @@ SOURCE_FILE_NAME=source.tar
 DB_DUMP_FILE_NAME=db_backup.tar.gz
 HOU_LOGS_FILE = houdini_logs.txt
 
-RELEASE_FILES=\
-	Makefile \
-	*.py \
-	wsgi-script/django.wsgi
-
-RELEASE_DIRS=\
-	templates \
-	googlecharts \
-        stats_main \
-	houdini_stats \
-	houdini_licenses \
-	houdini_surveys \
-	houdini_forum \
-	orbolt \
-	bin \
-	backups \
-
 package_source:
 	@# Create the package of source files to copy to the server.
 	rm -f $(SOURCE_FILE_NAME)
-	tar cf $(SOURCE_FILE_NAME) $(RELEASE_FILES) $(RELEASE_DIRS)
+	python package_source.py
 
 push:
 	$(MAKE) package_source
 
 	@# In case this is the first time updating the servers, make sure the
 	@# temporary directories exist.
-	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "mkdir -p $(TEMP_DIR)"
+	if [ $(QUERY_SERVER) != $(LOGGING_SERVER) ]; then \
+	    ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "mkdir -p $(TEMP_DIR)"; \
+	fi
 	ssh $(LOGGING_SERVER_USER)@$(LOGGING_SERVER) "mkdir -p $(TEMP_DIR)"
 
 	@# Copy the source and the Makefile to the servers.
-	scp $(SOURCE_FILE_NAME) Makefile $(QUERY_SERVER_USER)@$(QUERY_SERVER):$(TEMP_DIR)/
+	if [ $(QUERY_SERVER) != $(LOGGING_SERVER) ]; then \
+	    scp $(SOURCE_FILE_NAME) Makefile $(QUERY_SERVER_USER)@$(QUERY_SERVER):$(TEMP_DIR)/; \
+	fi
 	scp $(SOURCE_FILE_NAME) Makefile $(LOGGING_SERVER_USER)@$(LOGGING_SERVER):$(TEMP_DIR)/
 
 	@# Run the target on the server.
-	ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server NO_MIGRATIONS=1 TEMP_DIR=$(TEMP_DIR)"
+	if [ $(QUERY_SERVER) != $(LOGGING_SERVER) ]; then \
+	    ssh $(QUERY_SERVER_USER)@$(QUERY_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server NO_MIGRATIONS=1 TEMP_DIR=$(TEMP_DIR)"; \
+	fi
 	ssh $(LOGGING_SERVER_USER)@$(LOGGING_SERVER) "cd $(TEMP_DIR) && sudo make apply_updates_on_server"
 
 local_push:
@@ -108,3 +97,7 @@ load:
 
 run:
 	./manage.py runserver
+
+# Allow a Makefile.local to override things.
+-include Makefile.local
+	
