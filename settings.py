@@ -24,26 +24,9 @@ STATS_APPLICATIONS = ()
 REPORT_MODULES = ()
 TOP_MENU_OPTIONS = OrderedDict()
 
-# We need to figure out how to do this better since it shouldn't be in the main
-# settings
-PRODUCTION_LOGGING_SERVER_NAME = "florida"
-PRODUCTION_QUERY_SERVER_NAME = "yuma"
-
-IS_PRODUCTION_LOGGING_SERVER = (
-    socket.gethostname() == PRODUCTION_LOGGING_SERVER_NAME)
-IS_PRODUCTION_QUERY_SERVER = (
-    socket.gethostname() == PRODUCTION_QUERY_SERVER_NAME)
-IS_PRODUCTION_SERVER = (
-    IS_PRODUCTION_LOGGING_SERVER or IS_PRODUCTION_QUERY_SERVER)
-
-# If it's not a production server, then the server is both the logging and
-# query server.
-IS_LOGGING_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_LOGGING_SERVER
-IS_QUERY_SERVER = not IS_PRODUCTION_SERVER or IS_PRODUCTION_QUERY_SERVER
-
-DEBUG = not IS_PRODUCTION_SERVER
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-SHOW_DEBUG_TOOLBAR = not IS_PRODUCTION_SERVER
+SHOW_DEBUG_TOOLBAR = False
 
 ALLOWED_HOSTS = ['*',] 
 
@@ -114,6 +97,10 @@ MEDIA_URL = '/media/'
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = ''
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = '/stats/static/'
 
 # Location where we store the admin static files
 ADMIN_ROOT = os.path.join(_this_dir, "static/admin")
@@ -240,6 +227,9 @@ else:
 
 HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 4, 13) 
 
+IS_QUERY_SERVER = True
+IS_LOGGING_SERVER = True
+
 # Let the stats_extensions.py file in this directory set STATS_EXTENSIONS.
 STATS_EXTENSIONS = ()
 try:
@@ -262,10 +252,6 @@ for extension_relative_dir in STATS_EXTENSIONS:
 # Now that we know all the STATS_APPLICATIONS, we can tell Django by updating
 # INSTALLED_APPS.
 INSTALLED_APPS += STATS_APPLICATIONS
-
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
-STATIC_URL = ('/stats/static/' if IS_PRODUCTION_SERVER else '/static/')
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
