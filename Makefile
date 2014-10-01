@@ -51,15 +51,15 @@ apply_updates_on_server:
 	@# TODO: If it's the first time, we also need to do a syncdb.
 	(if [ -e $(INSTALL_DIR) ]; then \
 	    mkdir -p $(BACKUP_DIR); \
-	    if [ ! -e $(INSTALL_DIR)/$(HOU_LOGS_FILE) ]; then \
-                touch $(INSTALL_DIR)/$(HOU_LOGS_FILE); \
+	    if [ ! -e $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE) ]; then \
+                touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
 	fi; \
 	(cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \
-	    (cd $(INSTALL_DIR) && $(MAKE) dump); \
-	    mv $(INSTALL_DIR)/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
+	    (cd $(INSTALL_DIR)/stats_core && $(MAKE) dump); \
+	    mv $(INSTALL_DIR)/stats_core/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
 	else \
 	    mkdir -p $(INSTALL_DIR); \
-	    touch $(INSTALL_DIR)/$(HOU_LOGS_FILE); \
+	    touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
 	fi)
 
 	@# Copy the new source code
@@ -67,11 +67,11 @@ apply_updates_on_server:
 	(cd $(INSTALL_DIR) && tar xf $(TEMP_DIR)/$(SOURCE_FILE_NAME))
 	
 	@# Restore the log file.
-	(cd $(INSTALL_DIR) && tar xfz $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) $(HOU_LOGS_FILE))
+	(cd $(INSTALL_DIR)/stats_core && tar xfz $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) $(HOU_LOGS_FILE))
 
 	@# Apply any migrations, unless we've been told not too.
 	(if [ "$(NO_MIGRATIONS)" = "" ]; then \
-	    (cd $(INSTALL_DIR) && ./manage.py migrate) \
+	    (cd $(INSTALL_DIR)/stats_core && ./manage.py migrate) \
 	fi)
 
 	@# Change file ownerships away from root.
