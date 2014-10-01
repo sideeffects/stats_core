@@ -11,8 +11,8 @@ def exclude_file(x):
     
 # Stats core release dirs and files
 current_directory = os.path.basename(settings._this_dir)
-release_dirs_and_files = ["templates", "googlecharts", "stats_main", "bin", 
-                          "Makefile", 
+release_dirs_and_files = ["templates", "googlecharts", "stats_main", "bin",
+                          "backups", "Makefile", 
                           "wsgi-script/django.wsgi"] + glob.glob("*.py")
 
 # Opening tar file
