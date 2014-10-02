@@ -39,7 +39,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats_django_skeleton',
         'USER': 'www',
-        #'PASSWORD': 'TODO: enter-password',
+        'PASSWORD': 'TODO: enter-password',
     },
     'stats': {
         'ENGINE': 'django.db.backends.mysql',
@@ -228,12 +228,12 @@ HOUDINI_REPORTS_START_DATE = datetime.datetime(2014, 4, 13)
 IS_QUERY_SERVER = True
 IS_LOGGING_SERVER = True
 
-# Let the stats_extensions.py file in this directory set STATS_EXTENSIONS.
-STATS_EXTENSIONS = ()
-try:
-    from stats_extensions import *
-except ImportError:
-    pass
+# Extension apps to be added to stats_core 
+STATS_EXTENSIONS = (
+    # In the current version stats_core project ALWAYS needs
+    # the stats_houdini extension                
+    "../stats_houdini", 
+)
 
 # Loop through the stats extensions, add them to the sys.path, load each of
 # their local_settings, and give them a chance to append to STATS_APPLICATIONS.
