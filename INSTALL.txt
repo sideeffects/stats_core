@@ -1,3 +1,7 @@
+To set up you server for Houdini Statistics Website:
+
+1. Install packages:
+
 apt-get install python-dev
 apt-get install python-pip
 apt-get install apache2
@@ -14,6 +18,8 @@ pip install petl
 pip install django-google-charts
 pip install django-qsstats-magic
 
+2. Create database and database user and psw
+
 mysqladmin -u root password <new-password>
 mysqladmin -u root -p create stats
 
@@ -24,4 +30,50 @@ mysql> create database stats;
 mysql> grant all on stats_django_skeleton.* to 'www-stats'@'localhost' identified by 'www-stats-password';
 mysql> grant all on stats.* to 'www-stats'@'localhost' identified by 'www-stats-password';
 mysql> flush privileges;
+
+3. Set database pwd in settings.py
+
+In settings.py set the db passwords you created.
+Look up for the code below in setting.py
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'stats_django_skeleton',
+        'USER': 'www',
+        'PASSWORD': 'TODO: enter-password',
+    },
+    'stats': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'stats',
+        'USER': 'www',
+        'PASSWORD': 'TODO: enter-password',
+    },
+}
+
+4. Set up apache
+
+In your apache folder, in sites-enabled/000-default add:
+
+ WSGIScriptAlias /stats "/var/www/stats/stats_core/wsgi-script/django.wsgi"
+
+ <Directory /var/www/stats/stats_core/wsgi-script/django.wsgi>
+    AllowOverride All
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+ </Directory>
+
+ # Static files for the admin interface.
+ Alias /stats/static "/var/www/stats/stats_core/stats_main/static"
+
+ # Rewrite requests from /stats to /stats/.
+ RewriteRule ^/stats$ /stats/ [R,L]
+
+
+5. Set up base URL prefix 
+
+
+-----------------------------------------------------------------------------------------------------------------
+NOTE: For information on how to build menus and reports see houdini_stats/README.txt
+
+
 
