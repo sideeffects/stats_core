@@ -51,7 +51,13 @@ DATABASES = {
     },
 }
 
-4. Set up apache
+4. Choose your url prefix
+By default the prefix is "/stats"
+
+If you change it make sure to change STATIC_URL = '/stats/static/' (in settings.py),
+and the alias in rewrite rule lines below.
+
+5. Set up apache
 
 In your apache folder, in sites-enabled/000-default add:
 
@@ -68,15 +74,11 @@ In your apache folder, in sites-enabled/000-default add:
  # Rewrite requests from /stats to /stats/.
  RewriteRule ^/stats$ /stats/ [R,L]
 
-
-5. Set up base URL prefix 
-
-
 -----------------------------------------------------------------------------------------------------------------
 In this first version stats_core needs houdini_stats extensions which you can download from the repo with the same
 name. If you wish to add other extension to stats_core in settings.py find STATS_EXTENSIONS and add the desire app.
 
-NOTE: For information on how to build menus and reports see houdini_stats/config.txt
+NOTE: For information on how to build menus and reports see houdini_stats/README.md
 
 
 
