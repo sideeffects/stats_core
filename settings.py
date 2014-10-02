@@ -235,6 +235,12 @@ STATS_EXTENSIONS = (
     "../stats_houdini", 
 )
 
+# Import stats_core local_settings if one exists
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
 # Loop through the stats extensions, add them to the sys.path, load each of
 # their local_settings, and give them a chance to append to STATS_APPLICATIONS.
 for extension_relative_dir in STATS_EXTENSIONS:
