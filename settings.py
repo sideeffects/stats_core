@@ -39,7 +39,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats_django_skeleton',
         'USER': 'www',
-        'PASSWORD': 'TODO: enter-password',
         #'PASSWORD': 'TODO: enter-password',
     },
     'stats': {
@@ -47,7 +46,6 @@ DATABASES = {
         'NAME': 'stats',
         'USER': 'www',
         'PASSWORD': 'TODO: enter-password',
-        #'PASSWORD': 'TODO: enter-password',
     },
 }
 
