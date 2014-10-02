@@ -73,7 +73,10 @@ In your apache folder, in sites-enabled/000-default add:
 
 
 -----------------------------------------------------------------------------------------------------------------
-NOTE: For information on how to build menus and reports see houdini_stats/README.txt
+In this first version stats_core needs houdini_stats extensions which you can download from the repo with the same
+name. If you wish to add other extension to stats_core in settings.py find STATS_EXTENSIONS and add the desire app.
+
+NOTE: For information on how to build menus and reports see houdini_stats/config.txt
 
 
 
