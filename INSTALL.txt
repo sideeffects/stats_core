@@ -98,6 +98,8 @@ In /etc/apache2/sites-enabled/000-default add the following lines:
 cd ~/stats/stats_core
 make push
 
+8. Test that everything works by pointing your browser to http://localhost/stats.
+
 -----------------------------------------------------------------------------------------------------------------
 Currently, stats_core will not work unless the stats_houdini extension is installed.  You can download it from
 https://github.com/sideeffects/stats_houdini.  If you wish to add other extensions, edit settings.py
