@@ -53,8 +53,8 @@ apply_updates_on_server:
 	    mkdir -p $(BACKUP_DIR); \
 	    if [ ! -e $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE) ]; then \
                 touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
-	fi; \
-	(cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \
+	    fi; \
+	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \
 	    (cd $(INSTALL_DIR)/stats_core && $(MAKE) dump); \
 	    mv $(INSTALL_DIR)/stats_core/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
 	else \
@@ -100,4 +100,3 @@ run:
 
 # Allow a Makefile.local to override things.
 -include Makefile.local
-	
