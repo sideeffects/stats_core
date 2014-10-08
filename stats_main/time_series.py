@@ -57,7 +57,8 @@ def fill_missing_dates_with_zeros(time_series, agg_by, interval,
     return result_time_series
 
 #-------------------------------------------------------------------------------
-def time_series(queryset, date_field, interval, func=None, agg=None):
+def time_series(queryset, date_field, interval, func=None, agg=None, 
+                annotate_field=None):
     if agg in (None, "daily"): 
         qsstats = QuerySetStats(queryset, date_field, func)
         return qsstats.time_series(*interval)
@@ -69,14 +70,29 @@ def time_series(queryset, date_field, interval, func=None, agg=None):
         interval_filter = {date_field + "__gte" : interval[0],
                            date_field + "__lte" : interval[1]}
         
-        # Slightly raw-ish SQL query
-        result = (queryset.extra(select={agg_by: connections[queryset.db]
-                             .ops.date_trunc_sql(agg_by, date_field)})
-                             .values_list(agg_by)
-                             .annotate(dcount=Count(date_field))
-                             .filter(**interval_filter)
-                             .order_by(agg_by))
+        # Slightly raw-ish SQL query using extra
         
+        truncate_date = connections[queryset.db].ops.date_trunc_sql(agg_by, 
+                                                                    date_field)
+        if not annotate_field:
+            # By default we always annotate by dates, counting all the
+            # records recovered for the given dates
+            annotate_field = date_field
+            result = (queryset.extra(select={agg_by: truncate_date })
+                                 .values_list(agg_by)
+                                 .annotate(Count(annotate_field))
+                                 .filter(**interval_filter)
+                                 .order_by(agg_by))
+        else:
+            # We do a Sum by annotation field, we are assuming if the 
+            # annotation is not by dates it will be a field which type can be 
+            # added, like prices for example.
+            result = (queryset.extra(select={agg_by: truncate_date })
+                                 .values_list(agg_by)
+                                 .annotate(Sum(annotate_field))
+                                 .filter(**interval_filter)
+                                 .order_by(agg_by))
+            
         return fill_missing_dates_with_zeros(result, agg_by, interval)
 
 #-------------------------------------------------------------------------------

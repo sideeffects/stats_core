@@ -71,7 +71,8 @@ def get_sql_data_for_report(
 
 @cacheable(max_num_caches=15)
 def get_orm_data_for_report(query_set, time_field, series_range, 
-                            aggregation = None, func = None):
+                            aggregation = None, func = None, 
+                            annotate_field = None):
         """
         Function to get data for reports, using django orm for the queries.
         
@@ -80,8 +81,8 @@ def get_orm_data_for_report(query_set, time_field, series_range,
         and the function to be passed for aggregation in the time series.    
         """
         
-        return time_series.time_series(query_set, time_field, 
-                                       series_range, func, aggregation)
+        return time_series.time_series(query_set, time_field, series_range, 
+                                       func, aggregation, annotate_field)
 
 #-------------------------------------------------------------------------------
 #TODO: Move this to houdini reports, or create an events table for
