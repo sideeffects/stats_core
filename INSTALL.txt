@@ -1,7 +1,10 @@
 To set up you server for Houdini Statistics Website:
 
+Note: The server currently only runs on Linux.
+
 1. Install packages:
 
+apt-get install git
 apt-get install python-dev
 apt-get install python-pip
 apt-get install apache2
@@ -18,48 +21,64 @@ pip install petl
 pip install django-google-charts
 pip install django-qsstats-magic
 
-2. Create database and database user and psw
+2. Grab the source code
+
+mkdir ~/stats
+cd ~/stats
+git pull https://github.com/sideeffects/stats_core
+git pull https://github.com/sideeffects/stats_houdini
+
+or alternatively download the files from
+    https://github.com/sideeffects/stats_core/archive/master.zip
+    https://github.com/sideeffects/stats_houdini/archive/master.zip
+
+3. Set up the database:
+
+Note that, by default, the password is www-stats-password.  Update the instructions below if you use a
+different password.
 
 mysqladmin -u root password <new-password>
 mysqladmin -u root -p create stats
 
-create user www-stats identified by 'www-stats-password';
 mysql -u root -p
 mysql> create database stats_django_skeleton;
 mysql> create database stats;
+mysql> create user www-stats identified by 'www-stats-password';
 mysql> grant all on stats_django_skeleton.* to 'www-stats'@'localhost' identified by 'www-stats-password';
 mysql> grant all on stats.* to 'www-stats'@'localhost' identified by 'www-stats-password';
 mysql> flush privileges;
 
-3. Set database pwd in settings.py
+4. Set database pwd in settings.py:
 
-In settings.py set the db passwords you created.
-Look up for the code below in setting.py
+If you used a different database password than www-stats-password, update ~/stats/stats_core/settings.py:
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats_django_skeleton',
         'USER': 'www',
-        'PASSWORD': 'TODO: enter-password',
+        'PASSWORD': 'www-stats-password',
     },
     'stats': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats',
         'USER': 'www',
-        'PASSWORD': 'TODO: enter-password',
+        'PASSWORD': 'www-stats-password',
     },
 }
 
-4. Choose your url prefix
-By default the prefix is "/stats"
+5. Choose your url prefix:
 
-If you change it make sure to change STATIC_URL = '/stats/static/' (in settings.py),
-and the alias in rewrite rule lines below.
+By default the prefix is "/stats".  If you do not want to put the web pages on an existing
+web server, the default URL prefix should suffice.  Otherwise, if "/stats" is not an
+acceptable location in your web server's URL, you can change it by:
 
-5. Set up apache
+- Change STATIC_URL = '/stats/static/' (in settings.py)
+- Change the Alias and RewriteRules in the Apache configuration below.
 
-In your apache folder, in sites-enabled/000-default add:
+6. Set up Apache:
+
+In /etc/apache2/sites-enabled/000-default add the following lines:
 
  WSGIScriptAlias /stats "/var/www/stats/stats_core/wsgi-script/django.wsgi"
 
@@ -74,11 +93,17 @@ In your apache folder, in sites-enabled/000-default add:
  # Rewrite requests from /stats to /stats/.
  RewriteRule ^/stats$ /stats/ [R,L]
 
+7. Copy the code to installation location of /var/www/stats.
+
+cd ~/stats/stats_core
+make push
+
+8. Test that everything works by pointing your browser to http://localhost/stats.
+
 -----------------------------------------------------------------------------------------------------------------
-In this first version stats_core needs houdini_stats extensions which you can download from the repo with the same
-name. If you wish to add other extension to stats_core in settings.py find STATS_EXTENSIONS and add the desire app.
+Currently, stats_core will not work unless the stats_houdini extension is installed.  You can download it from
+https://github.com/sideeffects/stats_houdini.  If you wish to add other extensions, edit settings.py
+and change STATS_EXTENSIONS to include the extension.
 
-NOTE: For information on how to build menus and reports see houdini_stats/README.md
-
-
-
+NOTE: For information on how to build menus and reports, see
+https://github.com/sideeffects/stats_houdini/blob/master/README.md.

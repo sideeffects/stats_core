@@ -1,7 +1,7 @@
-LOGGING_SERVER=www.sidefx.com
+LOGGING_SERVER=$(shell hostname)
 LOGGING_SERVER_USER=root
-QUERY_SERVER=internal.sidefx.com
-QUERY_SERVER_USER=prisms
+QUERY_SERVER=$(shell hostname)
+QUERY_SERVER_USER=root
 INSTALL_DIR=/var/www/stats
 
 TEMP_DIR=~/stats_backup
