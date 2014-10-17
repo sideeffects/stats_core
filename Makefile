@@ -9,7 +9,7 @@ TIMESTAMP=$(shell date +"%Y-%m-%d")
 BACKUP_DIR=$(TEMP_DIR)/$(TIMESTAMP)
 SOURCE_FILE_NAME=source.tar
 DB_DUMP_FILE_NAME=db_backup.tar.gz
-HOU_LOGS_FILE = houdini_logs.txt
+HOU_LOGS_FILE=houdini_logs.txt
 
 package_source:
 	@# Create the package of source files to copy to the server.
@@ -58,7 +58,7 @@ apply_updates_on_server:
 	    (cd $(INSTALL_DIR)/stats_core && $(MAKE) dump); \
 	    mv $(INSTALL_DIR)/stats_core/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
 	else \
-	    mkdir -p $(INSTALL_DIR); \
+	    mkdir -p $(INSTALL_DIR)/stats_core; \
 	    touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
 	fi)
 
@@ -97,7 +97,10 @@ load:
 
 run:
 	./manage.py runserver
-
+	
+sync:
+	./manage.py syncdb
+	
 # Allow a Makefile.local to override things.
 -include Makefile.local
 	

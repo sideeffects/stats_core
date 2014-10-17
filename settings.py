@@ -38,13 +38,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats_django_skeleton',
-        'USER': 'www',
+        'USER': 'www-stats',
         'PASSWORD': 'TODO: enter-password',
     },
     'stats': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats',
-        'USER': 'www',
+        'USER': 'www-stats',
         'PASSWORD': 'TODO: enter-password',
     },
 }
