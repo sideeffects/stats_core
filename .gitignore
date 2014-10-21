@@ -1,1 +1,3 @@
 *.pyc
+Makefile.local
+local_settings.py
