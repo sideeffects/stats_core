@@ -71,7 +71,8 @@ apply_updates_on_server:
 
 	@# Apply any migrations, unless we've been told not too.
 	(if [ "$(NO_MIGRATIONS)" = "" ]; then \
-	    (cd $(INSTALL_DIR)/stats_core && ./manage.py migrate) \
+	    (cd $(INSTALL_DIR)/stats_core && ./manage.py syncdb) && \
+            (cd $(INSTALL_DIR)/stats_core && ./manage.py migrate); \
 	fi)
 
 	@# Change file ownerships away from root.
@@ -97,9 +98,6 @@ load:
 
 run:
 	./manage.py runserver
-	
-sync:
-	./manage.py syncdb
 	
 # Allow a Makefile.local to override things.
 -include Makefile.local
