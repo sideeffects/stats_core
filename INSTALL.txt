@@ -4,51 +4,65 @@ Note: The server currently only runs on Linux.
 
 1. Install packages:
 
-apt-get install git
-apt-get install python-dev
-apt-get install python-pip
-apt-get install apache2
-apt-get install mysql-server libmysqlclient-dev
-apt-get install python-mysqldb
-apt-get install openldap libldap2-dev libsasl2-dev libssl-dev python-ldap
-pip install django==1.5
-pip install south
-pip install python-ldap
-pip install django-auth-ldap
-pip install django-dajaxice
-pip install httpagentparser
-pip install petl
-pip install django-google-charts
-pip install django-qsstats-magic
+sudo apt-get install git
+sudo apt-get install python-dev
+sudo apt-get install python-pip
+sudo apt-get install python-dateutil
+sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi
+sudo apt-get install mysql-server libmysqlclient-dev
+sudo apt-get install python-mysqldb
+sudo apt-get install openldap libldap2-dev libsasl2-dev libssl-dev python-ldap
+sudo apt-get install ssh
+
+If you are on Linux Mint and can't find openldap, run:
+sudo apt-get install slapd ldap-utils 
+
+sudo pip install django==1.5
+sudo pip install south
+sudo pip install python-ldap
+sudo pip install django-auth-ldap
+sudo pip install django-dajaxice
+sudo pip install httpagentparser
+sudo pip install petl
+sudo pip install django-google-charts
+sudo pip install django-qsstats-magic
+a2enmod rewrite
 
 2. Grab the source code
 
 mkdir ~/stats
 cd ~/stats
-git pull https://github.com/sideeffects/stats_core
-git pull https://github.com/sideeffects/stats_houdini
+git clone https://github.com/sideeffects/stats_core
+git clone https://github.com/sideeffects/stats_houdini
 
 or alternatively download the files from
     https://github.com/sideeffects/stats_core/archive/master.zip
     https://github.com/sideeffects/stats_houdini/archive/master.zip
 
+For updates you can pull changes from the repos:
+
+git pull https://github.com/sideeffects/stats_core
+git pull https://github.com/sideeffects/stats_houdini
+
 3. Set up the database:
 
-Note that, by default, the password is www-stats-password.  Update the instructions below if you use a
-different password.
+The root password will be the same password you used when installing mysql below. 
 
-mysqladmin -u root password <new-password>
-mysqladmin -u root -p create stats
+mysqladmin -u root password <password>
+
+For the www-user, note that by default the password is www-stats-password. Update the instructions below if you use a
+different password.
 
 mysql -u root -p
 mysql> create database stats_django_skeleton;
 mysql> create database stats;
-mysql> create user www-stats identified by 'www-stats-password';
+mysql> create user 'www-stats' identified by 'www-stats-password';
 mysql> grant all on stats_django_skeleton.* to 'www-stats'@'localhost' identified by 'www-stats-password';
 mysql> grant all on stats.* to 'www-stats'@'localhost' identified by 'www-stats-password';
 mysql> flush privileges;
 
-4. Set database pwd in settings.py:
+4. Set database password in settings.py:
 
 If you used a different database password than www-stats-password, update ~/stats/stats_core/settings.py:
 
@@ -56,13 +70,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats_django_skeleton',
-        'USER': 'www',
+        'USER': 'www-stats',
         'PASSWORD': 'www-stats-password',
     },
     'stats': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'stats',
-        'USER': 'www',
+        'USER': 'www-stats',
         'PASSWORD': 'www-stats-password',
     },
 }
@@ -78,7 +92,11 @@ acceptable location in your web server's URL, you can change it by:
 
 6. Set up Apache:
 
-In /etc/apache2/sites-enabled/000-default add the following lines:
+From /etc/apache2/sites-available do:
+
+sudo a2ensite 000-default
+
+To 000-default add the following lines:
 
  WSGIScriptAlias /stats "/var/www/stats/stats_core/wsgi-script/django.wsgi"
 
