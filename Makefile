@@ -67,11 +67,13 @@ apply_updates_on_server:
 	(cd $(INSTALL_DIR) && tar xf $(TEMP_DIR)/$(SOURCE_FILE_NAME))
 	
 	@# Restore the log file.
-	(cd $(INSTALL_DIR)/stats_core && tar xfz $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) $(HOU_LOGS_FILE))
+	if [ -e $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) ]; then \
+	    (cd $(INSTALL_DIR)/stats_core && tar xfz $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) $(HOU_LOGS_FILE)); \
+	fi
 
 	@# Apply any migrations, unless we've been told not too.
 	(if [ "$(NO_MIGRATIONS)" = "" ]; then \
-	    (cd $(INSTALL_DIR)/stats_core && ./manage.py syncdb) && \
+	    (cd $(INSTALL_DIR)/stats_core && (echo "no" | ./manage.py syncdb)) && \
             (cd $(INSTALL_DIR)/stats_core && ./manage.py migrate); \
 	fi)
 

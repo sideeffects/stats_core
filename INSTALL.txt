@@ -96,7 +96,7 @@ From /etc/apache2/sites-available do:
 
 sudo a2ensite 000-default
 
-To 000-default add the following lines:
+Find the file named 000-default or 000-default.conf and add the following lines:
 
  WSGIScriptAlias /stats "/var/www/stats/stats_core/wsgi-script/django.wsgi"
 
