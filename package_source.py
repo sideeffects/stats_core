@@ -11,16 +11,18 @@ def exclude_file(x):
     
 # Stats core release dirs and files
 current_directory = os.path.basename(settings._this_dir)
-release_dirs_and_files = ["templates", "googlecharts", "stats_main", "bin",
-                          "backups", "Makefile", 
-                          "wsgi-script/django.wsgi"] + glob.glob("*.py")
+release_dirs_and_files = [
+    "bin", "googlecharts", "stats_main", "templates", "wsgi-script/django.wsgi",
+    "Makefile", "Makefile.local", "INSTALL.txt", "LICENSE", "README.md"
+    ] + glob.glob("*.py")
 
 # Opening tar file
 tar = tarfile.open(source_file_name, 'w:') 
 
 # Add the directories and files from stats-core to the tar ball 
 for dir_or_file in release_dirs_and_files:
-    tar.add(dir_or_file, arcname = current_directory + "/" + dir_or_file,
+    if os.path.exists(dir_or_file):
+        tar.add(dir_or_file, arcname=current_directory + "/" + dir_or_file,
             exclude = exclude_file)
 
 # Add extension apps to the tar file
