@@ -12,7 +12,7 @@ def exclude_file(x):
 # Stats core release dirs and files
 current_directory = os.path.basename(settings._this_dir)
 release_dirs_and_files = [
-    "bin", "googlecharts", "stats_main", "templates", "wsgi-script/django.wsgi",
+    "googlecharts", "stats_main", "templates", "wsgi-script/django.wsgi",
     "Makefile", "Makefile.local", "INSTALL.txt", "LICENSE", "README.md"
     ] + glob.glob("*.py")
 
