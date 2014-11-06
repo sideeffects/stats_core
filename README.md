@@ -22,8 +22,7 @@ STATS_EXTENSIONS = (
 
 ```
 
-
-Follow the instructions in INSTALL.txt 
+You can follow the instructions in INSTALL.txt to get your server up and running. 
 
 -----------------------------------------------------------------------------------------------------------------
 Currently, stats_core will not work unless the stats_houdini extension is also installed. You can download it from
