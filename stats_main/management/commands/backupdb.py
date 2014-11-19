@@ -3,7 +3,6 @@
 """
 
 import os
-import popen2
 import time
 import optparse
 import subprocess
