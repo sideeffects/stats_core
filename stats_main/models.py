@@ -14,6 +14,7 @@ class Machine(models.Model):
     hardware_id = models.CharField(
         help_text='''Mac address hash.''',
         max_length=80,
+        unique=True,
         default=''
     )
         
@@ -107,6 +108,8 @@ class MachineConfig(models.Model):
             self.machine.hardware_id, self.config_hash)
 
     class Meta:
+        # The combination of machine with the config_hash must be unique.
+        unique_together = (('machine', 'config_hash'),)
         # How to order results when doing queries:
         ordering = ('creation_date', )
         db_name = 'stats'
@@ -121,6 +124,7 @@ class LogId(models.Model):
     
     log_id = models.CharField(
         help_text='''Lod id.''',
+        unique=True,
         max_length=80
     )  
 
