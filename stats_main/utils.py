@@ -104,8 +104,9 @@ def is_valid_machine_config_hash(user_info):
     We want to make sure that the same user configs always create the
     same hash, so the data needs to be ordered.
     """
+     
     string_to_hash = ''.join([
-        key + ": " + user_info[key]
+        key + ": " + unicode(user_info[key])
         for key in sorted(user_info.keys())
         if key != "config_hash"])
  
@@ -143,48 +144,33 @@ def get_or_save_machine_config(user_info, ip_address, data_log_date):
     # 1. Validate machine config
     config_hash = user_info['config_hash']
      
-    #if not is_valid_machine_config_hash(user_info):
-    #    print "Different"
-        #raise ServerError("Invalid config hash %(name)s.",
-        #                      name=config_hash)
-   
-    # 2. Get or save Machine by hardware_id
+#     if not is_valid_machine_config_hash(user_info):
+#         print "Different"
+#         raise ServerError("Invalid config hash %(name)s.",
+#                            name=config_hash)
+#     
+    # 2. Get or save Machine by hardware_id    
     hardware_id = user_info.get('mac_address_hash','')   
+    machine, created = Machine.objects.get_or_create(hardware_id=hardware_id)
     
-    try:
-        machine = Machine.objects.get(hardware_id=hardware_id)
-    
-    except Machine.DoesNotExist:
-        machine = Machine(hardware_id=hardware_id)
-        machine.save()
-    
-    # 3. Get or save Machine Config 
-    try:
-        machine_config = MachineConfig.objects.get(machine = machine, 
-                                                config_hash__exact=config_hash)
-    except MachineConfig.DoesNotExist:
-        
-        sys_memory = user_info.get('system_memory', "0")
-        product = user_info.get('application_name',"") + " " + user_info.get(
+    # 3. Get or save Machine Config     
+    sys_memory = user_info.get('system_memory', "0")
+    product = user_info.get('application_name',"") + " " + user_info.get(
                                                          'license_category',"")
         
-        # Create new machine config 
-        machine_config = MachineConfig(config_hash = config_hash, 
-            ip_address = ip_address,  
-            machine = machine,                       
-            creation_date = data_log_date,
-            graphics_card = user_info.get('graphics_card',''),
-            graphics_card_version = user_info.get('graphics_card_version',''),
-            operating_system = user_info.get('operating_system', ""),             
-            system_memory = parse_byte_size_string(sys_memory),
-            number_of_processors = user_info.get('number_of_processors',0),
-            cpu_info =  user_info.get('cpu_info', ""), 
-            system_resolution =  user_info.get('system_resolution', ""), 
-            raw_user_info = str(user_info)
-        )
-        # Save the machine config 
-        machine_config.save()
-
+    machine_config, created = MachineConfig.objects.get_or_create(
+                   machine = machine, config_hash=config_hash, 
+                   defaults= dict(ip_address=ip_address, creation_date=data_log_date,
+                             graphics_card=user_info.get('graphics_card',''),
+                             graphics_card_version=user_info.get('graphics_card_version',''),
+                             operating_system=user_info.get('operating_system', ""),             
+                             system_memory=parse_byte_size_string(sys_memory),
+                             number_of_processors=user_info.get('number_of_processors',0),
+                             cpu_info=user_info.get('cpu_info', ""), 
+                             system_resolution=user_info.get('system_resolution', ""), 
+                             raw_user_info=str(user_info)))
+                              
+    if created:
         # Let applications extend the machine config model.
         for app_name in settings.STATS_APPLICATIONS:
             try:
