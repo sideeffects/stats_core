@@ -194,21 +194,10 @@ def is_new_log_or_existing(machine_config, log_id, data_log_date):
     Verify if a log already exists and if not save it.
     Returns true if the log is new, and false otherwise.
     """
-    log = LogId.objects.filter(machine_config = machine_config, 
-                               log_id = log_id)
-    if len(log) == 0:
-        log = LogId(machine_config=machine_config, log_id = log_id, 
-                                logging_date = data_log_date )
-        log.save()
-        return True
-    
-    elif len(log) > 1:
-        #Delete duplicate
-        log[1].delete()
-        return False
-    # Assumed there was one     
-    return False
-    
+    log, created = LogId.objects.get_or_create(
+                               machine_config = machine_config, log_id = log_id, 
+                               defaults= dict(logging_date = data_log_date))
+    return created
         
 #-------------------------------------------------------------------------------
     
