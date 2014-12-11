@@ -96,7 +96,7 @@ class API(object):
     def send_machine_config_and_stats( self, request, 
                                        machine_config_and_stats_json):
         json_content = ""
-        # Hack to avoid getting errors when the log file is empty
+        # try/except to avoid getting errors when the log file is empty
         try:
             # Get json content
             json_content = json.loads(
@@ -106,10 +106,22 @@ class API(object):
             save_error_log("Errors in stats file", traceback.format_exc(), 
                            get_ip_address(request))
             return json_http_response(True)
-                
-        return self.send_stats_main(
-            request, machine_config_and_stats_json['stat_log_version'],
-            json_content['machine_config'], json_content['stats'])
+        
+        # try/except to avoid errors when the json_content is not a dictionary
+        # and contains different data types like a number
+        try:
+            return self.send_stats_main(request, 
+                          machine_config_and_stats_json['stat_log_version'],
+                          json_content['machine_config'], json_content['stats'])
+        except:
+            import traceback
+            formated_stack_trace = "json_content: " + str(json_content) + " - "+\
+                    traceback.format_exc()
+            
+            save_error_log("Errors in stats file", formated_stack_trace,
+                           get_ip_address(request))
+            return json_http_response(True)
+            
         
     def send_stats_main(self, request, stat_log_version, machine_config_info, 
                         stats):
