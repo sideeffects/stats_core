@@ -54,8 +54,8 @@ apply_updates_on_server:
 	    if [ ! -e $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE) ]; then \
                 touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
 	    fi; \
-	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .); \
-	    (cd $(INSTALL_DIR)/stats_core && $(MAKE) dump); \
+	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .) && \
+	    (cd $(INSTALL_DIR)/stats_core && $(MAKE) dump) && \
 	    mv $(INSTALL_DIR)/stats_core/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
 	else \
 	    mkdir -p $(INSTALL_DIR)/stats_core; \
@@ -83,11 +83,14 @@ apply_updates_on_server:
 	@# Restart the server.
 	/etc/init.d/apache2 restart
 
+# We need to avoid tar errors about "file changed as we read it" when backing
+# up the houdini log file.
 dump:
 	./manage.py backupdb -d stats > db_backup_stats.sql
 	./manage.py backupdb -d default > db_backup_stats_django_skeleton.sql
-	tar cfz $(DB_DUMP_FILE_NAME) db_backup_stats.sql db_backup_stats_django_skeleton.sql $(HOU_LOGS_FILE)
-	rm db_backup_stats.sql db_backup_stats_django_skeleton.sql
+	cp $(HOU_LOGS_FILE) $(HOU_LOGS_FILE).backup
+	tar cfz $(DB_DUMP_FILE_NAME) --transform='s|$(HOU_LOGS_FILE).backup|$(HOU_LOGS_FILE)|' db_backup_stats.sql db_backup_stats_django_skeleton.sql $(HOU_LOGS_FILE).backup
+	rm $(HOU_LOGS_FILE).backup db_backup_stats.sql db_backup_stats_django_skeleton.sql
 
 load:
 	tar xfz $(DB_DUMP_FILE_NAME)
