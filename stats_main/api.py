@@ -46,9 +46,13 @@ class API(object):
         try:
             return self._dispatch_without_catching_api_errors(request)
         except StatsError as e:
-            return text_http_response(
-                (traceback.format_exc() if settings.DEBUG else str(e)))#,
-                #status=e.status_code)
+            # Properly raise an exception so it's handled by the logger and
+            # we're notified if Houdini attempts to call an API function that
+            # doesn't exist.
+            raise
+
+            #return text_http_response(
+            #    traceback.format_exc(), status=e.status_code)
 
     def _dispatch_without_catching_api_errors(self, request):
         """
