@@ -206,6 +206,9 @@ def _send_stats_main(request, stat_log_version, machine_config_info, stats):
         machine_config, stats["flags"], data_log_date)
     save_logs(
         machine_config, stats["logs"], data_log_date)
+    if "strings" in stats:
+        save_strings(
+            machine_config, stats["strings"], data_log_date)
 
     # Put everything inside a log file as well.
     save_data_log_to_file(
