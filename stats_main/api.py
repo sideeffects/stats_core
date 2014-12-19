@@ -1,4 +1,4 @@
-
+from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
@@ -27,7 +27,7 @@ class API(object):
         It is used by extensions to the stats system to extend the API.
         """
         function._api_static_method = True
-        setattr(cls, function.__name__, function)
+        setattr(cls, function.__name__, staticmethod(function))
 
     _extensions_are_loaded = False
 
@@ -66,7 +66,7 @@ class API(object):
         server will return a non-descriptive error message.
         """
         try:
-            return self._dispatch_without_catching_api_errors(request)
+            result = self._dispatch_without_catching_api_errors(request)
         except StatsError as e:
 #            return text_http_response(
 #                traceback.format_exc(), status=e.status_code)
@@ -74,6 +74,13 @@ class API(object):
             # we're notified if Houdini attempts to call an API function that
             # doesn't exist.
             raise
+
+        # If the API function didn't return an HttpResponse, wrap the result
+        # in JSON and convert to an HttpResponse on its behalf.
+        if not isinstance(result, HttpResponse):
+            result = json_http_response(result)
+
+        return result
 
     def _dispatch_without_catching_api_errors(self, request):
         """
@@ -136,7 +143,7 @@ def send_machine_config_and_stats(request, machine_config_and_stats_json):
         save_error_log(
             "Errors in stats file", traceback.format_exc(),
             get_ip_address(request))
-        return json_http_response(True)
+        return True
 
     # Catch errors where the json_content is not a dictionary or contains
     # different data types like a number.
@@ -152,7 +159,7 @@ def send_machine_config_and_stats(request, machine_config_and_stats_json):
         save_error_log(
             "Errors in stats file", formated_stack_trace,
             get_ip_address(request))
-        return json_http_response(True)
+        return True
 
     return _send_stats_main(
         request, stat_log_version, machine_config, stats)
@@ -160,16 +167,15 @@ def send_machine_config_and_stats(request, machine_config_and_stats_json):
 def _send_stats_main(request, stat_log_version, machine_config_info, stats):
     # We will only save the logs where version is 2 or higher.  Logs
     # without a log id also won't be saved.
-    if stat_log_version < 2 or "log_id" not in json_data.keys():
-        return json_http_response(True)
+    if stat_log_version < 2 or "log_id" not in stats.keys():
+        return True
 
     # Start by computing the total time they ran the product.
-    json_data = stats
     data_log_date =  datetime.datetime.fromtimestamp(
-        json_data["start_time"])
-    total_sec = json_data["end_time"] - json_data["start_time"]
-    total_idle_time = (json_data["idle_time"]
-        if json_data.has_key("idle_time") else 0)
+        stats["start_time"])
+    total_sec = stats["end_time"] - stats["start_time"]
+    total_idle_time = (stats["idle_time"]
+        if stats.has_key("idle_time") else 0)
 
     # Avoid adding data where the total time idle is greater than the
     # overall total, since the database doesn't like that.
@@ -184,38 +190,37 @@ def _send_stats_main(request, stat_log_version, machine_config_info, stats):
     # Save the log id if it hasnt been saved in the db yet.  Only save the
     # stats data if the log id was new.
     is_new_log = is_new_log_or_existing(
-        machine_config, json_data["log_id"], data_log_date)
+        machine_config, stats["log_id"], data_log_date)
     if not is_new_log:
-        return json_http_response(True)
+        return True
 
     # Finally, save the pieces of the json data into the database.
     save_uptime(
         machine_config, total_sec, total_idle_time, data_log_date)
     save_counts(
-        machine_config, json_data["counts"], data_log_date)
+        machine_config, stats["counts"], data_log_date)
     save_sums_and_counts(
-        machine_config, _get_sums_and_counts(json_data),
+        machine_config, _get_sums_and_counts(stats),
         data_log_date)
     save_flags(
-        machine_config, json_data["flags"], data_log_date)
+        machine_config, stats["flags"], data_log_date)
     save_logs(
-        machine_config, json_data["logs"], data_log_date)
+        machine_config, stats["logs"], data_log_date)
 
     # Put everything inside a log file as well.
     save_data_log_to_file(
-        data_log_date, machine_config_info['config_hash'], json_data,
+        data_log_date, machine_config_info['config_hash'], stats,
         ip_address)
+    return True
 
-    return json_http_response(True)
-
-def _get_sums_and_counts(json_data):
+def _get_sums_and_counts(stats):
     """
     To return properly sums and counts. There are machines who might not be 
     sending this key yet.
     """
-    if json_data.has_key("sums_and_counts"):
-        return json_data["sums_and_counts"]
-    return json_data.get("sums", {})
+    if stats.has_key("sums_and_counts"):
+        return stats["sums_and_counts"]
+    return stats.get("sums", {})
 
 @API.api_function
 def send_crash(request, machine_config_info, crashlog):
@@ -226,7 +231,6 @@ def send_crash(request, machine_config_info, crashlog):
         machine_config_info, get_ip_address(request),
         datetime.datetime.now())
     save_crash(machine_config, crashlog, datetime.datetime.now())
-    return json_http_response(True)
 
 #-------------------------------------------------------------------------------
 
