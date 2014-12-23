@@ -24,6 +24,7 @@ sudo pip install python-ldap
 sudo pip install django-auth-ldap
 sudo pip install django-dajaxice
 sudo pip install httpagentparser
+sudo pip install sqlalchemy
 sudo pip install petl
 sudo pip install petlx
 sudo pip install django-google-charts
