@@ -70,12 +70,13 @@ def parse_byte_size_string(string):
       2362232012
     """
 
-    if not string:
+    if len(string) == 0:
         return
+
     # Find out the numerical part.
     initial_string = string
     num_string = ""
-    while string and string[0:1].isdigit() or string[0:1] == '.':
+    while len(string) and (string[:1].isdigit() or string[:1] == '.'):
         num_string += string[0]
         string = string[1:]
 
@@ -88,6 +89,10 @@ def parse_byte_size_string(string):
     prefix = {suffix_set[0]: 1}
     for i, string in enumerate(suffix_set[1:]):
         prefix[string] = 1 << (i+1)*10
+
+    # If the data is garbage for some reason, just discard it.
+    if suffix not in prefix:
+        return 0
 
     return int(num * prefix[suffix])
 
