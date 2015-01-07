@@ -234,6 +234,7 @@ def send_crash(request, machine_config_info, crashlog):
         machine_config_info, get_ip_address(request),
         datetime.datetime.now())
     save_crash(machine_config, crashlog, datetime.datetime.now())
+    return True
 
 #-------------------------------------------------------------------------------
 
