@@ -13,7 +13,7 @@ import hashlib
 
 import settings
 
-#============================================================================
+#===============================================================================
 
 def text_http_response(content, status=200):
     """
@@ -30,7 +30,7 @@ def json_http_response(content, status=200):
     """
     return text_http_response(json.dumps(content), status=status)
 
-#----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 class StatsError(Exception):
     """
@@ -56,7 +56,7 @@ class UnauthorizedError(StatsError):
     def __init__(self, msg_template, **kwargs):
         StatsError.__init__(self, 401, msg_template, **kwargs)
 
-#----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def parse_byte_size_string(string):
     """
@@ -96,6 +96,7 @@ def parse_byte_size_string(string):
 
     return int(num * prefix[suffix])
 
+#-------------------------------------------------------------------------------
 def is_valid_machine_config_hash(user_info):
     """
     Compute the hash of the data, ignoring the hash value stored in the data,
@@ -116,6 +117,7 @@ def is_valid_machine_config_hash(user_info):
     return (user_info["config_hash"] ==
         hashlib.md5(string_to_hash).hexdigest())
 
+#-------------------------------------------------------------------------------
 def get_or_save_machine_config(user_info, ip_address, data_log_date):
     """
     Get or save if not already in db the machine config
@@ -189,6 +191,8 @@ def get_or_save_machine_config(user_info, ip_address, data_log_date):
 
     return machine_config
 
+#-------------------------------------------------------------------------------
+
 def is_new_log_or_existing(machine_config, log_id, data_log_date):
     """
     Verify if a log already exists and if not save it.
@@ -200,7 +204,7 @@ def is_new_log_or_existing(machine_config, log_id, data_log_date):
         defaults=dict(logging_date=data_log_date))
     return created
 
-#----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def save_crash(machine_config, crash_log, data_log_date):
     """
@@ -219,7 +223,7 @@ def save_crash(machine_config, crash_log, data_log_date):
     )
     crash.save()
 
-#----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def save_uptime(machine_config, num_seconds, idle_time, data_log_date):
     """
@@ -231,7 +235,8 @@ def save_uptime(machine_config, num_seconds, idle_time, data_log_date):
         number_of_seconds=num_seconds,
         idle_time=idle_time)
     uptime.save()
-
+    
+#-------------------------------------------------------------------------------
 def save_counts(machine_config, counts_dict, data_log_date):
     """
     Save the data that comes in "counts"
@@ -247,6 +252,7 @@ def save_counts(machine_config, counts_dict, data_log_date):
             save_key_usage(
                 machine_config, key, count, data_log_date)
 
+#-------------------------------------------------------------------------------
 def save_tool_usage(machine_config, tools_prefix, key, count, data_log_date):
     """
     Create HoudiniToolUsage object and save it in DB.
@@ -290,7 +296,8 @@ def save_tool_usage(machine_config, tools_prefix, key, count, data_log_date):
                 is_asset=is_asset)
             tools_usage.save()
             break
-
+        
+#-------------------------------------------------------------------------------
 def save_key_usage(machine_config, key, count, data_log_date):
     """
     Create HoudiniUsageCount object and save it in DB.
@@ -302,6 +309,78 @@ def save_key_usage(machine_config, key, count, data_log_date):
         count=count)
     key_usage.save()
 
+#-------------------------------------------------------------------------------
+def persistent_stats(machine_config, persistent_stats_dict, data_log_date):
+    """
+    Save the data that comes in persistent stats
+    """
+    
+    for key, value in persistent_stats_dict.iteritems():
+        # Try to find the key value pair and if it doesn't exists insert a new
+        # one
+        try:
+            key_value_pair = HoudiniPersistentStatsKeyValuePair.objects.get(
+                                                           key=key, value=value)
+        except:
+            key_value_pair = HoudiniPersistentStatsKeyValuePair(key=key,
+                                                                value=value)
+            key_value_pair.save()    
+        
+        assert key_value_pair is not None
+        
+        # Get houdini_major_version and houdini_minor_version from machine 
+        # config extension 
+        machine_config_ext = HoudiniMachineConfig.objects.get(
+                                                machine_config = machine_config) 
+        
+        # Try to find if there is a not a persistent stats like this one already
+        # and if so update it if needed, if not insert a new one
+        try:
+            # Get houdini permanent stats
+            hou_per_stats = HoudiniPersistentStats.objects.get(
+               machine = machine_config.machine,
+               houdini_major_version = machine_config_ext.houdini_major_version,
+               houdini_minor_version = machine_config_ext.houdini_minor_version,
+               )
+            # Find if there is an entry that already contains this persistent
+            # stats and update it if needed
+            hou_per_stats_entry = HoudiniPersistentStatsEntry.objects.filter(
+                                              persistent_stats = hou_per_stats)
+            need_to_add = True  
+            for entry in hou_per_stats_entry:
+                # See if we have a matching key and value.  If so, we won't
+                # add anything later.
+                if entry.persistent_stats_kvp == key_value_pair:
+                    need_to_add = False
+                    break
+                
+                # If we have a matching key but different value, delete the
+                # old pair and add the new one later.
+                if entry.persistent_stats_kvp.key == key:
+                    hou_per_stats_entry.delete()
+                    break
+
+            if need_to_add:
+                hou_per_stats_entry = HoudiniPersistentStatsEntry(
+                                          persistent_stats = hou_per_stats,
+                                          persistent_stats_kvp = key_value_pair) 
+                hou_per_stats_entry.save()
+        
+        except:
+            # Create persistent stats object and save it
+            hou_per_stats = HoudiniPersistentStats(date = data_log_date,
+               machine = machine_config.machine, hash = "",
+               houdini_major_version = machine_config_ext.houdini_major_version,
+               houdini_minor_version = machine_config_ext.houdini_minor_version,
+                   )                                        
+            hou_per_stats.save()
+            # Create persistent stats entry object and save it
+            hou_per_stats_entry = HoudiniPersistentStatsEntry(
+                                          persistent_stats = hou_per_stats,
+                                          persistent_stats_kvp = key_value_pair) 
+            hou_per_stats_entry.save()
+
+#-------------------------------------------------------------------------------
 def save_strings(machine_config, strings_dict, data_log_date):
     """
     Save the data that comes in "strings"
@@ -314,6 +393,7 @@ def save_strings(machine_config, strings_dict, data_log_date):
             value=value)
         houdini_string.save()
 
+#-------------------------------------------------------------------------------
 def save_sums_and_counts(machine_config, sums_and_counts, data_log_date):
     """
     Save sums and counts in DB.
@@ -335,6 +415,7 @@ def save_sums_and_counts(machine_config, sums_and_counts, data_log_date):
             count=sum_count[1])
         sum_and_count_object.save()
 
+#-------------------------------------------------------------------------------
 def save_flags(machine_config, flags, data_log_date):
     """
     Save flags in DB.
@@ -348,6 +429,7 @@ def save_flags(machine_config, flags, data_log_date):
             key=key)
         flag_object.save()
 
+#-------------------------------------------------------------------------------
 def save_logs(machine_config, logs, data_log_date):
     """
     Save logs in DB.
@@ -369,7 +451,7 @@ def save_logs(machine_config, logs, data_log_date):
                 log_entry=log_entry)
             log_object.save()
 
-#-----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def save_error_log(description, stack_trace, ip_address):
     """
@@ -382,7 +464,7 @@ def save_error_log(description, stack_trace, ip_address):
         ip_address=ip_address)
     error_log.save()
 
-#-----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def save_data_log_to_file(date, config_hash, json_data, ip_adress):
     """
@@ -393,7 +475,7 @@ def save_data_log_to_file(date, config_hash, json_data, ip_adress):
                        """.format(datetime.datetime.now(), ip_adress,
                                   config_hash, date, str(json_data)))
 
-#-----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def date_range_to_seconds(datetime1, datetime2):
     """
@@ -529,7 +611,7 @@ def _get_end_request(request):
 
     return end
 
-#-----------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def _get_aggregation(get_vars):
     """
