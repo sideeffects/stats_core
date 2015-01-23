@@ -120,8 +120,12 @@ class ReportMetaclass(type):
 #-------------------------------------------------------------------------------
 
 def find_report_class(name):
-    return [cls for cls in registered_report_classes
-        if cls.__name__ == name][0]
+    report_classes = [
+        cls for cls in registered_report_classes if cls.__name__ == name]
+    if len(report_classes) == 0:
+        return None
+
+    return report_classes[0]
 
 #-------------------------------------------------------------------------------
         

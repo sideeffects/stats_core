@@ -15,6 +15,7 @@ from django.template import Context, Template
 import datetime
 import urllib
 import functools
+import csv
 import sys
 
 import time_series
@@ -296,6 +297,33 @@ def index_view(request):
 
 @require_http_methods(["GET", "POST"])
 @login_required
+def generic_report_csv_view(request, report_name):
+    # TODO: Determine the proper group names for the intersection of the
+    # reports
+    validate_user_is_in_group(request, ['staff', 'r&d'])
+
+    # Find the report for the given name.
+    report_class = genericreportclasses.find_report_class(report_name)
+    if report_class is None:
+        raise Http404
+
+    # Run the query for the repot.
+    report = report_class()
+    series_range, aggregation = get_common_vars_for_charts(request)
+    report_data = report.get_data(series_range, aggregation)
+
+    # Convert the data into a CSV file.
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = (
+        'attachment; filename="%s.csv"' % report_name)
+    writer = csv.writer(response)
+    for row in report_data:
+        writer.writerow(row)
+
+    return response
+
+@require_http_methods(["GET", "POST"])
+@login_required
 def generic_report_view(request, menu_name, dropdown_option):
     series_range, aggregation = get_common_vars_for_charts(request)
     
@@ -324,7 +352,8 @@ def generic_report_view(request, menu_name, dropdown_option):
         # If report is heatmap we dont get that data her but later on
         # when the heatmap view is called
         if not report.is_heatmap():
-            report_data[report.name()] = report.get_data(series_range, aggregation)
+            report_data[report.name()] = report.get_data(
+                series_range, aggregation)
 
     # Generate the html for the charts.
     charts = render_chart_template(reports, report_data)

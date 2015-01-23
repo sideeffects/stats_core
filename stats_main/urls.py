@@ -18,11 +18,14 @@ if settings.IS_QUERY_SERVER:
             'generic_heatmap_report_view', name='heatmap'),
    
         # This is the generic view for new-style reports.
+        url(r'^csv/(?P<report_name>.*)$',
+            'generic_report_csv_view', name='generic_report_csv'),
+
+        # This is the generic view for new-style reports.
         url(r'^(?P<menu_name>.*)/(?P<dropdown_option>.*)$',
             'generic_report_view', name='generic_report'),
-
     )
-    
+
 if settings.IS_LOGGING_SERVER:
     urlpatterns += patterns('stats_main.api',
         # API for non-browser-based interaction.
