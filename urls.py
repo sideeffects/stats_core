@@ -17,4 +17,4 @@ urlpatterns = patterns('',
     (r'', include('stats_main.urls')),
     
 )
-handler500 = 'main_stats.views.custom_500' 
+handler500 = 'stats_main.views.custom_500' 
