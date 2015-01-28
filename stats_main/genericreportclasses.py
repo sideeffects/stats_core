@@ -207,6 +207,27 @@ class ChartReport(Report):
         """
         return ""  
     
+    def allows_csv_file_generation(self):
+        """
+        To mark if the report allows csv files generation.
+        """
+        return True
+    
+    def generate_csv_file(self):
+        """
+        To add button to generate a csv file for the report.
+        """
+        if not self.allows_csv_file_generation():
+            return ""
+        
+        url_tag =  "{% url 'generic_report_csv' '"+ self.get_class_name() + "' %}"
+        
+        return '''
+        <a href="''' + url_tag + '''"><button style="float: right;">
+        Generate CSV file</button></a>
+        ''' 
+             
+    
     def generate_template_placeholder_code(self):
         """
         Generate the template placeholder to draw the chart.
@@ -239,7 +260,7 @@ class ChartReport(Report):
             report_placeholder +='''
             </div>
             '''   
-        return self.chart_aditional_message() + report_title + \
+        return self.chart_aditional_message() + report_title + self.generate_csv_file() + \
             self.chart_aditional_information_above() + report_placeholder + \
             self.chart_aditional_information_below()
 

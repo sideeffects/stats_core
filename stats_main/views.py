@@ -298,8 +298,12 @@ def index_view(request):
 @require_http_methods(["GET", "POST"])
 @login_required
 def generic_report_csv_view(request, report_name):
+    """
+    View to generate csv files from reports.
+    """
     # TODO: Determine the proper group names for the intersection of the
     # reports
+    
     validate_user_is_in_group(request, ['staff', 'r&d'])
 
     # Find the report for the given name.
@@ -319,7 +323,7 @@ def generic_report_csv_view(request, report_name):
     writer = csv.writer(response)
     for row in report_data:
         writer.writerow(row)
-
+        
     return response
 
 @require_http_methods(["GET", "POST"])
