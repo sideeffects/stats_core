@@ -52,7 +52,10 @@
 <div class="container">
      <form class="form-signin" method="post" action="{{secure_login_url}}">
         {% csrf_token %} 
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading">Please sign in </h2>
+        <label> <b> Use your Sidefx userid and email password <b> </label>
+        <br />
+        
         <input type="text" class="input-block-level" placeholder="Username" name="username">
         <input type="password" class="input-block-level" placeholder="Password" name="password">
         <label class="checkbox">
