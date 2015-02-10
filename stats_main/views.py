@@ -17,6 +17,7 @@ import urllib
 import functools
 import csv
 import sys
+import time
 
 import time_series
 from utils import *
@@ -354,10 +355,14 @@ def generic_report_view(request, menu_name, dropdown_option):
     report_data = {}
     for report in reports:
         # If report is heatmap we dont get that data her but later on
-        # when the heatmap view is called
+        # when the heatmap view is called.  Store the time it took to
+        # run the query in the report object so it can display that information
+        # if it wants.
         if not report.is_heatmap():
+            start_time = time.time()
             report_data[report.name()] = report.get_data(
                 series_range, aggregation)
+            report.query_time = time.time() - start_time
 
     # Generate the html for the charts.
     charts = render_chart_template(reports, report_data)
