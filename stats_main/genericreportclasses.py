@@ -2,6 +2,7 @@ from django.db import connections
 from django.template import Context, Template
 
 from cachedqueries import cacheable
+from utils import sigdig
 import time_series
 
 #===============================================================================
@@ -149,7 +150,10 @@ class Report(object):
     
     def is_heatmap(self):
         return False
-
+    
+    def query_time(self):
+        return 0
+    
     def get_data(self, series_range, aggregation):
         pass
 
@@ -207,6 +211,19 @@ class ChartReport(Report):
         """
         return ""  
     
+    def chart_query_time_information(self):
+        """
+        To add the query time below charts.
+        """
+        if self.query_time == 0:
+            return ""
+        
+        return """<br><div align="right">
+         <span>  
+          Query time: {0}
+         </span>   
+         </div><br>""".format(str(sigdig(self.query_time)))
+        
     def allows_csv_file_generation(self):
         """
         To mark if the report allows csv files generation.
@@ -260,9 +277,10 @@ class ChartReport(Report):
             report_placeholder +='''
             </div>
             '''   
-        return self.chart_aditional_message() + report_title + self.generate_csv_file() + \
+        return self.chart_aditional_message() + report_title + \
+            self.chart_query_time_information() + self.generate_csv_file() + \
             self.chart_aditional_information_above() + report_placeholder + \
-            self.chart_aditional_information_below()
+            self.chart_aditional_information_below() 
 
     def generate_template_graph_drawing(self):
         """

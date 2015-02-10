@@ -10,6 +10,7 @@ import re
 import datetime
 import time
 import hashlib
+import math
 
 import settings
 
@@ -671,3 +672,15 @@ def get_list_of_tuples_from_list(list):
         output.append(item)
 
     return output
+
+
+#-------------------------------------------------------------------------------
+
+def sigdig(value, digits = 3):
+    order = int(math.floor(math.log10(math.fabs(value))))
+    places = digits - order - 1
+    if places > 0:
+        fmtstr = "%%.%df" % (places)
+    else:
+        fmtstr = "%.0f"
+    return fmtstr % (round(value, places))
