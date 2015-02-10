@@ -218,11 +218,11 @@ class ChartReport(Report):
         if self.query_time == 0:
             return ""
         
-        return """<br><div align="right">
-         <span>  
-          Query time: {0}
-         </span>   
-         </div><br>""".format(str(sigdig(self.query_time)))
+        return '''<div style="margin-right: auto; margin-left: 72%;" 
+                       align:"right">
+                  <font size="1"> query time: {0}s </font>
+                  </div><br>
+               '''.format(str(sigdig(self.query_time)))
         
     def allows_csv_file_generation(self):
         """
@@ -262,8 +262,8 @@ class ChartReport(Report):
         
         if chart_count==1:
             report_placeholder = ''' 
-            <div id="''' + self.name() + '''" class="wide graph"></div> 
-            <br> '''
+            <div id="''' + self.name() + '''" class="wide graph"></div>'''+ \
+            '''<br> '''
         else:
             report_placeholder = ''' 
             <div>
@@ -278,8 +278,9 @@ class ChartReport(Report):
             </div>
             '''   
         return self.chart_aditional_message() + report_title + \
-            self.chart_query_time_information() + self.generate_csv_file() + \
+            self.generate_csv_file() + \
             self.chart_aditional_information_above() + report_placeholder + \
+            self.chart_query_time_information() + \
             self.chart_aditional_information_below() 
 
     def generate_template_graph_drawing(self):
