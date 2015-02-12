@@ -151,7 +151,7 @@ class Report(object):
     def is_heatmap(self):
         return False
     
-    def query_time(self):
+    def loading_time(self):
         return 0
     
     def get_data(self, series_range, aggregation):
@@ -211,18 +211,18 @@ class ChartReport(Report):
         """
         return ""  
     
-    def chart_query_time_information(self):
+    def chart_loading_time_information(self):
         """
-        To add the query time below charts.
+        To add the loading time below charts.
         """
-        if self.query_time == 0:
+        if self.loading_time == 0:
             return ""
         
         return '''<div style="margin-right: auto; margin-left: 72%;" 
                        align:"right">
-                  <font size="1"> query time: {0}s </font>
+                  <font size="1"> loading time: {0}s </font>
                   </div><br>
-               '''.format(str(sigdig(self.query_time)))
+               '''.format(str(sigdig(self.loading_time)))
         
     def allows_csv_file_generation(self):
         """
@@ -280,7 +280,7 @@ class ChartReport(Report):
         return self.chart_aditional_message() + report_title + \
             self.generate_csv_file() + \
             self.chart_aditional_information_above() + report_placeholder + \
-            self.chart_query_time_information() + \
+            self.chart_loading_time_information() + \
             self.chart_aditional_information_below() 
 
     def generate_template_graph_drawing(self):

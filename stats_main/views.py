@@ -362,7 +362,7 @@ def generic_report_view(request, menu_name, dropdown_option):
             start_time = time.time()
             report_data[report.name()] = report.get_data(
                 series_range, aggregation)
-            report.query_time = time.time() - start_time
+            report.loading_time = time.time() - start_time
 
     # Generate the html for the charts.
     charts = render_chart_template(reports, report_data)
