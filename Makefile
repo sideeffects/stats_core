@@ -51,26 +51,22 @@ apply_updates_on_server:
 	@# TODO: If it's the first time, we also need to do a syncdb.
 	(if [ -e $(INSTALL_DIR) ]; then \
 	    mkdir -p $(BACKUP_DIR); \
-	    if [ ! -e $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE) ]; then \
-                touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
+	    if [ ! -e $(INSTALL_DIR)/$(HOU_LOGS_FILE) ]; then \
+                touch $(INSTALL_DIR)/$(HOU_LOGS_FILE); \
 	    fi; \
-	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) .) && \
+	    (cd $(INSTALL_DIR) && tar cf $(BACKUP_DIR)/$(SOURCE_FILE_NAME) . --exclude='$(HOU_LOGS_FILE)') && \
 	    (cd $(INSTALL_DIR)/stats_core && $(MAKE) dump) && \
 	    mv $(INSTALL_DIR)/stats_core/$(DB_DUMP_FILE_NAME) $(BACKUP_DIR)/; \
 	else \
 	    mkdir -p $(INSTALL_DIR)/stats_core; \
-	    touch $(INSTALL_DIR)/stats_core/$(HOU_LOGS_FILE); \
+	    touch $(INSTALL_DIR)/$(HOU_LOGS_FILE); \
 	fi)
 
-	@# Copy the new source code
-	if [ "$(INSTALL_DIR)" != "" ]; then rm -rf $(INSTALL_DIR)/*; fi
+	@# Copy the new source code.  Leave the houdini_logs.txt file in
+        @# the toplevel folder.
+	if [ "$(INSTALL_DIR)" != "" ]; then rm -rf $(INSTALL_DIR)/stats_core $(INSTALL_DIR)/stats_houdini $(INSTALL_DIR)/stats_sesi_internal; fi
 	(cd $(INSTALL_DIR) && tar xf $(TEMP_DIR)/$(SOURCE_FILE_NAME))
 	
-	@# Restore the log file.
-	if [ -e $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) ]; then \
-	    (cd $(INSTALL_DIR)/stats_core && tar xfz $(BACKUP_DIR)/$(DB_DUMP_FILE_NAME) $(HOU_LOGS_FILE)); \
-	fi
-
 	@# Apply any migrations, unless we've been told not too.
 	(if [ "$(NO_MIGRATIONS)" = "" ]; then \
 	    (cd $(INSTALL_DIR)/stats_core && (echo "no" | ./manage.py syncdb)) && \
@@ -88,9 +84,9 @@ apply_updates_on_server:
 dump:
 	./manage.py backupdb -d stats > db_backup_stats.sql
 	./manage.py backupdb -d default > db_backup_stats_django_skeleton.sql
-	cp $(HOU_LOGS_FILE) $(HOU_LOGS_FILE).backup
+	cp ../$(HOU_LOGS_FILE) $(HOU_LOGS_FILE).backup
 	tar cfz $(DB_DUMP_FILE_NAME) --transform='s|$(HOU_LOGS_FILE).backup|$(HOU_LOGS_FILE)|' db_backup_stats.sql db_backup_stats_django_skeleton.sql $(HOU_LOGS_FILE).backup
-	rm $(HOU_LOGS_FILE).backup db_backup_stats.sql db_backup_stats_django_skeleton.sql
+	rm ../$(HOU_LOGS_FILE).backup db_backup_stats.sql db_backup_stats_django_skeleton.sql
 
 load:
 	tar xfz $(DB_DUMP_FILE_NAME)
@@ -99,6 +95,7 @@ load:
 	./manage.py backupdb -d stats -l db_backup_stats.sql
 	./manage.py backupdb -d default -l db_backup_stats_django_skeleton.sql
 	./manage.py migrate
+	mv $(HOU_LOGS_FILE) ..
 	rm db_backup_stats.sql db_backup_stats_django_skeleton.sql
 
 run:
