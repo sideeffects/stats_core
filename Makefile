@@ -63,7 +63,7 @@ apply_updates_on_server:
 	fi)
 
 	@# Copy the new source code.  Leave the houdini_logs.txt file in
-        @# the toplevel folder.
+	@# the toplevel folder.
 	if [ "$(INSTALL_DIR)" != "" ]; then rm -rf $(INSTALL_DIR)/stats_core $(INSTALL_DIR)/stats_houdini $(INSTALL_DIR)/stats_sesi_internal; fi
 	(cd $(INSTALL_DIR) && tar xf $(TEMP_DIR)/$(SOURCE_FILE_NAME))
 	
@@ -86,7 +86,7 @@ dump:
 	./manage.py backupdb -d default > db_backup_stats_django_skeleton.sql
 	cp ../$(HOU_LOGS_FILE) $(HOU_LOGS_FILE).backup
 	tar cfz $(DB_DUMP_FILE_NAME) --transform='s|$(HOU_LOGS_FILE).backup|$(HOU_LOGS_FILE)|' db_backup_stats.sql db_backup_stats_django_skeleton.sql $(HOU_LOGS_FILE).backup
-	rm ../$(HOU_LOGS_FILE).backup db_backup_stats.sql db_backup_stats_django_skeleton.sql
+	rm $(HOU_LOGS_FILE).backup db_backup_stats.sql db_backup_stats_django_skeleton.sql
 
 load:
 	tar xfz $(DB_DUMP_FILE_NAME)
