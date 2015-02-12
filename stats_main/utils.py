@@ -471,7 +471,7 @@ def save_data_log_to_file(date, config_hash, json_data, ip_adress):
     """
     Save the received data log to a text file
     """
-    with open(_this_dir + "/houdini_logs.txt", "a") as log_file:
+    with open(_this_dir + "/../houdini_logs.txt", "a") as log_file:
         log_file.write("""\n Date log saved: {0}, IP: {1}, Config Hash: {2}, Date: {3} \n {4}
                        """.format(datetime.datetime.now(), ip_adress,
                                   config_hash, date, str(json_data)))
