@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from settings import TOP_MENU_OPTIONS
+from django.http import Http404 
 
 #-------------------------------------------------------------------------------
 
@@ -27,9 +28,13 @@ def menu_option_view_or_report_classes(menu_option_info):
 #-------------------------------------------------------------------------------
 
 def report_classes_for_menu_option(menu, option_name):
-    menu_option_info = find_menu_option_info(
-        TOP_MENU_OPTIONS[menu]["menu_options"], option_name)
-    return menu_option_view_or_report_classes(menu_option_info)
+    
+    try:
+        menu_option_info = find_menu_option_info(
+                            TOP_MENU_OPTIONS[menu]["menu_options"], option_name)
+        return menu_option_view_or_report_classes(menu_option_info)
+    except KeyError:
+        raise Http404
 
 #-------------------------------------------------------------------------------
 
@@ -52,8 +57,13 @@ def build_top_menu_options_next_prevs():
 #-------------------------------------------------------------------------------
 
 def find_menu_option_info(menu_option_infos, option_name):
-    return [menu_option_info for menu_option_info in menu_option_infos
-        if menu_option_info[0] == option_name][0]
+    
+    try:
+        return [menu_option_info for menu_option_info in menu_option_infos
+            if menu_option_info[0] == option_name][0]
+    except IndexError, KeyError:
+        raise Http404
+                    
 
 
  
