@@ -673,10 +673,12 @@ def get_list_of_tuples_from_list(list):
 
     return output
 
-
 #-------------------------------------------------------------------------------
 
 def sigdig(value, digits = 3):
+    """
+    Return float number with certain amount of significant digits
+    """
     order = int(math.floor(math.log10(math.fabs(value))))
     places = digits - order - 1
     if places > 0:
@@ -684,3 +686,19 @@ def sigdig(value, digits = 3):
     else:
         fmtstr = "%.0f"
     return fmtstr % (round(value, places))
+
+#-------------------------------------------------------------------------------
+
+def validate_log_date(start_time, end_time):
+    """
+    Validate that the log dates are not greater than the current date.
+    Return log date to use for the data logging too.
+    """
+    current_date = datetime.datetime.now()  
+    
+    if current_date < datetime.datetime.fromtimestamp(start_time) or \
+       current_date < datetime.datetime.fromtimestamp(end_time):
+        return False, current_date
+    
+    return True, datetime.datetime.fromtimestamp(start_time)
+        

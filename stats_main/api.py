@@ -171,8 +171,14 @@ def _send_stats_main(request, stat_log_version, machine_config_info, stats):
         return True
 
     # Start by computing the total time they ran the product.
-    data_log_date =  datetime.datetime.fromtimestamp(
-        stats["start_time"])
+    is_log_date_correct, data_log_date = validate_log_date(stats["start_time"],
+                                                           stats["end_time"])
+    # If the log dates received don't pass the validations don't do anything 
+    # else just skip that entire log
+    if not is_log_date_correct:
+        return True
+    
+    # Get total seconds and total idle time
     total_sec = stats["end_time"] - stats["start_time"]
     total_idle_time = (stats["idle_time"]
         if stats.has_key("idle_time") else 0)
