@@ -104,7 +104,17 @@ class API(object):
 
         # Look up the API method, making sure that it exists and has been
         # flagged as an API method.
-        handler_name, args, kwargs = json.loads(json_data)
+        try:
+            handler_name, args, kwargs = json.loads(json_data)
+        except ValueError:
+            save_error_log(
+                "Errors in stats file", traceback.format_exc(),
+                get_ip_address(request))
+
+            # Return True so this machine will stop trying to send the
+            # garbage data.
+            return True
+
         handler = getattr(self, handler_name, None)
         if handler is None or not hasattr(handler, "_api_static_method"):
             raise ServerError("Invalid API handler name %(name)s.",
