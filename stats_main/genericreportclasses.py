@@ -1,5 +1,8 @@
+import urllib
+
 from django.db import connections
 from django.template import Context, Template
+from django.utils.html import escape
 
 from cachedqueries import cacheable
 from utils import sigdig
@@ -110,6 +113,83 @@ def get_events_in_range(series_range, aggregation, fill_empty_string = True):
     
 #===============================================================================
 
+class Filter(object):
+    def __init__(self, report, name, label):
+        self.report = report
+        self.name = name
+        self.label = label
+
+    def url_parm_name(self):
+        """Return the name of the GET parameter that is passed into the URL
+        for this filter.
+        """
+        return self.report.name() + "|" + self.name
+
+    def default_value(self):
+        """Return the default value for the GET parameter, in case it isn't
+        passed in.
+        """
+        raise NotImplemented()
+
+    def html_form_element(self, current_value):
+        """Generate an input inside an html form for this filter, given
+        the current value that it should display.
+        """
+        raise NotImplemented()
+
+    def process_GET_value(self, value):
+        """Give the filter a chance to convert the GET parameter value into
+        something else.
+        """
+        return value
+
+class DropdownFilter(Filter):
+    def __init__(self, report, name, label, values):
+        Filter.__init__(self, report, name, label)
+        self.values = values[:]
+
+    def default_value(self):
+        return self.values[0]
+
+    def html_form_element(self, current_value):
+        html = "<span>%s</span>&nbsp;" % escape(self.label)
+        html += '<select name="%s">\n' % escape(self.url_parm_name())
+        for value in self.values:
+            selected_str = (" selected" if value == current_value else "")
+            html += '<option%s>%s</option>\n' % (selected_str, escape(value))
+        html += "</select>\n"
+        return html 
+
+class CheckboxFilter(Filter):
+    def __init__(self, report, name, label, checked):
+        Filter.__init__(self, report, name, label)
+        self.checked_by_default = checked
+
+    def default_value(self):
+        return ("1" if self.checked_by_default else "0")
+
+    def html_form_element(self, current_value):
+        # Note that if the form containing this checkbox has never been
+        # submitted, the corresponding GET parameter will not exist.  If
+        # it has been submitted and the checkbox as unchecked, we'll
+        # receive a GET value of "0".  If it has been submitted and the
+        # checkbox was checked, it will be ["0", "1"], and Django will flatten
+        # that to the last value of just "1".
+        checked_str = (" checked" if current_value else "")
+        return (
+            '<input type="hidden" name="%s" value="0">' % (
+                escape(self.url_parm_name())) +
+            '<input type="checkbox" name="%s" value="1"%s>%s' % (
+                escape(self.url_parm_name()), checked_str, escape(self.label)))
+
+    def process_GET_value(self, value):
+        # Return True if the checkbox was checked, so that the reports
+        # get a sensible value.
+        assert value in ("0", "1")
+        return value == "1"
+
+#===============================================================================
+
 registered_report_classes = []
             
 class ReportMetaclass(type):
@@ -154,7 +234,10 @@ class Report(object):
     def loading_time(self):
         return 0
     
-    def get_data(self, series_range, aggregation):
+    def get_filters(self):
+        return ()
+
+    def get_data(self, series_range, aggregation, filter_values):
         pass
 
     def supports_aggregation(self):
@@ -167,16 +250,38 @@ class Report(object):
         import settings
         return settings.REPORTS_START_DATE
 
-    def generate_template_placeholder_code(self):
+    def generate_template_placeholder_code(self, request, filter_values):
         pass
     
-    def generate_template_graph_drawing(self):
+    def generate_template_graph_drawing(self, filter_values):
         pass
+
+    def html_for_filters(self, request, filter_values):
+        filters = self.get_filters()
+        if len(filters) == 0:
+            return ""
+
+        filter_names = set(filt.url_parm_name() for filt in filters)
+
+        parts = ['<form>\n']
+        parts.extend(
+            '<input type="hidden" name="%s" value="%s">\n' % (
+                    url_parm_name, escape(value))
+            for url_parm_name, value in request.GET.items()
+            if url_parm_name not in filter_names)
+
+        for filt in filters:
+            parts.append(filt.html_form_element(filter_values.get(filt.name)))
+
+        parts.append('<input type="submit" value="Apply Filters" />\n')
+        parts.append('</form>\n')
+        return "".join(parts)
+
 #-------------------------------------------------------------------------------
 
 class ChartReport(Report):
     
-    def chart_columns(self):
+    def chart_columns(self, filter_values):
         pass
 
     def chart_options(self):
@@ -230,22 +335,32 @@ class ChartReport(Report):
         """
         return True
     
-    def generate_csv_file(self):
+    def generate_filters(self, request, filter_values):
+        """
+        To add button to generate a csv file for the report.
+        """
+        if len(self.get_filters()) == 0:
+            return ""
+
+        return self.html_for_filters(request, filter_values)
+
+    def generate_csv_file(self, request):
         """
         To add button to generate a csv file for the report.
         """
         if not self.allows_csv_file_generation():
             return ""
         
-        url_tag =  "{% url 'generic_report_csv' '"+ self.get_class_name() + "' %}"
+        url =  ("{% url 'generic_report_csv' '"+ self.get_class_name() +
+            "' %}?" + request.META["QUERY_STRING"])
         
         return '''
-        <a href="''' + url_tag + '''"><button style="float: right;">
+        <a href="''' + url + '''"><button style="float: right;">
         Generate CSV file</button></a>
         ''' 
              
     
-    def generate_template_placeholder_code(self):
+    def generate_template_placeholder_code(self, request, filter_values):
         """
         Generate the template placeholder to draw the chart.
         Usually we have just one report under placeholder, but there are cases
@@ -278,12 +393,13 @@ class ChartReport(Report):
             </div>
             '''   
         return self.chart_aditional_message() + report_title + \
-            self.generate_csv_file() + \
+            self.generate_filters(request, filter_values) + \
+            self.generate_csv_file(request) + \
             self.chart_aditional_information_above() + report_placeholder + \
             self.chart_loading_time_information() + \
             self.chart_aditional_information_below() 
 
-    def generate_template_graph_drawing(self):
+    def generate_template_graph_drawing(self, filter_values):
         """
         Generate the graph drawing template placeholder to draw the chart.
         Usually we have just one report to draw, but there are cases
@@ -303,7 +419,7 @@ class ChartReport(Report):
             template_string =  (
                 ("""{%% data report_data.%(name)s "%(name)s" %%}\n"""
                     % format_dict) +
-                self.chart_columns() + "\n" +
+                self.chart_columns(filter_values) + "\n" +
                 "{% enddata %}\n" +
                 ("""{%% graph "%(name)s" "%(name)s" %(options)s %%}"""
                     % format_dict)
@@ -315,7 +431,7 @@ class ChartReport(Report):
                 template_string += (
                 ("""{%% data report_data.%(name)s.%(index)d "%(name)s%(count)d" %%}\n"""
                     % format_dict) +
-                self.chart_columns() + "\n" +
+                self.chart_columns(filter_values) + "\n" +
                 "{% enddata %}\n" +
                 ("""{%% graph "%(name)s%(count)d" "%(name)s%(count)d" %(options)s %%}"""
                     % format_dict)
@@ -332,12 +448,12 @@ class HeatMapReport(Report):
     def supports_aggregation(self):
         return False
     
-    def generate_template_placeholder_code(self):
+    def generate_template_placeholder_code(self, request, filter_values):
         
         return ''' <div class="graph-title"> ''' + self.title() + ''' </div>
                <br>
                '''
-    def generate_template_graph_drawing(self):
+    def generate_template_graph_drawing(self, filter_values):
         """
         Generate the generic template code to be used for all heatmaps that
         inherit from this class.

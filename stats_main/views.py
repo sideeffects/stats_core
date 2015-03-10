@@ -296,6 +296,58 @@ def index_view(request):
 
 #-------------------------------------------------------------------------------
 
+# This is called when the page loads to build the parameter dictionaries for
+# all the reports on the page.
+def parse_report_filter_values(query_parms, reports):
+    """Given a dictionary of GET query parameters, return a dictionary mapping
+    report names to a dictionary of filter values.
+
+    Report filter parameters contain a | in the name.  For example, query_parms
+    might be
+        {
+            "crash_report|operating_system": "Linux",
+            "crash_report|graphics_card": "nVidia",
+            "apprentice_report|version": "13.0",
+            "start_date": "2015-01-01",
+            "end_date": "2015-01-31",
+        }
+    We want to return
+        {
+            "crash_report": {
+                "operating_system": "Linux",
+                "graphics_card": "nVidia",
+            },
+            "apprentice_report": {
+                "version": "13.0",
+            },
+        }
+    """
+    report_name_to_filter_values = {}
+    # Note that if there are multiple values in the request.GET dictionary,
+    # as is the case for checkboxes with corresponding hidden fields, that
+    # items() will simply return the last value.
+    for report_and_parm_name, value in query_parms.items():
+        if "|" in report_and_parm_name:
+            report_name, parm_name = report_and_parm_name.split("|", 1)
+            report_name_to_filter_values.setdefault(
+                report_name, {})[parm_name] = value
+
+    # Make sure that all reports are in the result, and that each of the
+    # report's filters has a value.
+    for report in reports:
+        filter_values = report_name_to_filter_values.setdefault(
+            report.name(), {})
+        for filt in report.get_filters():
+            if filt.name not in filter_values:
+                filter_values[filt.name] = filt.default_value()
+
+            # Give the filter a chance to convert from the GET value into
+            # something that makes more sense to the report.
+            filter_values[filt.name] = filt.process_GET_value(
+                filter_values[filt.name])
+
+    return report_name_to_filter_values 
+
 @require_http_methods(["GET", "POST"])
 @login_required
 def generic_report_csv_view(request, report_name):
@@ -304,7 +356,6 @@ def generic_report_csv_view(request, report_name):
     """
     # TODO: Determine the proper group names for the intersection of the
     # reports
-    
     validate_user_is_in_group(request, ['staff', 'r&d'])
 
     # Find the report for the given name.
@@ -312,10 +363,14 @@ def generic_report_csv_view(request, report_name):
     if report_class is None:
         raise Http404
 
-    # Run the query for the repot.
+    # Run the query for the report.
     report = report_class()
     series_range, aggregation = get_common_vars_for_charts(request)
-    report_data = report.get_data(series_range, aggregation)
+    report_name_to_filter_values = parse_report_filter_values(
+        request.GET, [report])
+    report_data = report.get_data(
+        series_range, aggregation,
+        report_name_to_filter_values[report.name()])
 
     # Convert the data into a CSV file.
     response = HttpResponse(content_type="text/csv")
@@ -351,6 +406,10 @@ def generic_report_view(request, menu_name, dropdown_option):
         for report_class_name in report_class_names]
     reports = [report_class() for report_class in report_classes]
 
+    # Get a dictionary
+    report_name_to_filter_values = parse_report_filter_values(
+        request.GET, reports)
+
     # Run the queries for each report.
     report_data = {}
     for report in reports:
@@ -361,11 +420,13 @@ def generic_report_view(request, menu_name, dropdown_option):
         if not report.is_heatmap():
             start_time = time.time()
             report_data[report.name()] = report.get_data(
-                series_range, aggregation)
+                series_range, aggregation,
+                report_name_to_filter_values[report.name()])
             report.loading_time = time.time() - start_time
 
     # Generate the html for the charts.
-    charts = render_chart_template(reports, report_data)
+    charts = render_chart_template(
+        reports, report_data, request, report_name_to_filter_values)
 
     return render_response(
         "generic_chart.html",
@@ -396,15 +457,18 @@ def find_template_path(template_file_name):
     return None
 #-------------------------------------------------------------------------------
 
-def render_chart_template(reports, report_data):
+def render_chart_template(
+        reports, report_data, request, report_name_to_filter_values):
     """
     Render the template for the charts
     """
     chart_placeholders = ""
     chart_drawing = ""
     for report in reports:
-        chart_placeholders += report.generate_template_placeholder_code()
-        chart_drawing += report.generate_template_graph_drawing()
+        filter_values = report_name_to_filter_values[report.name()]
+        chart_placeholders += report.generate_template_placeholder_code(
+            request, filter_values)
+        chart_drawing += report.generate_template_graph_drawing(filter_values)
     
     template_string = """
                         {% load reports_tags %}
@@ -447,10 +511,12 @@ def generic_heatmap_report_view(request, report_class_name):
     """
     series_range, aggregation = get_common_vars_for_charts(request)
     report_class = genericreportclasses.find_report_class(report_class_name)()
+    filter_values = {}
     
     return render_response(
          "heatmap.html", {
-         "lat_longs": report_class.get_data(series_range, aggregation),
+             "lat_longs": report_class.get_data(
+                series_range, aggregation, filter_values),
          },
          request)    
 
