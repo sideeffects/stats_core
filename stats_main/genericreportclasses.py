@@ -152,8 +152,8 @@ class DropdownFilter(Filter):
         return self.values[0]
 
     def html_form_element(self, current_value):
-        html = "<span>%s</span>&nbsp;" % escape(self.label)
-        html += '<select name="%s">\n' % escape(self.url_parm_name())
+        html = "<br> <span>%s</span>&nbsp;" % escape(self.label)
+        html += '<select style="width: 180px" name="%s">\n' % escape(self.url_parm_name())
         for value in self.values:
             selected_str = (" selected" if value == current_value else "")
             html += '<option%s>%s</option>\n' % (selected_str, escape(value))
@@ -179,7 +179,7 @@ class CheckboxFilter(Filter):
         return (
             '<input type="hidden" name="%s" value="0">' % (
                 escape(self.url_parm_name())) +
-            '<input type="checkbox" name="%s" value="1"%s>%s' % (
+            '<input type="checkbox" name="%s" value="1"%s>%s <br>' % (
                 escape(self.url_parm_name()), checked_str, escape(self.label)))
 
     def process_GET_value(self, value):
@@ -273,7 +273,7 @@ class Report(object):
         for filt in filters:
             parts.append(filt.html_form_element(filter_values.get(filt.name)))
 
-        parts.append('<input type="submit" value="Apply Filters" />\n')
+        parts.append('<br> <input type="submit" value="Apply Filters" /> \n')
         parts.append('</form>\n')
         return "".join(parts)
 
@@ -323,8 +323,7 @@ class ChartReport(Report):
         if self.loading_time == 0:
             return ""
         
-        return '''<div style="margin-right: auto; margin-left: 72%;" 
-                       align:"right">
+        return '''<div style="float:left;">  
                   <font size="1"> loading time: {0}s </font>
                   </div><br>
                '''.format(str(sigdig(self.loading_time)))
@@ -337,7 +336,7 @@ class ChartReport(Report):
     
     def generate_filters(self, request, filter_values):
         """
-        To add button to generate a csv file for the report.
+        To get the html code for the filters.
         """
         if len(self.get_filters()) == 0:
             return ""
@@ -355,7 +354,7 @@ class ChartReport(Report):
             "' %}?" + request.META["QUERY_STRING"])
         
         return '''
-        <a href="''' + url + '''"><button style="float: right;">
+        <a href="''' + url + '''"><button>
         Generate CSV file</button></a>
         ''' 
              
@@ -368,6 +367,7 @@ class ChartReport(Report):
         placeholder.
         """        
         
+        filters_placeholder = ''
         report_title = '''
         <div class="graph-title">''' + self.title() + '''</div>
         <br>'''
@@ -376,28 +376,39 @@ class ChartReport(Report):
         chart_count = self.chart_count() 
         
         if chart_count==1:
-            report_placeholder = ''' 
-            <div id="''' + self.name() + '''" class="wide graph"></div>'''+ \
-            '''<br> '''
+            report_placeholder = '''
+            <div id="''' + self.name() + '''" class="wide graph" 
+            style="float:left; width:940px; height:260px;">'''+ \
+            '</div> <br>'
+        
         else:
             report_placeholder = ''' 
-            <div>
+            <div style="float:left; width:940px; height:260px;">
             '''
             # Draw more than one report inline, under the same report tittle
             for i in range(1, chart_count+1):
                 report_placeholder += '''
-                <div id="''' + self.name() + str(i) + '''" style="display: inline-block">
+                <div id="''' + self.name() + str(i) + '''" style="display: inline-block;">
                 </div> 
                 '''
             report_placeholder +='''
             </div>
             '''   
-        return self.chart_aditional_message() + report_title + \
+        
+        filters_placeholder = '''<div id="filters_wrapper" 
+            style="float:right; width:180px; display: inline-block;">''' +\
             self.generate_filters(request, filter_values) + \
-            self.generate_csv_file(request) + \
-            self.chart_aditional_information_above() + report_placeholder + \
+            self.generate_csv_file(request) + "</div>"
+        
+        return '''<div id="reports_elements_wrapper" 
+            style="width:1150px; height:400px;">''' + \
+            self.chart_aditional_message() + report_title + \
+            self.chart_aditional_information_above() + \
+            '<div id="chart_filt_wrapper" style="width:1150px; height:260px;">'+\
+            report_placeholder + filters_placeholder + '</div>' + \
             self.chart_loading_time_information() + \
-            self.chart_aditional_information_below() 
+            self.chart_aditional_information_below() + \
+            "</div> <br>" # End tag for div reports_wrapper 
 
     def generate_template_graph_drawing(self, filter_values):
         """
