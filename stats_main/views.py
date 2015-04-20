@@ -298,11 +298,11 @@ def index_view(request):
 
 # This is called when the page loads to build the parameter dictionaries for
 # all the reports on the page.
-def parse_report_filter_values(query_parms, reports):
+def parse_report_filter_values(request, reports):
     """Given a dictionary of GET query parameters, return a dictionary mapping
     report names to a dictionary of filter values.
 
-    Report filter parameters contain a | in the name.  For example, query_parms
+    Report filter parameters contain a | in the name.  For example, request.GET
     might be
         {
             "crash_report|operating_system": "Linux",
@@ -326,7 +326,7 @@ def parse_report_filter_values(query_parms, reports):
     # Note that if there are multiple values in the request.GET dictionary,
     # as is the case for checkboxes with corresponding hidden fields, that
     # items() will simply return the last value.
-    for report_and_parm_name, value in query_parms.items():
+    for report_and_parm_name, value in request.GET.items():
         if "|" in report_and_parm_name:
             report_name, parm_name = report_and_parm_name.split("|", 1)
             report_name_to_filter_values.setdefault(
@@ -367,7 +367,7 @@ def generic_report_csv_view(request, report_name):
     report = report_class()
     series_range, aggregation = get_common_vars_for_charts(request)
     report_name_to_filter_values = parse_report_filter_values(
-        request.GET, [report])
+        request, [report])
     report_data = report.get_data(
         series_range, aggregation,
         report_name_to_filter_values[report.name()])
@@ -407,8 +407,7 @@ def generic_report_view(request, menu_name, dropdown_option):
     reports = [report_class() for report_class in report_classes]
 
     # Get a dictionary
-    report_name_to_filter_values = parse_report_filter_values(
-        request.GET, reports)
+    report_name_to_filter_values = parse_report_filter_values(request, reports)
 
     # Run the queries for each report.
     report_data = {}
