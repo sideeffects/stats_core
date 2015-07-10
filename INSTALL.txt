@@ -4,6 +4,7 @@ Note: The server currently only runs on Linux.
 
 1. Install packages:
 
+sudo apt-get install ssh
 sudo apt-get install git
 sudo apt-get install python-dev
 sudo apt-get install python-pip
@@ -13,14 +14,12 @@ sudo apt-get install libapache2-mod-wsgi
 sudo apt-get install mysql-server libmysqlclient-dev
 sudo apt-get install python-mysqldb
 sudo apt-get install openldap libldap2-dev libsasl2-dev libssl-dev python-ldap
-sudo apt-get install ssh
+(If you are on Linux Mint and can't find openldap, run:
+    sudo apt-get install slapd ldap-utils)
 
-If you are on Linux Mint and can't find openldap, run:
-sudo apt-get install slapd ldap-utils 
-
-sudo pip install django==1.5
+sudo pip install django==1.6
 sudo pip install south
-sudo pip install python-ldap
+#sudo pip install python-ldap
 sudo pip install django-auth-ldap
 sudo pip install django-dajaxice
 sudo pip install httpagentparser
@@ -29,6 +28,7 @@ sudo pip install petl
 sudo pip install petlx
 sudo pip install django-google-charts
 sudo pip install django-qsstats-magic
+
 a2enmod rewrite
 
 2. Grab the source code
@@ -61,7 +61,7 @@ mysql> create database stats_django_skeleton;
 mysql> create database stats;
 mysql> create user 'www-stats' identified by 'www-stats-password';
 mysql> grant all on stats_django_skeleton.* to 'www-stats'@'localhost' identified by 'www-stats-password';
-mysql> grant all on stats.* to 'www-stats'@'localhost' identified by 'www-stats-password';
+mysql> grant all on stats.* to 'www-stats'@'localhost';
 mysql> flush privileges;
 
 4. Set database password in settings.py:
@@ -85,9 +85,10 @@ DATABASES = {
 
 5. Choose your url prefix:
 
-By default the prefix is "/stats".  If you do not want to put the web pages on an existing
-web server, the default URL prefix should suffice.  Otherwise, if "/stats" is not an
-acceptable location in your web server's URL, you can change it by:
+By default the prefix is "/stats".  If you do not want to put the web pages on
+an existing web server, the default URL prefix should suffice.  Otherwise, if
+"/stats" is not an acceptable location in your web server's URL, you can change
+it by:
 
 - Change STATIC_URL = '/stats/static/' (in settings.py)
 - Change the Alias and RewriteRules in the Apache configuration below.
@@ -98,32 +99,36 @@ From /etc/apache2/sites-available do:
 
 sudo a2ensite 000-default
 
-Find the file named 000-default or 000-default.conf and add the following lines:
+Find the file named 000-default or 000-default.conf and add the following
+lines inside the <VirtualHost *:80> tag:
 
- WSGIScriptAlias /stats "/var/www/stats/stats_core/wsgi-script/django.wsgi"
+    WSGIScriptAlias /stats "/var/www/stats/stats_core/wsgi-script/django.wsgi"
 
- <Directory /var/www/stats/stats_core/wsgi-script/django.wsgi>
-    AllowOverride All
-    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
- </Directory>
+    <Directory /var/www/stats/stats_core/wsgi-script/django.wsgi>
+        AllowOverride All
+        Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+    </Directory>
 
- # Static files for the admin interface.
- Alias /stats/static "/var/www/stats/stats_core/stats_main/static"
+    # Static files for the admin interface.
+    Alias /stats/static "/var/www/stats/stats_core/stats_main/static"
 
- # Rewrite requests from /stats to /stats/.
- RewriteRule ^/stats$ /stats/ [R,L]
+    # Rewrite requests from /stats to /stats/.
+    RewriteRule ^/stats$ /stats/ [R,L]
 
 7. Copy the code to installation location of /var/www/stats.
 
 cd ~/stats/stats_core
 make push
 
-8. Test that everything works by pointing your browser to http://localhost/stats.
+8. Test that everything works by pointing your browser to
+   http://localhost/stats.
 
------------------------------------------------------------------------------------------------------------------
-Currently, stats_core will not work unless the stats_houdini extension is installed.  You can download it from
-https://github.com/sideeffects/stats_houdini.  If you wish to add other extensions, edit settings.py
-and change STATS_EXTENSIONS to include the extension.
+------------------------------------------------------------------------------
+Currently, stats_core will not work unless the stats_houdini extension is
+installed.  You can download it from
+https://github.com/sideeffects/stats_houdini.  If you wish to add other
+extensions, edit settings.py and change STATS_EXTENSIONS to include the
+extension.
 
 NOTE: For information on how to build menus and reports, see
 https://github.com/sideeffects/stats_houdini/blob/master/README.md.
