@@ -161,7 +161,7 @@ def send_machine_config_and_stats(request, machine_config_and_stats_json):
         stat_log_version = machine_config_and_stats_json['stat_log_version']
         machine_config = json_content['machine_config']
         stats = json_content['stats']
-    except (ValueError, KeyError):
+    except (ValueError, KeyError, TypeError):
         formated_stack_trace = (
             "json_content: " + str(json_content) + " - " +
             traceback.format_exc())
