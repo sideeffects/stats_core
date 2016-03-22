@@ -1,4 +1,5 @@
 # Django settings for stats project.
+import django
 
 import os
 import sys
@@ -9,6 +10,8 @@ try:
     from collections import OrderedDict
 except ImportError:
     from ordereddict import OrderedDict
+
+_django_version = [int(x) for x in django.get_version().split(".")[:2]]
 
 # Make sure this folder is the first one in the search path so we pick up
 # our googlecharts instead of the system's.
@@ -170,9 +173,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'googlecharts',
-    'south',
     'stats_main',
 )
+
+if _django_version[0] == 1 and _django_version[1] <= 6:
+    INSTALLED_APPS += ("south,")
 
 if SHOW_DEBUG_TOOLBAR:
     INSTALLED_APPS += (
@@ -255,7 +260,7 @@ for extension_relative_dir in STATS_EXTENSIONS:
 
 # Now that we know all the STATS_APPLICATIONS, we can tell Django by updating
 # INSTALLED_APPS.
-INSTALLED_APPS += STATS_APPLICATIONS
+INSTALLED_APPS += tuple(set(STATS_APPLICATIONS) - set(INSTALLED_APPS))
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
