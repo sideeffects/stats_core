@@ -58,6 +58,8 @@ SECRET_KEY = '<TODO: generate your own secret key>'
 # Database routers
 DATABASE_ROUTERS = ['routers.DBRouter']
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
 # Date that we started collecting data [Y, M, D]
 REPORTS_START_DATE = datetime.datetime(2013, 9, 01) 
 
