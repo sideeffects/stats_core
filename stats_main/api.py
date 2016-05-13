@@ -144,6 +144,9 @@ def send_machine_config_and_stats(request, machine_config_and_stats_json):
 
     This API function is called by the current version of Houdini.
     """
+    # *********** TODO: ************
+    return True
+
     # Catch errors if the log file is empty.
     json_content = ""
     try:
