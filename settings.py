@@ -179,7 +179,7 @@ INSTALLED_APPS = (
 )
 
 if _django_version[0] == 1 and _django_version[1] <= 6:
-    INSTALLED_APPS += ("south,")
+    INSTALLED_APPS += ("south",)
 
 if SHOW_DEBUG_TOOLBAR:
     INSTALLED_APPS += (
