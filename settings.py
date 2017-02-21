@@ -21,6 +21,10 @@ if sys.path[0] != _this_dir:
 
 _base_dir = os.path.abspath(os.path.join(_this_dir, os.pardir))
 
+# Silence warnings about replacing a foreign key that is a primary key with
+# a one to one field.
+SILENCED_SYSTEM_CHECKS = ["fields.W342"]
+
 # Stats applications and reports modules to include. 
 # Each included app will extend this list 
 STATS_APPLICATIONS = ()
@@ -53,7 +57,7 @@ DATABASES = {
 }
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '<TODO: generate your own secret key>'
+SECRET_KEY = '<TODO: generate your own secret key!>'
 
 # Database routers
 DATABASE_ROUTERS = ['routers.DBRouter']
