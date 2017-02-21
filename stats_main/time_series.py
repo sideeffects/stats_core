@@ -117,8 +117,7 @@ def merge_time_series(time_series_sequences):
     return a sequence of the form
         [
             (0, 10, 5),
-            (1, 20, 
-            4),
+            (1, 20, 4),
             (2, 15, 22),
         ]
     Note that the first elements (the 0's, 1's and 2's in the example above)
@@ -144,6 +143,18 @@ def _time_series_x_axes_line_up(time_series_sequences):
         if [pair[0] for pair in pairs] != [pairs[0][0]] * len(pairs):
             return False
     return True
+
+#-------------------------------------------------------------------------------
+def sum_time_series(time_series_sequences):
+    """Given a sequence in the form
+        [
+            [(0, 10), (1, 20), (2, 15),],
+            [(0, 5), (1, 4), (2, 22),]
+        ]
+    return
+        [(0, 15), (1, 24), (2, 37)]
+    """
+    return compute_time_series(time_series_sequences, lambda a, b: a + b)
 
 #-------------------------------------------------------------------------------
 def compute_time_series(time_series_sequences, operation):
