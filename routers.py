@@ -19,7 +19,7 @@ class DBRouter(object):
             return model._meta.db_name
         return None
 
-    def allow_syncdb(self, db, model):
+    def allow_migrate(self, db, model):
         actual_db = db
         if hasattr(model._meta, "db_name"):
             actual_db = model._meta.db_name
