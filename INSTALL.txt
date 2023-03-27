@@ -123,6 +123,10 @@ make push
 8. Test that everything works by pointing your browser to
    http://localhost/stats.
 
+/!\ For internal setup: make sure there is a local_settings.py file in stats_core,
+and include stats_sesi_internal and stats_houdini in STATS_EXTENSIONS, otherwise
+you will get an error when trying to import any module present in stats_sesi_internal.
+
 ------------------------------------------------------------------------------
 Currently, stats_core will not work unless the stats_houdini extension is
 installed.  You can download it from
